@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getCurrentUser } from "@/features/profile/queries";
+import { signOut } from "@/features/auth/actions";
 
 const NAV_LINKS = [
   { href: "/jobs", label: "Jobs" },
@@ -7,7 +9,9 @@ const NAV_LINKS = [
   { href: "/airports", label: "Airports" },
 ];
 
-export function Header() {
+export async function Header() {
+  const user = await getCurrentUser();
+
   return (
     <header className="border-b bg-white sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -25,12 +29,25 @@ export function Header() {
           <Link href="/employers" className="hidden sm:block text-slate-600 hover:text-slate-900">
             For Employers
           </Link>
-          <Link
-            href="/dev-sign-in"
-            className="bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-700"
-          >
-            Sign In
-          </Link>
+          {user ? (
+            <>
+              <Link href="/dashboard" className="text-slate-600 hover:text-slate-900">
+                Dashboard
+              </Link>
+              <form action={signOut}>
+                <button type="submit" className="border border-slate-300 px-4 py-2 rounded-md hover:bg-slate-50">
+                  Sign Out
+                </button>
+              </form>
+            </>
+          ) : (
+            <Link
+              href="/sign-in"
+              className="bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-700"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </header>
