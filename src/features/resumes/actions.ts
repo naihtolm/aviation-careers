@@ -101,9 +101,10 @@ export async function uploadResume(formData: FormData) {
       .eq("id", job.id);
     await supabase.from("resumes").update({ upload_status: "processed" }).eq("id", resume.id);
   } catch (err) {
+    const detail = err instanceof Error ? `${err.message}\n${err.stack}` : String(err);
     await db
       .from("resume_processing_jobs")
-      .update({ status: "failed", error_message: String(err), completed_at: new Date().toISOString() })
+      .update({ status: "failed", error_message: detail.slice(0, 4000), completed_at: new Date().toISOString() })
       .eq("id", job.id);
     await supabase.from("resumes").update({ upload_status: "failed" }).eq("id", resume.id);
     // Not an error return -- the resume record still exists and the
