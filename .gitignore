@@ -13,5 +13,6 @@ next-env.d.ts
 Thumbs.db
 
 supabase/.temp/
+.claude/
 
 npm-debug.log*

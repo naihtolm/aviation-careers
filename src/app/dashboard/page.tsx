@@ -39,7 +39,17 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-4 mt-6">
+      <Link
+        href="/dashboard/resume"
+        className="block border rounded-lg p-4 bg-slate-900 text-white mt-4 hover:bg-slate-800"
+      >
+        <p className="font-medium">Upload your resume</p>
+        <p className="text-sm text-slate-300 mt-1">
+          We'll pull out your experience, education, skills, and certifications — you review before anything saves.
+        </p>
+      </Link>
+
+      <div className="grid sm:grid-cols-2 gap-4 mt-4">
         <Link href="/jobs" className="border rounded-lg p-4 bg-white hover:border-slate-400">
           <p className="font-medium text-slate-900">Browse jobs</p>
           <p className="text-sm text-slate-500 mt-1">Search real aviation openings.</p>
