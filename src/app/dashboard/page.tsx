@@ -4,6 +4,8 @@ import { getCurrentUser, getFullProfile, profileCompletionPercent } from "@/feat
 
 function nextStepSuggestion(data: Awaited<ReturnType<typeof getFullProfile>>) {
   if (!data.seekerProfile?.city) return "Add your location so we can find jobs near you.";
+  if (data.careerInterestIds.length === 0) return "Tell us which careers you're interested in to see better matches.";
+  if (!data.seekerProfile?.experience_level) return "Add your experience level so we can tailor your recommendations.";
   if (data.experience.length === 0) return "Add your work experience to improve your matches.";
   if (data.skills.length === 0) return "Add your skills so employers can find you.";
   if (data.certifications.length === 0) return "Add your certifications — especially if your role requires FAA credentials.";

@@ -10,18 +10,26 @@ export async function getCurrentUser() {
 
 export async function getFullProfile(userId: string) {
   const supabase = await createServerActionClient();
-  const [{ data: profile }, { data: seekerProfile }, { data: experience }, { data: education }, { data: skills }, { data: certifications }] =
-    await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase.from("job_seeker_profiles").select("*").eq("user_id", userId).maybeSingle(),
-      supabase.from("user_experience").select("*").eq("user_id", userId).order("start_date", { ascending: false }),
-      supabase.from("user_education").select("*").eq("user_id", userId).order("graduation_date", { ascending: false }),
-      supabase.from("user_skills").select("skill_id, proficiency_level, skills ( name )").eq("user_id", userId),
-      supabase
-        .from("user_certifications")
-        .select("id, issued_date, expiration_date, verification_status, certifications ( name )")
-        .eq("user_id", userId),
-    ]);
+  const [
+    { data: profile },
+    { data: seekerProfile },
+    { data: experience },
+    { data: education },
+    { data: skills },
+    { data: certifications },
+    { data: careerInterests },
+  ] = await Promise.all([
+    supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+    supabase.from("job_seeker_profiles").select("*").eq("user_id", userId).maybeSingle(),
+    supabase.from("user_experience").select("*").eq("user_id", userId).order("start_date", { ascending: false }),
+    supabase.from("user_education").select("*").eq("user_id", userId).order("graduation_date", { ascending: false }),
+    supabase.from("user_skills").select("skill_id, proficiency_level, skills ( name )").eq("user_id", userId),
+    supabase
+      .from("user_certifications")
+      .select("id, issued_date, expiration_date, verification_status, certifications ( name )")
+      .eq("user_id", userId),
+    supabase.from("job_seeker_career_interests").select("category_id").eq("user_id", userId),
+  ]);
 
   return {
     profile,
@@ -30,6 +38,7 @@ export async function getFullProfile(userId: string) {
     education: education ?? [],
     skills: skills ?? [],
     certifications: certifications ?? [],
+    careerInterestIds: (careerInterests ?? []).map((c) => c.category_id),
   };
 }
 
@@ -38,6 +47,8 @@ export async function getFullProfile(userId: string) {
 export function profileCompletionPercent(data: Awaited<ReturnType<typeof getFullProfile>>) {
   const checks = [
     !!data.seekerProfile?.city,
+    !!data.seekerProfile?.experience_level,
+    data.careerInterestIds.length > 0,
     !!data.seekerProfile?.desired_salary_min || !!data.seekerProfile?.desired_salary_max,
     data.experience.length > 0,
     data.education.length > 0,

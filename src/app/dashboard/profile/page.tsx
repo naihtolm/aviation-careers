@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser, getFullProfile } from "@/features/profile/queries";
+import { getCareerCategories } from "@/features/careers/queries";
 import { ProfileDetailsForm } from "@/components/profile/ProfileDetailsForm";
 import { ListSection } from "@/components/profile/ListSection";
 import {
@@ -17,7 +18,7 @@ export default async function ProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  const data = await getFullProfile(user.id);
+  const [data, categories] = await Promise.all([getFullProfile(user.id), getCareerCategories()]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
@@ -28,7 +29,12 @@ export default async function ProfilePage() {
         </p>
       </div>
 
-      <ProfileDetailsForm seekerProfile={data.seekerProfile} profile={data.profile} />
+      <ProfileDetailsForm
+        seekerProfile={data.seekerProfile}
+        profile={data.profile}
+        categories={categories}
+        careerInterestIds={data.careerInterestIds}
+      />
 
       <ListSection
         title="Experience"

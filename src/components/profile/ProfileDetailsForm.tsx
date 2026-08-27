@@ -3,7 +3,26 @@
 import { useTransition } from "react";
 import { updateProfile } from "@/features/profile/actions";
 
-export function ProfileDetailsForm({ seekerProfile, profile }: { seekerProfile: any; profile: any }) {
+const EXPERIENCE_LEVELS = [
+  { value: "no_experience", label: "No experience" },
+  { value: "entry_level", label: "Entry level" },
+  { value: "one_to_two", label: "1–2 years" },
+  { value: "three_to_five", label: "3–5 years" },
+  { value: "five_to_ten", label: "5–10 years" },
+  { value: "ten_plus", label: "10+ years" },
+];
+
+export function ProfileDetailsForm({
+  seekerProfile,
+  profile,
+  categories,
+  careerInterestIds,
+}: {
+  seekerProfile: any;
+  profile: any;
+  categories: { id: string; name: string }[];
+  careerInterestIds: string[];
+}) {
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(formData: FormData) {
@@ -34,6 +53,41 @@ export function ProfileDetailsForm({ seekerProfile, profile }: { seekerProfile: 
           rows={3}
           className="w-full border rounded-md px-3 py-2 mt-1"
         />
+      </label>
+
+      {categories.length > 0 && (
+        <div>
+          <p className="text-sm mb-1">Career interests</p>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <label key={cat.id} className="flex items-center gap-1.5 text-sm border rounded-full px-3 py-1 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="career_category_ids"
+                  value={cat.id}
+                  defaultChecked={careerInterestIds.includes(cat.id)}
+                />
+                {cat.name}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <label className="block text-sm">
+        Experience level
+        <select
+          name="experience_level"
+          defaultValue={seekerProfile?.experience_level ?? ""}
+          className="w-full border rounded-md px-3 py-2 mt-1"
+        >
+          <option value="">Not specified</option>
+          {EXPERIENCE_LEVELS.map((level) => (
+            <option key={level.value} value={level.value}>
+              {level.label}
+            </option>
+          ))}
+        </select>
       </label>
 
       <div className="grid grid-cols-2 gap-3">

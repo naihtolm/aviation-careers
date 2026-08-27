@@ -45,6 +45,8 @@ async function findOrCreateSkill(name: string) {
 }
 
 export interface OnboardingInput {
+  careerCategoryIds: string[];
+  experienceLevel: string | null;
   city: string;
   state: string;
   willingToRelocate: boolean;
@@ -64,12 +66,19 @@ export async function completeOnboarding(input: OnboardingInput) {
       state: input.state || null,
       willing_to_relocate: input.willingToRelocate,
       open_to_remote: input.openToRemote,
+      experience_level: input.experienceLevel || null,
       desired_salary_min: input.desiredSalaryMin,
       desired_salary_max: input.desiredSalaryMax,
     },
     { onConflict: "user_id" }
   );
   if (profileError) return { error: profileError.message };
+
+  if (input.careerCategoryIds.length > 0) {
+    await supabase
+      .from("job_seeker_career_interests")
+      .insert(input.careerCategoryIds.map((categoryId) => ({ user_id: user.id, category_id: categoryId })));
+  }
 
   for (const name of input.certificationNames) {
     if (!name.trim()) continue;
@@ -95,6 +104,7 @@ export async function updateProfile(formData: FormData) {
       state: String(formData.get("state") ?? "") || null,
       willing_to_relocate: formData.get("willing_to_relocate") === "on",
       open_to_remote: formData.get("open_to_remote") === "on",
+      experience_level: String(formData.get("experience_level") ?? "") || null,
       desired_salary_min: formData.get("desired_salary_min") ? Number(formData.get("desired_salary_min")) : null,
       desired_salary_max: formData.get("desired_salary_max") ? Number(formData.get("desired_salary_max")) : null,
       profile_visibility: String(formData.get("profile_visibility") ?? "private"),
@@ -102,6 +112,15 @@ export async function updateProfile(formData: FormData) {
     .eq("user_id", user.id);
 
   if (error) return { error: error.message };
+
+  const categoryIds = formData.getAll("career_category_ids").map(String);
+  await supabase.from("job_seeker_career_interests").delete().eq("user_id", user.id);
+  if (categoryIds.length > 0) {
+    await supabase
+      .from("job_seeker_career_interests")
+      .insert(categoryIds.map((categoryId) => ({ user_id: user.id, category_id: categoryId })));
+  }
+
   revalidatePath("/dashboard/profile");
   return { error: null };
 }
