@@ -4,6 +4,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
+import { decodeHtmlEntities } from "@/lib/html";
 
 async function assertIsAdmin() {
   const supabase = await createServerActionClient();
@@ -78,7 +79,12 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       career_id: input.careerId,
       title: input.title,
       slug: jobSlug,
-      description: input.description,
+      // Greenhouse's API returns `content` already HTML-entity-escaped
+      // (e.g. "&lt;div&gt;" instead of "<div>") — decode once here so the
+      // stored description is real HTML, not escaped text, matching what
+      // dangerouslySetInnerHTML on the job detail page expects and
+      // keeping search_vector built from actual words, not entity tokens.
+      description: decodeHtmlEntities(input.description),
       status: "active",
       source_type: "feed",
       application_type: "external_url",

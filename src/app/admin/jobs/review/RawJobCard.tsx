@@ -3,6 +3,7 @@
 
 import { useState, useTransition } from "react";
 import { approveRawJob, rejectRawJob } from "./actions";
+import { decodeHtmlEntities } from "@/lib/html";
 
 interface Career {
   id: string;
@@ -157,7 +158,7 @@ export function RawJobCard({
             </summary>
             <div
               className="text-sm mt-2 prose max-w-none"
-              dangerouslySetInnerHTML={{ __html: record.raw_data.content ?? "" }}
+              dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(record.raw_data.content ?? "") }}
             />
           </details>
 
