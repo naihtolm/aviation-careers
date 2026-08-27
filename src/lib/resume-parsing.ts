@@ -7,6 +7,19 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 
+// pdfjs-dist (underneath pdf-parse v2) uses DOMMatrix -- a browser API --
+// for some PDF operations (image/transform handling in more complex
+// PDFs; a simple test PDF never exercised this path locally, but real
+// resume exports from Word/Google Docs/etc. do). Node has no such
+// global. dommatrix is a pure-JS polyfill with no native binary, so it
+// works the same on any platform (unlike e.g. @napi-rs/canvas, which
+// ships platform-specific binaries that don't reliably carry over from
+// a local build to Vercel's Linux runtime).
+if (typeof globalThis.DOMMatrix === "undefined") {
+  const { default: DOMMatrix } = await import("dommatrix");
+  globalThis.DOMMatrix = DOMMatrix as unknown as typeof globalThis.DOMMatrix;
+}
+
 export async function extractText(buffer: Buffer, fileType: "pdf" | "docx"): Promise<string> {
   if (fileType === "pdf") {
     // pdf-parse v2 (modern, actively-maintained pdfjs-dist underneath).
