@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/features/profile/queries";
 import { getLatestResume, getResumeDownloadUrl } from "@/features/resumes/queries";
 import { UploadForm } from "@/components/resume/UploadForm";
+import { RemoveResumeButton } from "@/components/resume/RemoveResumeButton";
 
 // Vercel Hobby caps at 60s even if a higher value is requested — text
 // extraction + one Claude call for a resume-length document comfortably
@@ -40,6 +41,8 @@ export default async function ResumePage() {
                 </a>
               </>
             )}
+            {" · "}
+            <RemoveResumeButton resumeId={latest.resume.id} />
           </p>
 
           {latest.resume.upload_status === "processing" && (

@@ -115,6 +115,27 @@ export async function uploadResume(formData: FormData) {
   redirect("/dashboard/resume");
 }
 
+export async function deleteResume(resumeId: string) {
+  const { supabase, user } = await requireUser();
+
+  const { data: resume } = await supabase
+    .from("resumes")
+    .select("storage_path")
+    .eq("id", resumeId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!resume) return;
+
+  if (resume.storage_path) {
+    await supabase.storage.from("resumes").remove([resume.storage_path]);
+  }
+  // resume_processing_jobs and resume_parses cascade-delete with the
+  // resumes row (on delete cascade in 003_resume_and_profile.sql).
+  await supabase.from("resumes").delete().eq("id", resumeId).eq("user_id", user.id);
+
+  revalidatePath("/dashboard/resume");
+}
+
 export async function saveReviewedResumeData(input: {
   experience: ReviewedExperience[];
   education: ReviewedEducation[];
