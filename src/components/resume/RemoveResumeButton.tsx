@@ -1,21 +1,43 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { deleteResume } from "@/features/resumes/actions";
 
+// No native confirm() dialog -- browsers can silently suppress repeated
+// dialogs from a page ("prevent this page from creating additional
+// dialogs"), which is indistinguishable from the button doing nothing.
+// A two-click in-page confirm has no such failure mode.
 export function RemoveResumeButton({ resumeId }: { resumeId: string }) {
   const [isPending, startTransition] = useTransition();
+  const [confirming, setConfirming] = useState(false);
 
-  function handleRemove() {
-    if (!window.confirm("Remove this resume? You can upload a new one right after.")) return;
+  function handleClick() {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
     startTransition(async () => {
       await deleteResume(resumeId);
     });
   }
 
+  if (confirming) {
+    return (
+      <span>
+        <button onClick={handleClick} disabled={isPending} className="text-red-600 font-medium hover:underline disabled:opacity-50">
+          {isPending ? "Removing…" : "Confirm remove?"}
+        </button>
+        {" · "}
+        <button onClick={() => setConfirming(false)} disabled={isPending} className="text-slate-500 hover:underline">
+          Cancel
+        </button>
+      </span>
+    );
+  }
+
   return (
-    <button onClick={handleRemove} disabled={isPending} className="text-red-600 hover:underline disabled:opacity-50">
-      {isPending ? "Removing…" : "Remove"}
+    <button onClick={handleClick} className="text-red-600 hover:underline">
+      Remove
     </button>
   );
 }
