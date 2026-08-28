@@ -21,6 +21,7 @@ export interface JobSearchParams {
   salaryMin?: number;
   location?: string;
   radiusMiles?: number;
+  publishedAfter?: string; // ISO timestamp — used by alert delivery to find only new matches
   page?: number;
   pageSize?: number;
 }
@@ -67,6 +68,10 @@ export async function searchJobs(params: JobSearchParams) {
     .select(JOB_SELECT, { count: "exact" })
     .eq("status", "active")
     .order("published_at", { ascending: false });
+
+  if (params.publishedAfter) {
+    query = query.gt("published_at", params.publishedAfter);
+  }
 
   if (params.keyword) {
     query = query.textSearch("search_vector", params.keyword, {
@@ -158,6 +163,23 @@ export async function getSimilarJobs(careerId: string | null, excludeJobId: stri
     .neq("id", excludeJobId)
     .limit(limit);
   return data ?? [];
+}
+
+export async function getSavedJobs(userId: string) {
+  const supabase = await createServerActionClient();
+  const { data } = await supabase
+    .from("saved_jobs")
+    .select(`created_at, jobs ( ${JOB_SELECT} )`)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  return (data ?? []).map((row: any) => row.jobs).filter(Boolean);
+}
+
+export async function getSavedJobIds(userId: string | null): Promise<Set<string>> {
+  if (!userId) return new Set();
+  const supabase = await createServerActionClient();
+  const { data } = await supabase.from("saved_jobs").select("job_id").eq("user_id", userId);
+  return new Set((data ?? []).map((r) => r.job_id));
 }
 
 export async function getFeaturedJobs(limit = 6) {

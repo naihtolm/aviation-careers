@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser, getFullProfile, profileCompletionPercent } from "@/features/profile/queries";
+import { getSavedJobs } from "@/features/jobs/queries";
+import { getApplicationsByStatus } from "@/features/applications/queries";
+import { getAlerts } from "@/features/alerts/queries";
 
 function nextStepSuggestion(data: Awaited<ReturnType<typeof getFullProfile>>) {
   if (!data.seekerProfile?.city) return "Add your location so we can find jobs near you.";
@@ -16,8 +19,14 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-in");
 
-  const data = await getFullProfile(user.id);
+  const [data, savedJobs, applications, alerts] = await Promise.all([
+    getFullProfile(user.id),
+    getSavedJobs(user.id),
+    getApplicationsByStatus(user.id),
+    getAlerts(user.id),
+  ]);
   const completion = profileCompletionPercent(data);
+  const applicationCount = Object.values(applications).reduce((sum, arr) => sum + arr.length, 0);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -60,11 +69,21 @@ export default async function DashboardPage() {
             {data.experience.length} experience · {data.education.length} education · {data.skills.length} skills
           </p>
         </Link>
+        <Link href="/dashboard/saved" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+          <p className="font-medium text-slate-900">Saved jobs</p>
+          <p className="text-sm text-slate-500 mt-1">{savedJobs.length} saved</p>
+        </Link>
+        <Link href="/dashboard/applications" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+          <p className="font-medium text-slate-900">Applications</p>
+          <p className="text-sm text-slate-500 mt-1">{applicationCount} tracked</p>
+        </Link>
+        <Link href="/dashboard/alerts" className="border rounded-lg p-4 bg-white hover:border-slate-400 sm:col-span-2">
+          <p className="font-medium text-slate-900">Job alerts</p>
+          <p className="text-sm text-slate-500 mt-1">
+            {alerts.filter((a: any) => a.is_active).length} active alert{alerts.filter((a: any) => a.is_active).length === 1 ? "" : "s"}
+          </p>
+        </Link>
       </div>
-
-      <p className="text-xs text-slate-400 mt-8">
-        Saved jobs, application tracking, and job alerts are coming in a future update.
-      </p>
     </div>
   );
 }

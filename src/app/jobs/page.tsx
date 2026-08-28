@@ -1,6 +1,7 @@
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
-import { searchJobs } from "@/features/jobs/queries";
+import { searchJobs, getSavedJobIds } from "@/features/jobs/queries";
+import { getCurrentUser } from "@/features/profile/queries";
 
 const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"];
 const EXPERIENCE_LEVELS = ["entry_level", "one_to_two", "three_to_five", "five_to_ten", "ten_plus"];
@@ -16,16 +17,20 @@ export default async function JobSearchPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
-  const { jobs, total } = await searchJobs({
-    keyword: params.keyword,
-    careerCategorySlug: params.career_category,
-    employmentType: params.employment_type,
-    experienceLevel: params.experience_level,
-    workArrangement: params.work_arrangement,
-    location: params.location,
-    radiusMiles: params.radius ? Number(params.radius) : undefined,
-    salaryMin: params.salary_min ? Number(params.salary_min) : undefined,
-  });
+  const [{ jobs, total }, user] = await Promise.all([
+    searchJobs({
+      keyword: params.keyword,
+      careerCategorySlug: params.career_category,
+      employmentType: params.employment_type,
+      experienceLevel: params.experience_level,
+      workArrangement: params.work_arrangement,
+      location: params.location,
+      radiusMiles: params.radius ? Number(params.radius) : undefined,
+      salaryMin: params.salary_min ? Number(params.salary_min) : undefined,
+    }),
+    getCurrentUser(),
+  ]);
+  const savedJobIds = await getSavedJobIds(user?.id ?? null);
 
   function filterHref(key: string, value: string) {
     const next = new URLSearchParams(params as Record<string, string>);
@@ -102,7 +107,7 @@ export default async function JobSearchPage({
           ) : (
             <div className="space-y-3">
               {jobs.map((job: any) => (
-                <JobCard key={job.id} job={job} />
+                <JobCard key={job.id} job={job} initialSaved={savedJobIds.has(job.id)} />
               ))}
             </div>
           )}

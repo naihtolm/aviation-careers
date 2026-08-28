@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SaveJobButton } from "@/components/jobs/SaveJobButton";
 
 function formatSalary(comp: any[] | undefined) {
   const row = (comp ?? []).find((c) => c.is_public);
@@ -19,7 +20,7 @@ function primaryLocation(jobLocations: any[] | undefined) {
   return "Location not specified";
 }
 
-export function JobCard({ job }: { job: any }) {
+export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?: boolean }) {
   const salary = formatSalary(job.job_compensation);
   return (
     <Link
@@ -36,11 +37,14 @@ export function JobCard({ job }: { job: any }) {
             )}
           </p>
         </div>
-        {job.careers?.name && (
-          <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded whitespace-nowrap">
-            {job.careers.name}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {job.careers?.name && (
+            <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded whitespace-nowrap">
+              {job.careers.name}
+            </span>
+          )}
+          <SaveJobButton jobId={job.id} initialSaved={initialSaved} />
+        </div>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
         <span>{primaryLocation(job.job_locations)}</span>

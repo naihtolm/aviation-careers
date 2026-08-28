@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getJobBySlug, getSimilarJobs } from "@/features/jobs/queries";
+import { getJobBySlug, getSimilarJobs, getSavedJobIds } from "@/features/jobs/queries";
+import { getCurrentUser } from "@/features/profile/queries";
 import { ApplyPanel } from "@/components/jobs/ApplyPanel";
 import { JobCard } from "@/components/jobs/JobCard";
+import { MatchCard } from "@/components/jobs/MatchCard";
 import { decodeHtmlEntities } from "@/lib/html";
 
 function formatSalary(comp: any[]) {
@@ -28,7 +30,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   const job = await getJobBySlug(slug);
   if (!job) notFound();
 
-  const similarJobs = await getSimilarJobs(job.careers?.id ?? null, job.id);
+  const user = await getCurrentUser();
+  const [similarJobs, savedJobIds] = await Promise.all([
+    getSimilarJobs(job.careers?.id ?? null, job.id),
+    getSavedJobIds(user?.id ?? null),
+  ]);
   const salary = formatSalary(job.job_compensation);
   const location = primaryLocationLabel(job.job_locations);
 
@@ -63,6 +69,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               applicationType={job.application_type}
               applicationUrl={job.application_url}
               companyName={job.companies?.name ?? "the employer"}
+              initialSaved={savedJobIds.has(job.id)}
             />
           </div>
 
@@ -88,12 +95,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
           )}
 
           <div className="border-t mt-6 pt-6">
-            <div className="border rounded-lg p-4 bg-slate-50">
-              <p className="font-medium text-slate-900 text-sm">Check My Match</p>
-              <p className="text-sm text-slate-500 mt-1">
-                Sign in and complete your profile to see how well you match this job's requirements.
-              </p>
-            </div>
+            <MatchCard jobId={job.id} />
           </div>
         </div>
 
@@ -104,6 +106,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               applicationType={job.application_type}
               applicationUrl={job.application_url}
               companyName={job.companies?.name ?? "the employer"}
+              initialSaved={savedJobIds.has(job.id)}
             />
           </div>
         </div>
@@ -114,7 +117,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Similar jobs</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {similarJobs.map((j: any) => (
-              <JobCard key={j.id} job={j} />
+              <JobCard key={j.id} job={j} initialSaved={savedJobIds.has(j.id)} />
             ))}
           </div>
         </div>

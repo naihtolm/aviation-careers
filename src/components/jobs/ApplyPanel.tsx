@@ -1,38 +1,62 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { logApplyClick, saveJob } from "@/features/jobs/actions";
+import { saveJob, unsaveJob } from "@/features/jobs/actions";
+import { trackApplyClick, confirmApplied } from "@/features/applications/actions";
+
+type ModalState = "closed" | "confirming" | "didYouApply";
 
 export function ApplyPanel({
   jobId,
   applicationType,
   applicationUrl,
   companyName,
+  initialSaved = false,
 }: {
   jobId: string;
   applicationType: string;
   applicationUrl: string | null;
   companyName: string;
+  initialSaved?: boolean;
 }) {
-  const [confirming, setConfirming] = useState(false);
+  const [modal, setModal] = useState<ModalState>("closed");
+  const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [saved, setSaved] = useState(initialSaved);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
-
-  function handleApplyClick() {
-    setConfirming(true);
-  }
 
   function handleConfirmRedirect() {
     startTransition(async () => {
-      await logApplyClick(jobId);
-      if (applicationUrl) window.location.href = applicationUrl;
+      const { applicationId } = await trackApplyClick(jobId, applicationUrl);
+      setApplicationId(applicationId);
+      // New tab, not a full-page redirect — this is what makes the
+      // post-redirect "did you apply?" prompt possible at all, since
+      // our own page stays open instead of navigating away.
+      if (applicationUrl) window.open(applicationUrl, "_blank", "noopener,noreferrer");
+      setModal(applicationId ? "didYouApply" : "closed");
+    });
+  }
+
+  function handleConfirmApplied() {
+    startTransition(async () => {
+      if (applicationId) await confirmApplied(applicationId);
+      setModal("closed");
     });
   }
 
   function handleSave() {
     startTransition(async () => {
+      if (saved) {
+        const result = await unsaveJob(jobId);
+        if (!result.error) setSaved(false);
+        return;
+      }
       const result = await saveJob(jobId);
-      setSaveMessage(result.error === "sign_in_required" ? "Sign in to save this job." : "Saved!");
+      if (result.error === "sign_in_required") {
+        setSaveMessage("Sign in to save this job.");
+        return;
+      }
+      if (!result.error) setSaved(true);
     });
   }
 
@@ -41,7 +65,7 @@ export function ApplyPanel({
       {applicationType === "external_url" ? (
         <>
           <button
-            onClick={handleApplyClick}
+            onClick={() => setModal("confirming")}
             className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700"
           >
             Apply Now
@@ -60,13 +84,15 @@ export function ApplyPanel({
       <button
         onClick={handleSave}
         disabled={isPending}
-        className="w-full border border-slate-300 py-2.5 rounded-md font-medium hover:bg-slate-50 disabled:opacity-50"
+        className={`w-full py-2.5 rounded-md font-medium disabled:opacity-50 ${
+          saved ? "bg-slate-900 text-white" : "border border-slate-300 hover:bg-slate-50"
+        }`}
       >
-        Save Job
+        {saved ? "Saved ✓" : "Save Job"}
       </button>
       {saveMessage && <p className="text-xs text-center text-slate-500">{saveMessage}</p>}
 
-      {confirming && (
+      {modal === "confirming" && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full">
             <h3 className="font-medium text-slate-900">You'll be redirected to {companyName}'s site</h3>
@@ -76,7 +102,7 @@ export function ApplyPanel({
             </p>
             <div className="flex gap-2 mt-4">
               <button
-                onClick={() => setConfirming(false)}
+                onClick={() => setModal("closed")}
                 className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
               >
                 Cancel
@@ -86,7 +112,34 @@ export function ApplyPanel({
                 disabled={isPending}
                 className="flex-1 bg-slate-900 text-white py-2 rounded-md text-sm disabled:opacity-50"
               >
-                {isPending ? "Redirecting…" : "Continue"}
+                {isPending ? "Opening…" : "Continue"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {modal === "didYouApply" && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="font-medium text-slate-900">Did you apply to this job?</h3>
+            <p className="text-sm text-slate-500 mt-2">
+              We opened {companyName}'s application page in a new tab. Let us know if you finished applying so we
+              can track it for you.
+            </p>
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => setModal("closed")}
+                className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
+              >
+                Not yet
+              </button>
+              <button
+                onClick={handleConfirmApplied}
+                disabled={isPending}
+                className="flex-1 bg-slate-900 text-white py-2 rounded-md text-sm disabled:opacity-50"
+              >
+                {isPending ? "Saving…" : "Yes, I applied"}
               </button>
             </div>
           </div>
