@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Upload, Search, UserRound, Bookmark, FileText, Bell } from "lucide-react";
 import { getCurrentUser, getFullProfile, profileCompletionPercent } from "@/features/profile/queries";
 import { getSavedJobs } from "@/features/jobs/queries";
 import { getApplicationsByStatus } from "@/features/applications/queries";
@@ -50,38 +51,68 @@ export default async function DashboardPage() {
 
       <Link
         href="/dashboard/resume"
-        className="block border rounded-lg p-4 bg-brand-600 text-white mt-4 hover:bg-brand-700 transition-colors"
+        className="flex items-center gap-3 border rounded-lg p-4 bg-brand-600 text-white mt-4 hover:bg-brand-700 transition-colors"
       >
-        <p className="font-medium">Upload your resume</p>
-        <p className="text-sm text-slate-300 mt-1">
-          We'll pull out your experience, education, skills, and certifications — you review before anything saves.
-        </p>
+        <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+          <Upload className="w-5 h-5" />
+        </div>
+        <div>
+          <p className="font-medium">Upload your resume</p>
+          <p className="text-sm text-brand-100 mt-0.5">
+            We'll pull out your experience, education, skills, and certifications — you review before anything saves.
+          </p>
+        </div>
       </Link>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
-        <Link href="/jobs" className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <p className="font-medium text-slate-900">Browse jobs</p>
-          <p className="text-sm text-slate-500 mt-1">Search real aviation openings.</p>
+        <Link href="/jobs" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <Search className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-medium text-slate-900">Browse jobs</p>
+            <p className="text-sm text-slate-500 mt-0.5">Search real aviation openings.</p>
+          </div>
         </Link>
-        <Link href="/dashboard/profile" className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <p className="font-medium text-slate-900">Your profile</p>
-          <p className="text-sm text-slate-500 mt-1">
-            {data.experience.length} experience · {data.education.length} education · {data.skills.length} skills
-          </p>
+        <Link href="/dashboard/profile" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <UserRound className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-medium text-slate-900">Your profile</p>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {data.experience.length} experience · {data.education.length} education · {data.skills.length} skills
+            </p>
+          </div>
         </Link>
-        <Link href="/dashboard/saved" className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <p className="font-medium text-slate-900">Saved jobs</p>
-          <p className="text-sm text-slate-500 mt-1">{savedJobs.length} saved</p>
+        <Link href="/dashboard/saved" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <Bookmark className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-medium text-slate-900">Saved jobs</p>
+            <p className="text-sm text-slate-500 mt-0.5">{savedJobs.length} saved</p>
+          </div>
         </Link>
-        <Link href="/dashboard/applications" className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <p className="font-medium text-slate-900">Applications</p>
-          <p className="text-sm text-slate-500 mt-1">{applicationCount} tracked</p>
+        <Link href="/dashboard/applications" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <FileText className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-medium text-slate-900">Applications</p>
+            <p className="text-sm text-slate-500 mt-0.5">{applicationCount} tracked</p>
+          </div>
         </Link>
-        <Link href="/dashboard/alerts" className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all sm:col-span-2">
-          <p className="font-medium text-slate-900">Job alerts</p>
-          <p className="text-sm text-slate-500 mt-1">
-            {alerts.filter((a: any) => a.is_active).length} active alert{alerts.filter((a: any) => a.is_active).length === 1 ? "" : "s"}
-          </p>
+        <Link href="/dashboard/alerts" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all sm:col-span-2">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+            <Bell className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-medium text-slate-900">Job alerts</p>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {alerts.filter((a: any) => a.is_active).length} active alert{alerts.filter((a: any) => a.is_active).length === 1 ? "" : "s"}
+            </p>
+          </div>
         </Link>
       </div>
     </div>

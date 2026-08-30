@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { DollarSign, TrendingUp, GraduationCap, ShieldCheck, Briefcase } from "lucide-react";
 import { getCareerBySlug } from "@/features/careers/queries";
 import { JobCard } from "@/components/jobs/JobCard";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 function fmt(n: number | null) {
   return n ? `$${Math.round(n).toLocaleString()}` : null;
@@ -19,27 +21,46 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         <Link href="/careers" className="hover:underline">Careers</Link>
         {career.career_categories?.name && <> / {career.career_categories.name}</>}
       </p>
-      <h1 className="text-2xl font-semibold text-slate-900 mt-1">{career.name}</h1>
-      <p className="text-slate-500 mt-1">{career.short_description}</p>
+      <div className="flex items-center gap-3 mt-3">
+        <div className="w-11 h-11 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+          <CategoryIcon name={career.career_categories?.name ?? career.name} />
+        </div>
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">{career.name}</h1>
+          <p className="text-slate-500 mt-0.5">{career.short_description}</p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-        <div className="border rounded-lg p-3 bg-white">
-          <p className="text-xs text-slate-500">Median salary</p>
-          <p className="font-semibold text-slate-900">{fmt(salary?.salary_p50) ?? "—"}</p>
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <DollarSign className="w-3.5 h-3.5" />
+            <p className="text-xs">Median salary</p>
+          </div>
+          <p className="font-semibold text-slate-900 mt-1">{fmt(salary?.salary_p50) ?? "—"}</p>
         </div>
-        <div className="border rounded-lg p-3 bg-white">
-          <p className="text-xs text-slate-500">Salary range</p>
-          <p className="font-semibold text-slate-900">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <TrendingUp className="w-3.5 h-3.5" />
+            <p className="text-xs">Salary range</p>
+          </div>
+          <p className="font-semibold text-slate-900 mt-1">
             {salary ? `${fmt(salary.salary_p10)}–${fmt(salary.salary_p90)}` : "—"}
           </p>
         </div>
-        <div className="border rounded-lg p-3 bg-white">
-          <p className="text-xs text-slate-500">Entry-level friendly</p>
-          <p className="font-semibold text-slate-900">{career.entry_level ? "Yes" : "No"}</p>
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <GraduationCap className="w-3.5 h-3.5" />
+            <p className="text-xs">Entry-level friendly</p>
+          </div>
+          <p className="font-semibold text-slate-900 mt-1">{career.entry_level ? "Yes" : "No"}</p>
         </div>
-        <div className="border rounded-lg p-3 bg-white">
-          <p className="text-xs text-slate-500">FAA regulated</p>
-          <p className="font-semibold text-slate-900">{career.regulated ? "Yes" : "No"}</p>
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <p className="text-xs">FAA regulated</p>
+          </div>
+          <p className="font-semibold text-slate-900 mt-1">{career.regulated ? "Yes" : "No"}</p>
         </div>
       </div>
 
@@ -113,7 +134,13 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
 
       <section className="border-t mt-10 pt-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900">Open jobs</h2>
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Briefcase className="w-5 h-5 text-brand-600" />
+            Open jobs
+            {jobs.length > 0 && (
+              <span className="text-xs font-medium bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full">{jobs.length}</span>
+            )}
+          </h2>
           <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline">
             View salary details →
           </Link>

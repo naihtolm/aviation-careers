@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { MapPin, Briefcase, ExternalLink } from "lucide-react";
 import { getCompanyBySlug } from "@/features/companies/queries";
 import { Tabs } from "@/components/ui/Tabs";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { RelationshipBadge } from "@/components/ui/RelationshipBadge";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -11,24 +14,28 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            {company.name}
-            {company.verification_status === "approved" && (
-              <span className="ml-2 text-sm text-brand-600 align-middle" title="Verified employer">✓ Verified</span>
-            )}
-          </h1>
-          <p className="text-slate-500 mt-1 capitalize">{company.company_type?.replace("_", " ")}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <CompanyLogo name={company.name} website={company.website} size={56} className="mt-1" />
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-900">
+              {company.name}
+              {company.verification_status === "approved" && (
+                <span className="ml-2 text-sm text-brand-600 align-middle" title="Verified employer">✓ Verified</span>
+              )}
+            </h1>
+            <p className="text-slate-500 mt-1 capitalize">{company.company_type?.replace("_", " ")}</p>
+          </div>
         </div>
         {company.website && (
           <a
             href={company.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm border rounded-md px-3 py-1.5 text-slate-600 shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-1.5 text-sm border rounded-md px-3 py-1.5 text-slate-600 shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all shrink-0"
           >
             Visit website
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
         )}
       </div>
@@ -43,11 +50,15 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               content: (
                 <div className="text-sm text-slate-600 space-y-2">
                   {company.locations?.city && (
-                    <p>
+                    <p className="inline-flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-slate-400" />
                       Headquarters: {company.locations.city}, {company.locations.state_code}
                     </p>
                   )}
-                  <p>{jobs.length} open job{jobs.length === 1 ? "" : "s"}</p>
+                  <p className="flex items-center gap-1.5">
+                    <Briefcase className="w-4 h-4 text-slate-400" />
+                    {jobs.length} open job{jobs.length === 1 ? "" : "s"}
+                  </p>
                 </div>
               ),
             },
@@ -79,7 +90,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                         <Link href={`/airports/${a.airports?.iata_code}`} className="text-brand-600 hover:underline">
                           {a.airports?.name} ({a.airports?.iata_code})
                         </Link>
-                        <span className="text-slate-400 ml-2 capitalize">{a.relationship_type.replace("_", " ")}</span>
+                        <RelationshipBadge type={a.relationship_type} className="text-slate-400 ml-2" />
                       </li>
                     ))}
                   </ul>

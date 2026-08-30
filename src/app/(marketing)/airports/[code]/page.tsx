@@ -1,8 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Plane, MapPin } from "lucide-react";
 import { getAirportByCode } from "@/features/airports/queries";
 import { JobCard } from "@/components/jobs/JobCard";
 import { Tabs } from "@/components/ui/Tabs";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { RelationshipBadge } from "@/components/ui/RelationshipBadge";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 export default async function AirportDetailPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
@@ -19,12 +23,20 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
       <p className="text-sm text-slate-500">
         <Link href="/airports" className="hover:underline">Airports</Link>
       </p>
-      <h1 className="text-2xl font-semibold text-slate-900 mt-1">
-        {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
-      </h1>
-      <p className="text-slate-500 mt-1">
-        {airport.city}, {airport.state}
-      </p>
+      <div className="flex items-center gap-3 mt-1">
+        <div className="w-11 h-11 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+          <Plane className="w-6 h-6" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">
+            {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
+          </h1>
+          <p className="text-slate-500 mt-0.5 flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5" />
+            {airport.city}, {airport.state}
+          </p>
+        </div>
+      </div>
 
       <div className="mt-8">
         <Tabs
@@ -53,10 +65,13 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
                       <Link
                         key={i}
                         href={`/companies/${c.companies?.slug}`}
-                        className="border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                        className="flex items-center gap-3 border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                       >
-                        <p className="font-medium text-slate-900 text-sm">{c.companies?.name}</p>
-                        <p className="text-xs text-slate-500 mt-0.5 capitalize">{c.relationship_type.replace("_", " ")}</p>
+                        <CompanyLogo name={c.companies?.name ?? "?"} website={c.companies?.website} size={32} />
+                        <div className="min-w-0">
+                          <p className="font-medium text-slate-900 text-sm truncate">{c.companies?.name}</p>
+                          <RelationshipBadge type={c.relationship_type} className="text-xs text-slate-500 mt-0.5" />
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -68,9 +83,12 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
                 careerNames.length === 0 ? (
                   <p className="text-sm text-slate-500">No career data yet for jobs at this airport.</p>
                 ) : (
-                  <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
+                  <ul className="space-y-2">
                     {careerNames.map((name) => (
-                      <li key={name as string}>{name as string}</li>
+                      <li key={name as string} className="flex items-center gap-2 text-sm text-slate-600">
+                        <CategoryIcon name={name as string} className="w-4 h-4 text-brand-600 shrink-0" />
+                        {name as string}
+                      </li>
                     ))}
                   </ul>
                 ),

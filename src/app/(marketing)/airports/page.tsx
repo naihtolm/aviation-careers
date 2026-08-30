@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plane, Briefcase } from "lucide-react";
 import { AirportMap } from "@/components/map/AirportMap";
 import { getAirports } from "@/features/airports/queries";
 
@@ -40,12 +41,21 @@ export default async function AirportDirectoryPage() {
                   href={`/airports/${code}`}
                   className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
-                  <p className="font-medium text-slate-900">
-                    {a.name} <span className="text-slate-400 font-normal">({code})</span>
-                  </p>
-                  <p className="text-sm text-slate-500 mt-1">
-                    {a.city}, {a.state} · {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
-                  </p>
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                      <Plane className="w-5 h-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium text-slate-900 truncate">
+                        {a.name} <span className="text-slate-400 font-normal">({code})</span>
+                      </p>
+                      <p className="text-sm text-slate-500 mt-1">{a.city}, {a.state}</p>
+                      <p className="flex items-center gap-1 text-sm text-slate-500 mt-0.5">
+                        <Briefcase className="w-3.5 h-3.5" />
+                        {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
+                      </p>
+                    </div>
+                  </div>
                 </Link>
               );
             })}

@@ -1,13 +1,14 @@
 import Link from "next/link";
+import { Briefcase, GraduationCap, DollarSign, Plane } from "lucide-react";
 import { getCurrentUser } from "@/features/profile/queries";
 import { getEmployerContext } from "@/features/employers/queries";
 import { signOut } from "@/features/auth/actions";
 
 const NAV_LINKS = [
-  { href: "/jobs", label: "Jobs" },
-  { href: "/careers", label: "Careers" },
-  { href: "/salaries", label: "Salaries" },
-  { href: "/airports", label: "Airports" },
+  { href: "/jobs", label: "Jobs", icon: Briefcase },
+  { href: "/careers", label: "Careers", icon: GraduationCap },
+  { href: "/salaries", label: "Salaries", icon: DollarSign },
+  { href: "/airports", label: "Airports", icon: Plane },
 ];
 
 export async function Header() {
@@ -22,7 +23,8 @@ export async function Header() {
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-slate-900">
+            <Link key={link.href} href={link.href} className="inline-flex items-center gap-1.5 hover:text-slate-900">
+              <link.icon className="w-4 h-4" />
               {link.label}
             </Link>
           ))}

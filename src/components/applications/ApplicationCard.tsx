@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { updateApplicationStatus, updateApplicationNotes } from "@/features/applications/actions";
 import { STATUSES } from "@/features/applications/constants";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 
 export function ApplicationCard({ application }: { application: any }) {
   const [isPending, startTransition] = useTransition();
@@ -23,11 +24,16 @@ export function ApplicationCard({ application }: { application: any }) {
   }
 
   return (
-    <div className="border rounded-lg p-3 bg-white">
-      <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-slate-900 hover:underline">
-        {application.jobs?.title}
-      </Link>
-      <p className="text-xs text-slate-500">{application.jobs?.companies?.name}</p>
+    <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+      <div className="flex items-start gap-2">
+        <CompanyLogo name={application.jobs?.companies?.name ?? "?"} website={application.jobs?.companies?.website} size={28} />
+        <div className="min-w-0">
+          <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-slate-900 hover:underline">
+            {application.jobs?.title}
+          </Link>
+          <p className="text-xs text-slate-500">{application.jobs?.companies?.name}</p>
+        </div>
+      </div>
 
       <select
         value={application.status}

@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { GraduationCap, ShieldCheck } from "lucide-react";
 import { getCareerCategories, getCareers } from "@/features/careers/queries";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 
 export default async function CareerDirectoryPage({
   searchParams,
@@ -44,14 +46,23 @@ export default async function CareerDirectoryPage({
               href={`/careers/${career.slug}`}
               className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
-              <p className="font-medium text-slate-900">{career.name}</p>
+              <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
+                <CategoryIcon name={career.career_categories?.name ?? career.name} className="w-5 h-5" />
+              </div>
+              <p className="font-medium text-slate-900 mt-3">{career.name}</p>
               <p className="text-sm text-slate-500 mt-1">{career.short_description}</p>
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {career.entry_level && (
-                  <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">Entry-level friendly</span>
+                  <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">
+                    <GraduationCap className="w-3.5 h-3.5" />
+                    Entry-level friendly
+                  </span>
                 )}
                 {career.regulated && (
-                  <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded">FAA regulated</span>
+                  <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    FAA regulated
+                  </span>
                 )}
               </div>
             </Link>

@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Flame } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
 import { AirportMap } from "@/components/map/AirportMap";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { getFeaturedJobs, getHomepageStats } from "@/features/jobs/queries";
 import { getCareerCategories } from "@/features/careers/queries";
@@ -89,7 +91,15 @@ export default async function HomePage() {
       <Reveal>
         <section className="max-w-6xl mx-auto px-4 py-14">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-semibold text-slate-900">Featured jobs</h2>
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-semibold text-slate-900">Featured jobs</h2>
+              {stats.newJobsThisWeek > 0 && (
+                <span className="inline-flex items-center gap-1 text-xs font-medium bg-orange-50 text-orange-600 px-2 py-1 rounded-full">
+                  <Flame className="w-3.5 h-3.5" />
+                  {stats.newJobsThisWeek} new this week
+                </span>
+              )}
+            </div>
             <Link href="/jobs" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
               View all jobs →
             </Link>
@@ -147,12 +157,15 @@ export default async function HomePage() {
                 <Link
                   key={c.id}
                   href={`/companies/${c.slug}`}
-                  className="border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  className="flex items-center gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
-                  <p className="font-medium text-slate-900">{c.name}</p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
-                  </p>
+                  <CompanyLogo name={c.name} website={(c as any).website} size={36} />
+                  <div className="min-w-0">
+                    <p className="font-medium text-slate-900 truncate">{c.name}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
+                    </p>
+                  </div>
                 </Link>
               ))}
             </div>

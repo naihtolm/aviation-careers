@@ -6,7 +6,7 @@ export async function getApplicationsByStatus(userId: string) {
   const { data } = await supabase
     .from("job_applications")
     .select(
-      "id, status, notes, applied_at, created_at, external_application_url, jobs ( id, title, slug, companies ( name, slug ) )"
+      "id, status, notes, applied_at, created_at, external_application_url, jobs ( id, title, slug, companies ( name, slug, website ) )"
     )
     .eq("user_id", userId)
     .order("created_at", { ascending: false });

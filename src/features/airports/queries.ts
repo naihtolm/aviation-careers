@@ -68,7 +68,7 @@ export async function getAirportByCode(code: string) {
   const [{ data: companyLinks }, { data: jobLocations }] = await Promise.all([
     supabase
       .from("company_airports")
-      .select("relationship_type, companies ( id, name, slug, company_type, status )")
+      .select("relationship_type, companies ( id, name, slug, website, company_type, status )")
       .eq("airport_id", airport.id)
       .eq("active", true),
     supabase
@@ -76,10 +76,11 @@ export async function getAirportByCode(code: string) {
       .select(
         `jobs (
           id, slug, title, status, employment_type, work_arrangement,
-          companies ( name, slug, verification_status ),
+          companies ( name, slug, website, verification_status ),
           careers ( name, slug ),
           job_locations ( is_primary, locations ( city, state_code ), airports ( city, state ) ),
-          job_compensation ( pay_type, currency, min_amount, max_amount, period, is_public )
+          job_compensation ( pay_type, currency, min_amount, max_amount, period, is_public ),
+          published_at
         )`
       )
       .eq("airport_id", airport.id),

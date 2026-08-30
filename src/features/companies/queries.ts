@@ -5,7 +5,7 @@ export async function getFeaturedCompanies(limit = 6) {
   const supabase = await createServerActionClient();
   const { data: companies } = await supabase
     .from("companies")
-    .select("id, name, slug, logo_path, company_type")
+    .select("id, name, slug, logo_path, website, company_type")
     .eq("status", "active")
     .limit(limit);
   if (!companies?.length) return [];

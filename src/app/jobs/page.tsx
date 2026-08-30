@@ -1,3 +1,4 @@
+import { Clock, TrendingUp, Home } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
 import { searchJobs, getSavedJobIds } from "@/features/jobs/queries";
@@ -56,7 +57,10 @@ export default async function JobSearchPage({
       <div className="mt-8 grid md:grid-cols-[220px_1fr] gap-8">
         <aside className="space-y-6 md:sticky md:top-24 md:self-start">
           <div>
-            <p className="text-sm font-medium text-slate-900 mb-2">Employment type</p>
+            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
+              <Clock className="w-4 h-4 text-brand-600" />
+              Employment type
+            </p>
             <ul className="space-y-1">
               {EMPLOYMENT_TYPES.map((v) => (
                 <li key={v}>
@@ -71,7 +75,10 @@ export default async function JobSearchPage({
             </ul>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-900 mb-2">Experience level</p>
+            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
+              <TrendingUp className="w-4 h-4 text-brand-600" />
+              Experience level
+            </p>
             <ul className="space-y-1">
               {EXPERIENCE_LEVELS.map((v) => (
                 <li key={v}>
@@ -86,7 +93,10 @@ export default async function JobSearchPage({
             </ul>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-900 mb-2">Work arrangement</p>
+            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
+              <Home className="w-4 h-4 text-brand-600" />
+              Work arrangement
+            </p>
             <ul className="space-y-1">
               {WORK_ARRANGEMENTS.map((v) => (
                 <li key={v}>

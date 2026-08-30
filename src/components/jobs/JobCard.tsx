@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { MapPin, Clock, Home, DollarSign } from "lucide-react";
 import { SaveJobButton } from "@/components/jobs/SaveJobButton";
+import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { timeAgo, isRecent } from "@/lib/time";
 
 function formatSalary(comp: any[] | undefined) {
   const row = (comp ?? []).find((c) => c.is_public);
@@ -22,22 +25,35 @@ function primaryLocation(jobLocations: any[] | undefined) {
 
 export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?: boolean }) {
   const salary = formatSalary(job.job_compensation);
+  const posted = job.published_at ? timeAgo(job.published_at) : null;
+  const fresh = isRecent(job.published_at);
+
   return (
     <Link
       href={`/jobs/${job.slug}`}
       className="block border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
     >
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="font-medium text-slate-900">{job.title}</h3>
-          <p className="text-sm text-slate-500 mt-0.5">
-            {job.companies?.name}
-            {job.companies?.verification_status === "approved" && (
-              <span className="ml-1 text-brand-600" title="Verified employer">✓</span>
-            )}
-          </p>
+        <div className="flex items-start gap-3 min-w-0">
+          <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={40} />
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <h3 className="font-medium text-slate-900">{job.title}</h3>
+              {fresh && (
+                <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">
+                  New
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {job.companies?.name}
+              {job.companies?.verification_status === "approved" && (
+                <span className="ml-1 text-brand-600" title="Verified employer">✓</span>
+              )}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {job.careers?.name && (
             <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded whitespace-nowrap">
               {job.careers.name}
@@ -47,11 +63,30 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
         </div>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
-        <span>{primaryLocation(job.job_locations)}</span>
-        {job.employment_type && <span className="capitalize">{job.employment_type.replace("_", " ")}</span>}
-        {job.work_arrangement && <span className="capitalize">{job.work_arrangement.replace("_", " ")}</span>}
-        {salary && <span className="text-slate-700 font-medium">{salary}</span>}
+        <span className="inline-flex items-center gap-1">
+          <MapPin className="w-3.5 h-3.5 shrink-0" />
+          {primaryLocation(job.job_locations)}
+        </span>
+        {job.employment_type && (
+          <span className="inline-flex items-center gap-1 capitalize">
+            <Clock className="w-3.5 h-3.5 shrink-0" />
+            {job.employment_type.replace("_", " ")}
+          </span>
+        )}
+        {job.work_arrangement && (
+          <span className="inline-flex items-center gap-1 capitalize">
+            <Home className="w-3.5 h-3.5 shrink-0" />
+            {job.work_arrangement.replace("_", " ")}
+          </span>
+        )}
+        {salary && (
+          <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
+            <DollarSign className="w-3.5 h-3.5 shrink-0" />
+            {salary}
+          </span>
+        )}
       </div>
+      {posted && <p className="text-xs text-slate-400 mt-2">Posted {posted}</p>}
     </Link>
   );
 }

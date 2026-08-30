@@ -4,7 +4,7 @@ import { createServerActionClient } from "@/lib/supabase/server";
 const JOB_SELECT = `
   id, slug, title, description, employment_type, experience_level,
   work_arrangement, application_type, application_url, published_at,
-  companies ( id, name, slug, logo_path, verification_status ),
+  companies ( id, name, slug, logo_path, website, verification_status ),
   careers ( id, name, slug ),
   job_locations ( id, is_primary, locations ( city, state_code, latitude, longitude ), airports ( iata_code, name, slug, city, state, latitude, longitude ) ),
   job_compensation ( pay_type, currency, min_amount, max_amount, period, is_public )
@@ -210,10 +210,17 @@ export async function getFeaturedJobs(limit = 6) {
 // cheap count-only queries, not full row fetches.
 export async function getHomepageStats() {
   const supabase = await createServerActionClient();
-  const [{ count: jobCount }, { count: companyCount }, { count: airportCount }] = await Promise.all([
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const [{ count: jobCount }, { count: companyCount }, { count: airportCount }, { count: newJobsThisWeek }] = await Promise.all([
     supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active"),
     supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "active"),
     supabase.from("airports").select("id", { count: "exact", head: true }).eq("active", true),
+    supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active").gte("published_at", sevenDaysAgo),
   ]);
-  return { jobCount: jobCount ?? 0, companyCount: companyCount ?? 0, airportCount: airportCount ?? 0 };
+  return {
+    jobCount: jobCount ?? 0,
+    companyCount: companyCount ?? 0,
+    airportCount: airportCount ?? 0,
+    newJobsThisWeek: newJobsThisWeek ?? 0,
+  };
 }
