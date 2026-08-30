@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { registerEmployer } from "@/features/employers/registration-actions";
+import { companyTypeLabel } from "@/lib/companyType";
 
 const COMPANY_TYPES = [
   "airline",
@@ -45,7 +46,7 @@ export default function EmployerSignUpPage() {
           <select name="companyType" defaultValue="other" className="w-full border rounded-md px-3 py-2 mt-1">
             {COMPANY_TYPES.map((t) => (
               <option key={t} value={t}>
-                {t.replace(/_/g, " ")}
+                {companyTypeLabel(t)}
               </option>
             ))}
           </select>

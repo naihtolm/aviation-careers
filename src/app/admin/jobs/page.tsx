@@ -1,5 +1,6 @@
 import { getAllJobsForAdmin } from "@/features/admin/queries";
 import { AdminJobsTable } from "@/components/admin/AdminJobsTable";
+import { titleCase } from "@/lib/text";
 
 const STATUSES = ["draft", "pending_review", "active", "paused", "expired", "archived", "rejected"];
 
@@ -36,7 +37,7 @@ export default async function AdminJobsPage({
           <option value="">Any status</option>
           {STATUSES.map((s) => (
             <option key={s} value={s}>
-              {s.replace("_", " ")}
+              {titleCase(s)}
             </option>
           ))}
         </select>

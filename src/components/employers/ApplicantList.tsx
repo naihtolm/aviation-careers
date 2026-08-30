@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { updateApplicationStatus } from "@/features/employers/applicant-actions";
+import { titleCase } from "@/lib/text";
 
 type Applicant = {
   id: string;
@@ -45,11 +46,11 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
                     await updateApplicationStatus(a.id, jobId, status);
                   });
                 }}
-                className="border rounded-md px-2 py-1.5 text-sm capitalize disabled:opacity-50"
+                className="border rounded-md px-2 py-1.5 text-sm disabled:opacity-50"
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
-                    {s}
+                    {titleCase(s)}
                   </option>
                 ))}
               </select>

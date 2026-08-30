@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { saveJob, unsaveJob } from "@/features/jobs/actions";
 
 export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; initialSaved?: boolean }) {
@@ -30,18 +31,22 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
   }
 
   return (
-    <span className="relative inline-block">
+    <span className="relative inline-block shrink-0">
       <button
         onClick={handleClick}
         disabled={isPending}
-        className={`text-sm border rounded-md px-2 py-1 disabled:opacity-50 ${
-          saved ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600 hover:border-slate-400"
+        title={saved ? "Remove from saved jobs" : "Save job"}
+        aria-label={saved ? "Remove from saved jobs" : "Save job"}
+        className={`w-8 h-8 flex items-center justify-center rounded-md border disabled:opacity-50 ${
+          saved
+            ? "bg-brand-50 border-brand-200 text-brand-600"
+            : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"
         }`}
       >
-        {saved ? "Saved ✓" : "Save"}
+        {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
       </button>
       {message && (
-        <span className="absolute top-full left-0 mt-1 text-xs text-red-600 bg-white border rounded px-2 py-1 whitespace-nowrap z-10">
+        <span className="absolute top-full right-0 mt-1 text-xs text-red-600 bg-white border rounded px-2 py-1 whitespace-nowrap z-10">
           {message}
         </span>
       )}

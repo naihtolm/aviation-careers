@@ -5,6 +5,7 @@ import { getCompanyBySlug } from "@/features/companies/queries";
 import { Tabs } from "@/components/ui/Tabs";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { RelationshipBadge } from "@/components/ui/RelationshipBadge";
+import { companyTypeLabel } from "@/lib/companyType";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -24,7 +25,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                 <span className="ml-2 text-sm text-brand-600 align-middle" title="Verified employer">✓ Verified</span>
               )}
             </h1>
-            <p className="text-slate-500 mt-1 capitalize">{company.company_type?.replace("_", " ")}</p>
+            <p className="text-slate-500 mt-1">{companyTypeLabel(company.company_type)}</p>
           </div>
         </div>
         {company.website && (

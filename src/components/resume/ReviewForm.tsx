@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { saveReviewedResumeData } from "@/features/resumes/actions";
 import type { ParsedResumeData, ReviewedExperience, ReviewedEducation } from "@/lib/resume-parsing";
+import { titleCase } from "@/lib/text";
 
 const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"];
 
@@ -84,7 +85,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                       <option value="">Employment type</option>
                       {EMPLOYMENT_TYPES.map((t) => (
                         <option key={t} value={t}>
-                          {t.replace("_", " ")}
+                          {titleCase(t)}
                         </option>
                       ))}
                     </select>

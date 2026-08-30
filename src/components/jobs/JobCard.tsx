@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Clock, Home, DollarSign } from "lucide-react";
+import { MapPin, Clock, Home, DollarSign, Tag } from "lucide-react";
 import { SaveJobButton } from "@/components/jobs/SaveJobButton";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { timeAgo, isRecent } from "@/lib/time";
@@ -33,36 +33,35 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
       href={`/jobs/${job.slug}`}
       className="block border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3 min-w-0">
-          <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={40} />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-medium text-slate-900">{job.title}</h3>
-              {fresh && (
-                <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">
-                  New
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-slate-500 mt-0.5">
+      <div className="flex items-start gap-3">
+        <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={40} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-medium text-slate-900 leading-snug min-w-0">{job.title}</h3>
+            <SaveJobButton jobId={job.id} initialSaved={initialSaved} />
+          </div>
+          <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+            <p className="text-sm text-slate-500">
               {job.companies?.name}
               {job.companies?.verification_status === "approved" && (
                 <span className="ml-1 text-brand-600" title="Verified employer">✓</span>
               )}
             </p>
+            {fresh && (
+              <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded shrink-0">
+                New
+              </span>
+            )}
           </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          {job.careers?.name && (
-            <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded whitespace-nowrap">
-              {job.careers.name}
-            </span>
-          )}
-          <SaveJobButton jobId={job.id} initialSaved={initialSaved} />
         </div>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
+        {job.careers?.name && (
+          <span className="inline-flex items-center gap-1">
+            <Tag className="w-3.5 h-3.5 shrink-0" />
+            {job.careers.name}
+          </span>
+        )}
         <span className="inline-flex items-center gap-1">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
           {primaryLocation(job.job_locations)}

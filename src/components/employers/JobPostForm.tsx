@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { createJobPosting, updateJobPosting, type ScreeningQuestion } from "@/features/employers/job-post-actions";
+import { titleCase } from "@/lib/text";
 
 const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"];
 const WORK_ARRANGEMENTS = ["on_site", "hybrid", "remote"];
@@ -129,7 +130,7 @@ export function JobPostForm({
           <select value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="w-full border rounded-md px-3 py-2 mt-1">
             {EMPLOYMENT_TYPES.map((t) => (
               <option key={t} value={t}>
-                {t.replace("_", " ")}
+                {titleCase(t)}
               </option>
             ))}
           </select>
@@ -145,7 +146,7 @@ export function JobPostForm({
         <select value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value)} className="w-full border rounded-md px-3 py-2">
           {WORK_ARRANGEMENTS.map((w) => (
             <option key={w} value={w}>
-              {w.replace("_", " ")}
+              {titleCase(w)}
             </option>
           ))}
         </select>

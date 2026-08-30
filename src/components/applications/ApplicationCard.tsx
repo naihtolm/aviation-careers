@@ -5,6 +5,7 @@ import Link from "next/link";
 import { updateApplicationStatus, updateApplicationNotes } from "@/features/applications/actions";
 import { STATUSES } from "@/features/applications/constants";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
+import { titleCase } from "@/lib/text";
 
 export function ApplicationCard({ application }: { application: any }) {
   const [isPending, startTransition] = useTransition();
@@ -39,11 +40,11 @@ export function ApplicationCard({ application }: { application: any }) {
         value={application.status}
         onChange={handleStatusChange}
         disabled={isPending}
-        className="w-full border rounded px-2 py-1 text-xs mt-2 capitalize"
+        className="w-full border rounded px-2 py-1 text-xs mt-2"
       >
         {STATUSES.map((s) => (
           <option key={s} value={s}>
-            {s}
+            {titleCase(s)}
           </option>
         ))}
       </select>

@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { reviewEmployerVerification } from "@/features/employers/admin-actions";
+import { companyTypeLabel } from "@/lib/companyType";
 
 export function EmployerVerificationCard({ verification }: { verification: any }) {
   const [isPending, startTransition] = useTransition();
@@ -17,7 +18,7 @@ export function EmployerVerificationCard({ verification }: { verification: any }
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-medium text-slate-900">{company?.name}</h3>
-          <p className="text-sm text-slate-500 capitalize">{company?.company_type?.replace(/_/g, " ")}</p>
+          <p className="text-sm text-slate-500">{companyTypeLabel(company?.company_type)}</p>
           {company?.website && (
             <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               {company.website}
