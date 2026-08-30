@@ -28,7 +28,7 @@ export function ApplicationCard({ application }: { application: any }) {
       <div className="flex items-start gap-2">
         <CompanyLogo name={application.jobs?.companies?.name ?? "?"} website={application.jobs?.companies?.website} size={28} />
         <div className="min-w-0">
-          <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-slate-900 hover:underline">
+          <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-slate-900 hover:underline hover:text-brand-600 transition-colors">
             {application.jobs?.title}
           </Link>
           <p className="text-xs text-slate-500">{application.jobs?.companies?.name}</p>

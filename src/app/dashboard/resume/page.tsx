@@ -21,7 +21,7 @@ export default async function ResumePage() {
   return (
     <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
           ← Dashboard
         </Link>
         <h1 className="text-2xl font-semibold text-slate-900 mt-1">Resume</h1>
@@ -39,7 +39,7 @@ export default async function ResumePage() {
             {downloadUrl && (
               <>
                 {" · "}
-                <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">
+                <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                   View file
                 </a>
               </>
@@ -55,7 +55,7 @@ export default async function ResumePage() {
           {latest.resume.upload_status === "processed" && (
             <div className="mt-3 bg-emerald-50 rounded-md p-3">
               <p className="text-sm text-emerald-800">We found information in your resume.</p>
-              <Link href="/dashboard/resume/review" className="text-sm text-brand-600 hover:underline mt-1 inline-block">
+              <Link href="/dashboard/resume/review" className="text-sm text-brand-600 hover:underline mt-1 inline-block hover:text-brand-700 transition-colors">
                 Review and add to profile →
               </Link>
             </div>
@@ -67,7 +67,7 @@ export default async function ResumePage() {
                 We couldn't process this file automatically. No problem — you can still build out your profile by
                 hand.
               </p>
-              <Link href="/dashboard/profile" className="text-sm text-brand-600 hover:underline mt-1 inline-block">
+              <Link href="/dashboard/profile" className="text-sm text-brand-600 hover:underline mt-1 inline-block hover:text-brand-700 transition-colors">
                 Go to profile →
               </Link>
             </div>

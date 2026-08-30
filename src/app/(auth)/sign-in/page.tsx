@@ -37,10 +37,10 @@ export default function SignInPage() {
       </form>
 
       <div className="flex justify-between text-sm text-slate-500 mt-4">
-        <Link href="/sign-up" className="text-brand-600 hover:underline">
+        <Link href="/sign-up" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
           Create an account
         </Link>
-        <Link href="/reset-password" className="hover:underline">
+        <Link href="/reset-password" className="hover:underline hover:text-slate-900 transition-colors">
           Forgot password?
         </Link>
       </div>

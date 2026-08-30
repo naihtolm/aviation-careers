@@ -247,7 +247,7 @@ export function JobPostForm({
               </div>
             ))}
             {questions.length < 3 && (
-              <button type="button" onClick={addQuestion} className="text-sm text-brand-600 hover:underline">
+              <button type="button" onClick={addQuestion} className="text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                 + Add screening question ({questions.length}/3)
               </button>
             )}

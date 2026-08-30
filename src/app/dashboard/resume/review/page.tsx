@@ -17,7 +17,7 @@ export default async function ResumeReviewPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <p className="text-sm text-slate-500">
-        <Link href="/dashboard/resume" className="hover:underline">
+        <Link href="/dashboard/resume" className="hover:underline hover:text-slate-900 transition-colors">
           Resume
         </Link>
       </p>

@@ -229,7 +229,7 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
             return (
               <li key={m.id} className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: tier.color }} />
-                <a href={m.href} className="text-brand-600 hover:underline text-sm">
+                <a href={m.href} className="text-brand-600 hover:underline text-sm hover:text-brand-700 transition-colors">
                   {m.name} ({m.code}) — {m.jobCount} job{m.jobCount === 1 ? "" : "s"}
                 </a>
               </li>

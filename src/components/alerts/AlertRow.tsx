@@ -26,14 +26,14 @@ export function AlertRow({ alert }: { alert: any }) {
         <button
           onClick={() => startTransition(() => toggleAlert(alert.id, !alert.is_active))}
           disabled={isPending}
-          className="text-slate-600 hover:underline disabled:opacity-50"
+          className="text-slate-600 hover:underline disabled:opacity-50 hover:text-slate-900 transition-colors"
         >
           {alert.is_active ? "Pause" : "Resume"}
         </button>
         <button
           onClick={() => startTransition(() => deleteAlert(alert.id))}
           disabled={isPending}
-          className="text-red-600 hover:underline disabled:opacity-50"
+          className="text-red-600 hover:underline disabled:opacity-50 hover:text-red-700 transition-colors"
         >
           Delete
         </button>

@@ -37,7 +37,7 @@ export function MatchCard({ jobId }: { jobId: string }) {
       <div className="border rounded-lg p-4 bg-slate-50">
         <p className="font-medium text-slate-900 text-sm">Check My Match</p>
         <p className="text-sm text-slate-500 mt-1">
-          <Link href="/sign-in" className="text-brand-600 hover:underline">
+          <Link href="/sign-in" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
             Sign in
           </Link>{" "}
           and complete your profile to see how well you match this job's requirements.
@@ -85,7 +85,7 @@ export function MatchCard({ jobId }: { jobId: string }) {
         </ul>
       )}
 
-      <Link href="/dashboard/profile" className="text-xs text-brand-600 hover:underline mt-3 inline-block">
+      <Link href="/dashboard/profile" className="text-xs text-brand-600 hover:underline mt-3 inline-block hover:text-brand-700 transition-colors">
         Update your profile →
       </Link>
     </div>

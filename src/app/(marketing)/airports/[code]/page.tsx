@@ -22,7 +22,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <p className="text-sm text-slate-500">
-        <Link href="/airports" className="hover:underline">Airports</Link>
+        <Link href="/airports" className="hover:underline hover:text-slate-900 transition-colors">Airports</Link>
       </p>
       <div className="flex items-center gap-3 mt-1">
         <div className="w-11 h-11 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
@@ -106,7 +106,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
               content: (
                 <p className="text-sm text-slate-500">
                   Airport-level salary breakdowns aren't available yet — visit the{" "}
-                  <Link href="/salaries" className="text-brand-600 hover:underline">
+                  <Link href="/salaries" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                     Salary Explorer
                   </Link>{" "}
                   for national data by career.

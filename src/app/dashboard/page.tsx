@@ -44,7 +44,7 @@ export default async function DashboardPage() {
           <div className="bg-brand-600 h-2 rounded-full" style={{ width: `${completion}%` }} />
         </div>
         <p className="text-sm text-slate-500 mt-3">{nextStepSuggestion(data)}</p>
-        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
+        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
           Edit profile →
         </Link>
       </div>

@@ -50,7 +50,7 @@ export function ListSection({
               <button
                 onClick={() => handleDelete(item.id)}
                 disabled={isPending}
-                className="text-xs text-red-600 hover:underline disabled:opacity-50"
+                className="text-xs text-red-600 hover:underline disabled:opacity-50 hover:text-red-700 transition-colors"
               >
                 Remove
               </button>

@@ -51,7 +51,7 @@ export default async function AdminDataQualityPage() {
           description="No job_locations row — will show as location not specified."
           items={issues.missingLocation}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               {j.title}
             </Link>
           )}
@@ -61,7 +61,7 @@ export default async function AdminDataQualityPage() {
           description="No salary range on file at all."
           items={issues.missingCompensation}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               {j.title}
             </Link>
           )}
@@ -71,7 +71,7 @@ export default async function AdminDataQualityPage() {
           description="Under 40 characters, or missing entirely."
           items={issues.missingDescription}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               {j.title}
             </Link>
           )}
@@ -93,7 +93,7 @@ export default async function AdminDataQualityPage() {
           description="Raw job records received more than 3 days ago, still unreviewed."
           items={issues.stalePendingIngestion}
           renderItem={(r) => (
-            <Link href="/admin/jobs/review" className="text-brand-600 hover:underline">
+            <Link href="/admin/jobs/review" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               Received {new Date(r.received_at).toLocaleDateString()}
             </Link>
           )}

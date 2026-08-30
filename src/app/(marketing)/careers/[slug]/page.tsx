@@ -18,7 +18,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <p className="text-sm text-slate-500">
-        <Link href="/careers" className="hover:underline">Careers</Link>
+        <Link href="/careers" className="hover:underline hover:text-slate-900 transition-colors">Careers</Link>
         {career.career_categories?.name && <> / {career.career_categories.name}</>}
       </p>
       <div className="flex items-center gap-3 mt-3">
@@ -141,7 +141,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
               <span className="text-xs font-medium bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full">{jobs.length}</span>
             )}
           </h2>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline">
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
             View salary details →
           </Link>
         </div>

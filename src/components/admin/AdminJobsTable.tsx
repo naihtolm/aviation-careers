@@ -57,7 +57,7 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
             <tr key={job.id} className="border-t">
               <td className="px-3 py-2">
                 {job.status === "active" ? (
-                  <Link href={`/jobs/${job.slug}`} className="text-slate-900 hover:underline">
+                  <Link href={`/jobs/${job.slug}`} className="text-slate-900 hover:underline hover:text-brand-600 transition-colors">
                     {job.title}
                   </Link>
                 ) : (

@@ -23,7 +23,7 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
         ← Dashboard
       </Link>
       <h1 className="text-2xl font-semibold text-slate-900 mt-1">Applications</h1>
@@ -34,7 +34,7 @@ export default async function ApplicationsPage() {
           <p className="text-sm text-slate-500 mt-1">
             When you click Apply on a job, we'll track it here so you can follow up.
           </p>
-          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
+          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
             Browse jobs →
           </Link>
         </div>

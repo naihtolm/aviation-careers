@@ -24,11 +24,11 @@ export function RemoveResumeButton({ resumeId }: { resumeId: string }) {
   if (confirming) {
     return (
       <span>
-        <button onClick={handleClick} disabled={isPending} className="text-red-600 font-medium hover:underline disabled:opacity-50">
+        <button onClick={handleClick} disabled={isPending} className="text-red-600 font-medium hover:underline disabled:opacity-50 hover:text-red-700 transition-colors">
           {isPending ? "Removing…" : "Confirm remove?"}
         </button>
         {" · "}
-        <button onClick={() => setConfirming(false)} disabled={isPending} className="text-slate-500 hover:underline">
+        <button onClick={() => setConfirming(false)} disabled={isPending} className="text-slate-500 hover:underline hover:text-slate-900 transition-colors">
           Cancel
         </button>
       </span>
@@ -36,7 +36,7 @@ export function RemoveResumeButton({ resumeId }: { resumeId: string }) {
   }
 
   return (
-    <button onClick={handleClick} className="text-red-600 hover:underline">
+    <button onClick={handleClick} className="text-red-600 hover:underline hover:text-red-700 transition-colors">
       Remove
     </button>
   );

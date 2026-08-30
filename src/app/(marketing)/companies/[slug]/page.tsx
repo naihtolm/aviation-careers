@@ -87,7 +87,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                   <ul className="space-y-1">
                     {airportLinks.map((a: any, i: number) => (
                       <li key={i} className="text-sm">
-                        <Link href={`/airports/${a.airports?.iata_code}`} className="text-brand-600 hover:underline">
+                        <Link href={`/airports/${a.airports?.iata_code}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                           {a.airports?.name} ({a.airports?.iata_code})
                         </Link>
                         <RelationshipBadge type={a.relationship_type} className="text-slate-400 ml-2" />

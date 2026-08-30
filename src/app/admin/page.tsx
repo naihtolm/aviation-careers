@@ -38,7 +38,7 @@ export default async function AdminOverviewPage() {
             {stats.pendingVerifications > 0 && (
               <Link
                 href="/admin/employers"
-                className="block border border-amber-300 bg-amber-50 rounded-lg p-3 text-sm text-amber-900 hover:bg-amber-100"
+                className="block border border-amber-300 bg-amber-50 rounded-lg p-3 text-sm text-amber-900 hover:bg-amber-100 transition-colors"
               >
                 {stats.pendingVerifications} employer{stats.pendingVerifications === 1 ? "" : "s"} waiting on verification →
               </Link>
@@ -46,7 +46,7 @@ export default async function AdminOverviewPage() {
             {stats.pendingIngestion > 0 && (
               <Link
                 href="/admin/jobs/review"
-                className="block border border-amber-300 bg-amber-50 rounded-lg p-3 text-sm text-amber-900 hover:bg-amber-100"
+                className="block border border-amber-300 bg-amber-50 rounded-lg p-3 text-sm text-amber-900 hover:bg-amber-100 transition-colors"
               >
                 {stats.pendingIngestion} ingested job{stats.pendingIngestion === 1 ? "" : "s"} waiting on review →
               </Link>

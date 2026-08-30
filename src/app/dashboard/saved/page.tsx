@@ -12,7 +12,7 @@ export default async function SavedJobsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
         ← Dashboard
       </Link>
       <h1 className="text-2xl font-semibold text-slate-900 mt-1">Saved Jobs</h1>
@@ -21,7 +21,7 @@ export default async function SavedJobsPage() {
         <div className="border rounded-lg p-8 text-center bg-white mt-6">
           <p className="text-slate-900 font-medium">No saved jobs yet</p>
           <p className="text-sm text-slate-500 mt-1">Save jobs you're interested in to find them here later.</p>
-          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
+          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
             Browse jobs →
           </Link>
         </div>

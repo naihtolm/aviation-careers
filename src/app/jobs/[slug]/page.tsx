@@ -64,7 +64,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               </div>
               <p className="text-slate-600 mt-1">
                 {job.companies?.slug ? (
-                  <Link href={`/companies/${job.companies.slug}`} className="hover:underline">
+                  <Link href={`/companies/${job.companies.slug}`} className="hover:underline hover:text-slate-900 transition-colors">
                     {job.companies?.name}
                   </Link>
                 ) : (

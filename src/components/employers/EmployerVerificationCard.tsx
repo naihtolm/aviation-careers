@@ -19,7 +19,7 @@ export function EmployerVerificationCard({ verification }: { verification: any }
           <h3 className="font-medium text-slate-900">{company?.name}</h3>
           <p className="text-sm text-slate-500 capitalize">{company?.company_type?.replace(/_/g, " ")}</p>
           {company?.website && (
-            <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline">
+            <a href={company.website} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
               {company.website}
             </a>
           )}

@@ -14,7 +14,7 @@ export default async function AlertsPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
           ← Dashboard
         </Link>
         <h1 className="text-2xl font-semibold text-slate-900 mt-1">Job Alerts</h1>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { UploadCloud, FileCheck2 } from "lucide-react";
 import { uploadResume } from "@/features/resumes/actions";
 
 export function UploadForm() {
@@ -18,15 +19,28 @@ export function UploadForm() {
 
   return (
     <form action={handleSubmit} className="border rounded-lg p-6 bg-white">
-      <label className="block">
-        <span className="text-sm font-medium text-slate-900">Upload your resume</span>
-        <p className="text-xs text-slate-500 mt-1 mb-3">PDF or DOCX, up to 10 MB.</p>
+      <span className="text-sm font-medium text-slate-900">Upload your resume</span>
+      {/* A bare <input type="file"> renders as a tiny native button with no
+          visible boundary -- wrapping it in a dashed, clickable card makes
+          the whole tap target obvious and gives clear before/after states. */}
+      <label
+        className={`mt-3 flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-lg px-6 py-8 text-center cursor-pointer transition-colors ${
+          fileName ? "border-brand-300 bg-brand-50/50" : "border-slate-300 hover:border-brand-400 hover:bg-brand-50/40"
+        }`}
+      >
+        {fileName ? (
+          <FileCheck2 className="w-6 h-6 text-brand-600" />
+        ) : (
+          <UploadCloud className="w-6 h-6 text-slate-400" />
+        )}
+        <span className="text-sm font-medium text-slate-700">{fileName ?? "Click to choose a file"}</span>
+        <span className="text-xs text-slate-400">PDF or DOCX, up to 10 MB</span>
         <input
           type="file"
           name="file"
           accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
-          className="text-sm"
+          className="sr-only"
         />
       </label>
 

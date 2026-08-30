@@ -37,7 +37,7 @@ export default async function SalaryDetailPage({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <p className="text-sm text-slate-500">
-        <Link href="/salaries" className="hover:underline">Salaries</Link> / {career.name}
+        <Link href="/salaries" className="hover:underline hover:text-slate-900 transition-colors">Salaries</Link> / {career.name}
       </p>
       <h1 className="text-2xl font-semibold text-slate-900 mt-1">
         {career.name} Salary — {locationLabel}
@@ -46,7 +46,7 @@ export default async function SalaryDetailPage({
       {!aggregate ? (
         <div className="border rounded-lg p-6 bg-slate-50 mt-6 text-center">
           <p className="font-medium text-slate-900">No salary data yet for this location</p>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline mt-2 inline-block">
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline mt-2 inline-block hover:text-brand-700 transition-colors">
             View national data instead →
           </Link>
         </div>

@@ -67,7 +67,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
               {job.derived === "draft" ? (
                 <span className="font-medium text-slate-900">{job.title || "Untitled draft"}</span>
               ) : (
-                <Link href={`/jobs/${job.slug}`} className="font-medium text-slate-900 hover:underline">
+                <Link href={`/jobs/${job.slug}`} className="font-medium text-slate-900 hover:underline hover:text-brand-600 transition-colors">
                   {job.title}
                 </Link>
               )}
@@ -80,7 +80,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                     {job.application_type === "platform_application" && (
                       <>
                         {" · "}
-                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-brand-600 hover:underline">
+                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                           {job.applicantCount} applicant{job.applicantCount === 1 ? "" : "s"}
                         </Link>
                       </>
