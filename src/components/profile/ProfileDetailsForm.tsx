@@ -1,7 +1,9 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { MapPin } from "lucide-react";
 import { updateProfile } from "@/features/profile/actions";
+import { fetchPlaceSuggestions, type PlaceSuggestion } from "@/lib/mapboxPlaces";
 
 const EXPERIENCE_LEVELS = [
   { value: "no_experience", label: "No experience" },
@@ -24,6 +26,38 @@ export function ProfileDetailsForm({
   careerInterestIds: string[];
 }) {
   const [isPending, startTransition] = useTransition();
+  const [city, setCity] = useState(seekerProfile?.city ?? "");
+  const [state, setState] = useState(seekerProfile?.state ?? "");
+  const [citySuggestions, setCitySuggestions] = useState<PlaceSuggestion[]>([]);
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+  const cityFieldRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (city.trim().length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
+    const requestCity = city;
+    const timer = setTimeout(async () => {
+      const results = await fetchPlaceSuggestions(requestCity);
+      setCitySuggestions(results);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [city]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (cityFieldRef.current && !cityFieldRef.current.contains(e.target as Node)) setCityDropdownOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function selectCity(suggestion: PlaceSuggestion) {
+    setCity(suggestion.city);
+    if (suggestion.stateCode) setState(suggestion.stateCode);
+    setCityDropdownOpen(false);
+  }
 
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
@@ -91,13 +125,47 @@ export function ProfileDetailsForm({
       </label>
 
       <div className="grid grid-cols-2 gap-3">
-        <label className="block text-sm">
-          City
-          <input name="city" defaultValue={seekerProfile?.city ?? ""} className="w-full border rounded-md px-3 py-2 mt-1" />
-        </label>
+        <div ref={cityFieldRef} className="relative">
+          <label className="block text-sm">
+            City
+            <input
+              name="city"
+              value={city}
+              onChange={(e) => {
+                setCity(e.target.value);
+                setCityDropdownOpen(true);
+              }}
+              onFocus={() => setCityDropdownOpen(true)}
+              autoComplete="off"
+              className="w-full border rounded-md px-3 py-2 mt-1"
+            />
+          </label>
+          {cityDropdownOpen && citySuggestions.length > 0 && (
+            <ul className="absolute left-0 right-0 top-full mt-1 bg-white border rounded-md shadow-lg z-20 max-h-56 overflow-auto text-sm">
+              {citySuggestions.map((s) => (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => selectCity(s)}
+                    className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-slate-50 transition-colors"
+                  >
+                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                    <span className="text-slate-900">{s.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <label className="block text-sm">
           State
-          <input name="state" defaultValue={seekerProfile?.state ?? ""} className="w-full border rounded-md px-3 py-2 mt-1" />
+          <input
+            name="state"
+            value={state}
+            onChange={(e) => setState(e.target.value)}
+            className="w-full border rounded-md px-3 py-2 mt-1"
+          />
         </label>
       </div>
 

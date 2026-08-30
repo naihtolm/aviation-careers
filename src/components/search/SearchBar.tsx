@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { LocationAutocomplete } from "@/components/search/LocationAutocomplete";
 
 export function SearchBar({
   defaultKeyword = "",
@@ -35,12 +36,11 @@ export function SearchBar({
         onChange={(e) => setKeyword(e.target.value)}
       />
       <div className="hidden sm:block w-px bg-slate-200" />
-      <input
-        type="text"
+      <LocationAutocomplete
         placeholder="City, state, or airport"
-        className="flex-1 px-3 py-2 outline-none"
+        className="w-full px-3 py-2 outline-none"
         value={location}
-        onChange={(e) => setLocation(e.target.value)}
+        onChange={setLocation}
       />
       <button
         type="submit"
