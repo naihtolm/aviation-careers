@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createServerActionClient } from "@/lib/supabase/server";
+import { getEmployerContext } from "@/features/employers/queries";
 
 export async function signUp(formData: FormData) {
   const email = String(formData.get("email") ?? "");
@@ -27,6 +28,10 @@ export async function signIn(formData: FormData) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const employerContext = await getEmployerContext(user!.id);
+  if (employerContext) redirect("/employer/dashboard");
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("onboarding_completed")

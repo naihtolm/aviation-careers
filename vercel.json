@@ -1,6 +1,7 @@
 {
   "crons": [
     { "path": "/api/cron/ingest-jobs", "schedule": "0 13 * * *" },
-    { "path": "/api/cron/send-alerts", "schedule": "0 14 * * *" }
+    { "path": "/api/cron/send-alerts", "schedule": "0 14 * * *" },
+    { "path": "/api/cron/expire-jobs", "schedule": "0 15 * * *" }
   ]
 }

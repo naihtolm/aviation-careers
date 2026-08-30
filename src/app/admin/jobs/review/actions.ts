@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
 import { decodeHtmlEntities } from "@/lib/html";
+import { findOrCreateLocation } from "@/lib/locations";
 
 async function assertIsAdmin() {
   const supabase = await createServerActionClient();
@@ -47,13 +48,20 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
 
+    // status: 'active' -- an admin approving a raw ingested job has already
+    // vetted the source company by definition (they're the one clicking
+    // Approve). There's no separate "activate this ingestion-created
+    // company" screen anywhere in the app, so defaulting to 'pending' here
+    // would leave the company (and every job under it) permanently
+    // invisible to the public (companies_public_read requires status =
+    // 'active') until someone manually fixes it in the database.
     const { data: company, error: companyError } = await db
       .from("companies")
       .insert({
         name: input.newCompanyName,
         slug,
         company_type: "other", // admin can refine later via company management UI
-        status: "pending",
+        status: "active",
       })
       .select("id")
       .single();
@@ -96,16 +104,10 @@ export async function approveRawJob(input: ApproveRawJobInput) {
 
   if (jobError) throw new Error(`Failed to create job: ${jobError.message}`);
 
-  // 3. Location (free text for now — normalized `locations` matching is Phase 1.5+)
-  if (input.city || input.state) {
-    await db.from("job_locations").insert({
-      job_id: job.id,
-      is_primary: true,
-      // location_id intentionally left null until we run city/state through
-      // the `locations` table matcher; storing the raw text on job_events
-      // metadata or a future job_locations.raw_text column is the
-      // Phase 1.5 follow-up if this manual step turns out to be common.
-    });
+  // 3. Location
+  if (input.city && input.state) {
+    const locationId = await findOrCreateLocation(input.city, input.state);
+    await db.from("job_locations").insert({ job_id: job.id, location_id: locationId, is_primary: true });
   }
 
   // 4. Compensation

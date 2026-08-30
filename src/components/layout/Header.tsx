@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCurrentUser } from "@/features/profile/queries";
+import { getEmployerContext } from "@/features/employers/queries";
 import { signOut } from "@/features/auth/actions";
 
 const NAV_LINKS = [
@@ -11,6 +12,7 @@ const NAV_LINKS = [
 
 export async function Header() {
   const user = await getCurrentUser();
+  const employerContext = user ? await getEmployerContext(user.id) : null;
 
   return (
     <header className="border-b bg-white sticky top-0 z-40">
@@ -31,7 +33,7 @@ export async function Header() {
           </Link>
           {user ? (
             <>
-              <Link href="/dashboard" className="text-slate-600 hover:text-slate-900">
+              <Link href={employerContext ? "/employer/dashboard" : "/dashboard"} className="text-slate-600 hover:text-slate-900">
                 Dashboard
               </Link>
               <form action={signOut}>

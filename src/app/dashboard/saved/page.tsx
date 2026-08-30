@@ -12,7 +12,10 @@ export default async function SavedJobsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-slate-900">Saved Jobs</h1>
+      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+        ← Dashboard
+      </Link>
+      <h1 className="text-2xl font-semibold text-slate-900 mt-1">Saved Jobs</h1>
 
       {jobs.length === 0 ? (
         <div className="border rounded-lg p-8 text-center bg-white mt-6">

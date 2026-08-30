@@ -71,6 +71,37 @@ export async function updateApplicationStatus(applicationId: string, status: str
   revalidatePath("/dashboard/applications");
 }
 
+export async function submitNativeApplication(jobId: string, screeningAnswers: Record<string, string>) {
+  const { supabase, user } = await requireUser();
+  if (!user) return { error: "sign_in_required" as const };
+
+  const { data: resume } = await supabase.from("resumes").select("id").eq("user_id", user.id).eq("is_primary", true).maybeSingle();
+  if (!resume) return { error: "resume_required" as const };
+
+  const { data: existing } = await supabase
+    .from("job_applications")
+    .select("id, status")
+    .eq("user_id", user.id)
+    .eq("job_id", jobId)
+    .maybeSingle();
+  if (existing?.status === "applied") return { error: "already_applied" as const };
+
+  const payload = {
+    status: "applied" as const,
+    applied_at: new Date().toISOString(),
+    source: "platform",
+    screening_answers: screeningAnswers,
+  };
+
+  const { error } = existing
+    ? await supabase.from("job_applications").update(payload).eq("id", existing.id)
+    : await supabase.from("job_applications").insert({ ...payload, user_id: user.id, job_id: jobId });
+
+  if (error) return { error: error.message };
+  revalidatePath("/dashboard/applications");
+  return { success: true as const };
+}
+
 export async function updateApplicationNotes(applicationId: string, notes: string) {
   const { supabase, user } = await requireUser();
   if (!user) return;

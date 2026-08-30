@@ -16,30 +16,36 @@ export default async function AirportDirectoryPage() {
         <>
           <div className="mt-6">
             <AirportMap
-              markers={airports.map((a: any) => ({
-                id: a.id,
-                latitude: a.latitude,
-                longitude: a.longitude,
-                label: `${a.name} (${a.iata_code})`,
-                href: `/airports/${a.iata_code}`,
-              }))}
+              markers={airports.map((a: any) => {
+                const code = a.iata_code ?? a.icao_code;
+                return {
+                  id: a.id,
+                  latitude: a.latitude,
+                  longitude: a.longitude,
+                  label: `${a.name} (${code})`,
+                  href: `/airports/${code}`,
+                };
+              })}
             />
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
-            {airports.map((a: any) => (
-              <Link
-                key={a.id}
-                href={`/airports/${a.iata_code}`}
-                className="border rounded-lg p-4 bg-white hover:border-slate-400"
-              >
-                <p className="font-medium text-slate-900">
-                  {a.name} <span className="text-slate-400 font-normal">({a.iata_code})</span>
-                </p>
-                <p className="text-sm text-slate-500 mt-1">
-                  {a.city}, {a.state} · {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
-                </p>
-              </Link>
-            ))}
+            {airports.map((a: any) => {
+              const code = a.iata_code ?? a.icao_code;
+              return (
+                <Link
+                  key={a.id}
+                  href={`/airports/${code}`}
+                  className="border rounded-lg p-4 bg-white hover:border-slate-400"
+                >
+                  <p className="font-medium text-slate-900">
+                    {a.name} <span className="text-slate-400 font-normal">({code})</span>
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    {a.city}, {a.state} · {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </>
       )}

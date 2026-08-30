@@ -78,13 +78,16 @@ export default async function HomePage() {
             </Link>
           </div>
           <AirportMap
-            markers={airports.map((a: any) => ({
-              id: a.id,
-              latitude: a.latitude,
-              longitude: a.longitude,
-              label: `${a.name} (${a.iata_code}) — ${a.jobCount} job${a.jobCount === 1 ? "" : "s"}`,
-              href: `/airports/${a.iata_code}`,
-            }))}
+            markers={airports.map((a: any) => {
+              const code = a.iata_code ?? a.icao_code;
+              return {
+                id: a.id,
+                latitude: a.latitude,
+                longitude: a.longitude,
+                label: `${a.name} (${code}) — ${a.jobCount} job${a.jobCount === 1 ? "" : "s"}`,
+                href: `/airports/${code}`,
+              };
+            })}
           />
         </section>
       )}

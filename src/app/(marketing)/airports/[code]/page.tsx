@@ -20,7 +20,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
         <Link href="/airports" className="hover:underline">Airports</Link>
       </p>
       <h1 className="text-2xl font-semibold text-slate-900 mt-1">
-        {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code})</span>
+        {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
       </h1>
       <p className="text-slate-500 mt-1">
         {airport.city}, {airport.state}

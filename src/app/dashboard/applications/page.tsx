@@ -23,7 +23,10 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-slate-900">Applications</h1>
+      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+        ← Dashboard
+      </Link>
+      <h1 className="text-2xl font-semibold text-slate-900 mt-1">Applications</h1>
 
       {total === 0 ? (
         <div className="border rounded-lg p-8 text-center bg-white mt-6">

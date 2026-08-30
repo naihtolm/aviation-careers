@@ -1,10 +1,19 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { createPortal } from "react-dom";
+import Link from "next/link";
 import { saveJob, unsaveJob } from "@/features/jobs/actions";
-import { trackApplyClick, confirmApplied } from "@/features/applications/actions";
+import { trackApplyClick, confirmApplied, submitNativeApplication } from "@/features/applications/actions";
 
-type ModalState = "closed" | "confirming" | "didYouApply";
+type ModalState = "closed" | "confirming" | "didYouApply" | "nativeApply" | "appliedConfirmation";
+
+interface ScreeningQuestion {
+  id: string;
+  type: "yes_no" | "short_text" | "multiple_choice";
+  label: string;
+  options?: string[];
+}
 
 export function ApplyPanel({
   jobId,
@@ -12,18 +21,25 @@ export function ApplyPanel({
   applicationUrl,
   companyName,
   initialSaved = false,
+  screeningQuestions = [],
+  alreadyApplied = false,
 }: {
   jobId: string;
   applicationType: string;
   applicationUrl: string | null;
   companyName: string;
   initialSaved?: boolean;
+  screeningQuestions?: ScreeningQuestion[];
+  alreadyApplied?: boolean;
 }) {
   const [modal, setModal] = useState<ModalState>("closed");
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(initialSaved);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [nativeApplyError, setNativeApplyError] = useState<string | null>(null);
+  const [applied, setApplied] = useState(alreadyApplied);
 
   function handleConfirmRedirect() {
     startTransition(async () => {
@@ -44,6 +60,32 @@ export function ApplyPanel({
     });
   }
 
+  function handleNativeApplySubmit() {
+    setNativeApplyError(null);
+    startTransition(async () => {
+      const result = await submitNativeApplication(jobId, answers);
+      if (result.error === "sign_in_required") {
+        setNativeApplyError("Sign in to apply.");
+        return;
+      }
+      if (result.error === "resume_required") {
+        setNativeApplyError("resume_required");
+        return;
+      }
+      if (result.error === "already_applied") {
+        setApplied(true);
+        setModal("closed");
+        return;
+      }
+      if (result.error) {
+        setNativeApplyError(result.error);
+        return;
+      }
+      setApplied(true);
+      setModal("appliedConfirmation");
+    });
+  }
+
   function handleSave() {
     startTransition(async () => {
       if (saved) {
@@ -60,38 +102,17 @@ export function ApplyPanel({
     });
   }
 
-  return (
-    <div className="border rounded-lg p-4 bg-white space-y-3">
-      {applicationType === "external_url" ? (
-        <>
-          <button
-            onClick={() => setModal("confirming")}
-            className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700"
-          >
-            Apply Now
-          </button>
-          <p className="text-xs text-slate-400 text-center">You'll be redirected to {companyName}'s site.</p>
-        </>
-      ) : (
-        // Native apply for self-posted employer jobs is a Sprint 6 build —
-        // this branch just needs to exist now so Sprint 6 isn't retrofitting
-        // this page, per the Sprint 2 plan.
-        <div className="text-sm text-slate-500 text-center py-2">
-          Native application coming soon for this job.
-        </div>
-      )}
-
-      <button
-        onClick={handleSave}
-        disabled={isPending}
-        className={`w-full py-2.5 rounded-md font-medium disabled:opacity-50 ${
-          saved ? "bg-slate-900 text-white" : "border border-slate-300 hover:bg-slate-50"
-        }`}
-      >
-        {saved ? "Saved ✓" : "Save Job"}
-      </button>
-      {saveMessage && <p className="text-xs text-center text-slate-500">{saveMessage}</p>}
-
+  // Built up-front, then portalled straight to document.body below rather
+  // than rendered inline. This panel lives inside a `position: sticky`
+  // sidebar (see app/jobs/[slug]/page.tsx) -- a `fixed` modal nested that
+  // deep is a well-known cross-browser stacking-context footgun (sticky
+  // ancestors don't reliably keep fixed descendants painting above
+  // unrelated siblings in every browser, which is exactly what caused the
+  // "Similar jobs" cards to render on top of this modal). Portalling to
+  // body sidesteps the whole class of bug instead of chasing it
+  // ancestor-by-ancestor.
+  const modalContent = (
+    <>
       {modal === "confirming" && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full">
@@ -145,6 +166,156 @@ export function ApplyPanel({
           </div>
         </div>
       )}
+
+      {modal === "nativeApply" && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full max-h-[85vh] overflow-y-auto">
+            <h3 className="font-medium text-slate-900">Apply to {companyName}</h3>
+            <p className="text-sm text-slate-500 mt-2">
+              Your saved resume and profile will be sent with this application.
+            </p>
+
+            {nativeApplyError === "resume_required" ? (
+              <div className="mt-4">
+                <p className="text-sm text-amber-700 bg-amber-50 rounded-md p-3">
+                  You need a resume on file before applying. Upload one, then come back.
+                </p>
+                <Link
+                  href="/dashboard/resume"
+                  className="block text-center mt-3 bg-slate-900 text-white py-2 rounded-md text-sm"
+                >
+                  Upload resume
+                </Link>
+                <button
+                  onClick={() => setModal("closed")}
+                  className="w-full border border-slate-300 py-2 rounded-md text-sm mt-2"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <>
+                {screeningQuestions.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    {screeningQuestions.map((q) => (
+                      <div key={q.id}>
+                        <label className="block text-sm text-slate-700 mb-1">{q.label}</label>
+                        {q.type === "yes_no" ? (
+                          <select
+                            value={answers[q.label] ?? ""}
+                            onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
+                          >
+                            <option value="">Select…</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        ) : q.type === "multiple_choice" ? (
+                          <select
+                            value={answers[q.label] ?? ""}
+                            onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
+                          >
+                            <option value="">Select…</option>
+                            {(q.options ?? []).map((opt) => (
+                              <option key={opt} value={opt}>
+                                {opt}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            value={answers[q.label] ?? ""}
+                            onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {nativeApplyError && nativeApplyError !== "resume_required" && (
+                  <p className="text-sm text-red-600 mt-3">{nativeApplyError}</p>
+                )}
+
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => setModal("closed")}
+                    className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleNativeApplySubmit}
+                    disabled={isPending}
+                    className="flex-1 bg-slate-900 text-white py-2 rounded-md text-sm disabled:opacity-50"
+                  >
+                    {isPending ? "Submitting…" : "Submit Application"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {modal === "appliedConfirmation" && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+            <h3 className="font-medium text-slate-900">Application submitted</h3>
+            <p className="text-sm text-slate-500 mt-2">
+              {companyName} will review your application. You can track its status from your dashboard.
+            </p>
+            <button
+              onClick={() => setModal("closed")}
+              className="w-full bg-slate-900 text-white py-2 rounded-md text-sm mt-4"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <div className="border rounded-lg p-4 bg-white space-y-3">
+      {applicationType === "external_url" ? (
+        <>
+          <button
+            onClick={() => setModal("confirming")}
+            className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700"
+          >
+            Apply Now
+          </button>
+          <p className="text-xs text-slate-400 text-center">You'll be redirected to {companyName}'s site.</p>
+        </>
+      ) : applied ? (
+        <div className="text-sm text-emerald-700 bg-emerald-50 rounded-md text-center py-2.5 font-medium">
+          Applied ✓
+        </div>
+      ) : (
+        <button
+          onClick={() => setModal("nativeApply")}
+          className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700"
+        >
+          Apply Now
+        </button>
+      )}
+
+      <button
+        onClick={handleSave}
+        disabled={isPending}
+        className={`w-full py-2.5 rounded-md font-medium disabled:opacity-50 ${
+          saved ? "bg-slate-900 text-white" : "border border-slate-300 hover:bg-slate-50"
+        }`}
+      >
+        {saved ? "Saved ✓" : "Save Job"}
+      </button>
+      {saveMessage && <p className="text-xs text-center text-slate-500">{saveMessage}</p>}
+
+      {modal !== "closed" && typeof document !== "undefined" && createPortal(modalContent, document.body)}
     </div>
   );
 }

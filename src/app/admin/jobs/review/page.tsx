@@ -1,5 +1,4 @@
 // app/admin/jobs/review/page.tsx
-import { redirect } from "next/navigation";
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
 import { RawJobCard } from "./RawJobCard";
@@ -18,17 +17,9 @@ interface RawJobRecord {
 }
 
 export default async function JobReviewPage() {
+  // Admin auth is checked once in app/admin/layout.tsx (requireAdmin()) --
+  // no need to repeat it here.
   const supabase = await createServerActionClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/sign-in");
-
-  const { data: isAdmin } = await supabase.rpc("has_role", {
-    target_role: "platform_admin",
-  });
-  if (!isAdmin) redirect("/");
 
   // raw_job_records has no client-facing RLS policy at all (service-role
   // only, by design — see supabase/migrations/010_rls_policies.sql) so
@@ -62,16 +53,12 @@ export default async function JobReviewPage() {
     .order("name");
 
   if (error) {
-    return (
-      <div className="p-8">
-        <p className="text-red-600">Failed to load raw job records: {error.message}</p>
-      </div>
-    );
+    return <p className="text-red-600">Failed to load raw job records: {error.message}</p>;
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
-      <h1 className="text-2xl font-semibold mb-2">Job Ingestion Review</h1>
+    <div>
+      <h2 className="text-xl font-semibold mb-2">Job Ingestion Review</h2>
       <p className="text-sm text-gray-500 mb-6">
         {rawRecords?.length ?? 0} pending job(s) awaiting review, oldest first.
       </p>

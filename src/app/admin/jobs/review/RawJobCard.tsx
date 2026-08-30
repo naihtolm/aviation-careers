@@ -28,6 +28,20 @@ interface RawJobRecord {
   source_id: string;
 }
 
+// Greenhouse location strings vary a lot: "Irvine, CA", "Manassas, VA",
+// "Manchester, Connecticut, United States", or with a street address
+// prefixed on -- "9990 Wakeman Drive, Manassas, VA 20110". A naive
+// split(",")[0,1] reads that last one as city="9990 Wakeman Drive",
+// state="Manassas". Drop a leading segment that looks like a street
+// address, and strip a trailing ZIP off the state segment.
+function parseLocation(raw: string): { city: string; state: string } {
+  const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
+  if (parts.length > 2 && /^\d/.test(parts[0])) parts.shift();
+  const city = parts[0] ?? "";
+  const state = (parts[1] ?? "").replace(/\s*\d{5}(-\d{4})?$/, "").trim();
+  return { city, state };
+}
+
 export function RawJobCard({
   record,
   careers,
@@ -47,10 +61,12 @@ export function RawJobCard({
 
   const title = record.raw_data.title ?? "(untitled)";
   const location = record.raw_data.location?.name ?? "";
+  const parsedLocation = parseLocation(location);
+  const [city, setCity] = useState(parsedLocation.city);
+  const [state, setState] = useState(parsedLocation.state);
 
   function handleApprove() {
     startTransition(async () => {
-      const [city, state] = location.split(",").map((s) => s.trim());
       await approveRawJob({
         rawRecordId: record.id,
         title,
@@ -58,8 +74,8 @@ export function RawJobCard({
         careerId: careerId || null,
         companyId: companyId || null,
         newCompanyName: companyId ? null : newCompanyName || null,
-        city: city || null,
-        state: state || null,
+        city: city.trim() || null,
+        state: state.trim() || null,
         applicationUrl: record.raw_data.absolute_url ?? null,
         salaryMin: salaryMin ? Number(salaryMin) : null,
         salaryMax: salaryMax ? Number(salaryMax) : null,
@@ -108,6 +124,27 @@ export function RawJobCard({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="flex gap-2">
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">City</label>
+              <input
+                type="text"
+                className="w-full border rounded px-2 py-1"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">State</label>
+              <input
+                type="text"
+                className="w-full border rounded px-2 py-1"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+              />
+            </div>
           </div>
 
           <div>

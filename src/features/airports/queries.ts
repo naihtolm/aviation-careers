@@ -5,7 +5,7 @@ export async function getAirports() {
   const supabase = await createServerActionClient();
   const { data: airports } = await supabase
     .from("airports")
-    .select("id, iata_code, name, slug, city, state, latitude, longitude")
+    .select("id, iata_code, icao_code, name, slug, city, state, latitude, longitude")
     .eq("active", true)
     .order("name");
 
@@ -29,10 +29,14 @@ export async function getAirports() {
 
 export async function getAirportByCode(code: string) {
   const supabase = await createServerActionClient();
+  // Not every airport has an IATA code -- general aviation fields like
+  // Manassas Regional are commonly ICAO-only. Route by whichever code the
+  // airport actually has (see the ?? fallback everywhere this is linked).
+  const upperCode = code.toUpperCase();
   const { data: airport } = await supabase
     .from("airports")
     .select("*")
-    .eq("iata_code", code.toUpperCase())
+    .or(`iata_code.eq.${upperCode},icao_code.eq.${upperCode}`)
     .eq("active", true)
     .maybeSingle();
   if (!airport) return null;

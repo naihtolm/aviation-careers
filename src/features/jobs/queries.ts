@@ -139,7 +139,7 @@ export async function getJobBySlug(slug: string) {
   const { data, error } = await supabase
     .from("jobs")
     .select(
-      `${JOB_SELECT}, job_requirements ( * ), job_skills ( importance, requirement_type, skills ( name ) ), job_certifications ( requirement_type, certifications ( name ) )`
+      `${JOB_SELECT}, screening_questions, job_requirements ( * ), job_skills ( importance, requirement_type, skills ( name ) ), job_certifications ( requirement_type, certifications ( name ) )`
     )
     .eq("slug", slug)
     .eq("status", "active")
@@ -180,6 +180,19 @@ export async function getSavedJobIds(userId: string | null): Promise<Set<string>
   const supabase = await createServerActionClient();
   const { data } = await supabase.from("saved_jobs").select("job_id").eq("user_id", userId);
   return new Set((data ?? []).map((r) => r.job_id));
+}
+
+export async function hasAppliedToJob(userId: string | null, jobId: string): Promise<boolean> {
+  if (!userId) return false;
+  const supabase = await createServerActionClient();
+  const { data } = await supabase
+    .from("job_applications")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("job_id", jobId)
+    .eq("status", "applied")
+    .maybeSingle();
+  return !!data;
 }
 
 export async function getFeaturedJobs(limit = 6) {

@@ -21,7 +21,10 @@ export default async function ResumePage() {
   return (
     <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Resume</h1>
+        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+          ← Dashboard
+        </Link>
+        <h1 className="text-2xl font-semibold text-slate-900 mt-1">Resume</h1>
         <p className="text-sm text-slate-500 mt-1">
           Upload your resume and we'll pull out your experience, education, skills, and certifications for you to
           review before anything is added to your profile. Manual entry always works too if you'd rather skip this.

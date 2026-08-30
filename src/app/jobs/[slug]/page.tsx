@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getJobBySlug, getSimilarJobs, getSavedJobIds } from "@/features/jobs/queries";
+import { getJobBySlug, getSimilarJobs, getSavedJobIds, hasAppliedToJob } from "@/features/jobs/queries";
 import { getCurrentUser } from "@/features/profile/queries";
 import { ApplyPanel } from "@/components/jobs/ApplyPanel";
 import { JobCard } from "@/components/jobs/JobCard";
@@ -31,9 +31,10 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   if (!job) notFound();
 
   const user = await getCurrentUser();
-  const [similarJobs, savedJobIds] = await Promise.all([
+  const [similarJobs, savedJobIds, alreadyApplied] = await Promise.all([
     getSimilarJobs(job.careers?.id ?? null, job.id),
     getSavedJobIds(user?.id ?? null),
+    hasAppliedToJob(user?.id ?? null, job.id),
   ]);
   const salary = formatSalary(job.job_compensation);
   const location = primaryLocationLabel(job.job_locations);
@@ -70,6 +71,8 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               applicationUrl={job.application_url}
               companyName={job.companies?.name ?? "the employer"}
               initialSaved={savedJobIds.has(job.id)}
+              screeningQuestions={(job as any).screening_questions ?? []}
+              alreadyApplied={alreadyApplied}
             />
           </div>
 
@@ -107,6 +110,8 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               applicationUrl={job.application_url}
               companyName={job.companies?.name ?? "the employer"}
               initialSaved={savedJobIds.has(job.id)}
+              screeningQuestions={(job as any).screening_questions ?? []}
+              alreadyApplied={alreadyApplied}
             />
           </div>
         </div>

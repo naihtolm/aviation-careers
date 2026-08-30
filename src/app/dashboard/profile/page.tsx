@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getCurrentUser, getFullProfile } from "@/features/profile/queries";
 import { getCareerCategories } from "@/features/careers/queries";
 import { ProfileDetailsForm } from "@/components/profile/ProfileDetailsForm";
@@ -23,9 +24,16 @@ export default async function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Your Profile</h1>
+        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline">
+          ← Dashboard
+        </Link>
+        <h1 className="text-2xl font-semibold text-slate-900 mt-1">Your Profile</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Manual entry for now — uploading a resume to auto-fill this is coming in a future update.
+          Edit everything manually below, or{" "}
+          <Link href="/dashboard/resume" className="text-blue-600 hover:underline">
+            upload a resume
+          </Link>{" "}
+          and we'll pull in your experience, education, skills, and certifications for you to review first.
         </p>
       </div>
 
