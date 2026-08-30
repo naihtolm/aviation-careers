@@ -89,7 +89,7 @@ export async function getDataQualityIssues() {
     db.from("jobs").select("id, title, description, company_id").eq("status", "active"),
     db.from("job_locations").select("job_id"),
     db.from("job_compensation").select("job_id"),
-    db.from("companies").select("id, name, description, website, logo_path").eq("status", "active"),
+    db.from("companies").select("id, name, description, website").eq("status", "active"),
   ]);
 
   const locatedSet = new Set((locatedJobIds ?? []).map((r) => r.job_id));
@@ -102,7 +102,10 @@ export async function getDataQualityIssues() {
 
   const orgs = companies ?? [];
   const companiesMissingDescription = orgs.filter((c) => !c.description);
-  const companiesMissingLogo = orgs.filter((c) => !c.logo_path);
+  // No logo upload flow exists -- real employer logos are pulled live from
+  // this website field (see components/ui/CompanyLogo.tsx), so a missing
+  // website is what actually leaves a company without a real logo on site.
+  const companiesMissingWebsite = orgs.filter((c) => !c.website);
 
   const { data: stalePending } = await db
     .from("raw_job_records")
@@ -115,7 +118,7 @@ export async function getDataQualityIssues() {
     missingCompensation,
     missingDescription,
     companiesMissingDescription,
-    companiesMissingLogo,
+    companiesMissingWebsite,
     stalePendingIngestion: stalePending ?? [],
   };
 }

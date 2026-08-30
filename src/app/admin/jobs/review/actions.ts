@@ -29,6 +29,7 @@ export interface ApproveRawJobInput {
   careerId: string | null;
   companyId: string | null;
   newCompanyName: string | null; // set if admin is creating a company inline
+  newCompanyWebsite: string | null;
   city: string | null;
   state: string | null;
   applicationUrl: string | null;
@@ -61,6 +62,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
         name: input.newCompanyName,
         slug,
         company_type: "other", // admin can refine later via company management UI
+        website: input.newCompanyWebsite || null,
         status: "active",
       })
       .select("id")

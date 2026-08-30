@@ -83,9 +83,9 @@ export default async function AdminDataQualityPage() {
           renderItem={(c) => <span>{c.name}</span>}
         />
         <IssueSection
-          title="Companies missing a logo"
-          description="No logo uploaded yet."
-          items={issues.companiesMissingLogo}
+          title="Companies missing a website"
+          description="No real logo can show on their listings without one — add it via Company Profile."
+          items={issues.companiesMissingWebsite}
           renderItem={(c) => <span>{c.name}</span>}
         />
         <IssueSection

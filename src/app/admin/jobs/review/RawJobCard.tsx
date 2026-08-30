@@ -1,9 +1,25 @@
 // app/admin/jobs/review/RawJobCard.tsx
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { approveRawJob, rejectRawJob } from "./actions";
 import { decodeHtmlEntities } from "@/lib/html";
+
+// Clearbit's free, unauthenticated company-lookup API -- used only to
+// suggest a website domain as the admin types a new company name so they
+// don't have to go look it up themselves. Best-effort: if it's down, rate
+// limited, or finds nothing, the admin just types the website manually
+// like before.
+async function suggestWebsite(companyName: string): Promise<string | null> {
+  try {
+    const res = await fetch(`https://autocomplete.clearbit.com/v1/companies/suggest?query=${encodeURIComponent(companyName)}`);
+    if (!res.ok) return null;
+    const results = await res.json();
+    return results?.[0]?.domain ? `https://${results[0].domain}` : null;
+  } catch {
+    return null;
+  }
+}
 
 interface Career {
   id: string;
@@ -56,8 +72,25 @@ export function RawJobCard({
   const [careerId, setCareerId] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [newCompanyName, setNewCompanyName] = useState("");
+  const [newCompanyWebsite, setNewCompanyWebsite] = useState("");
+  const [websiteEdited, setWebsiteEdited] = useState(false);
+  const [suggestingWebsite, setSuggestingWebsite] = useState(false);
   const [salaryMin, setSalaryMin] = useState("");
   const [salaryMax, setSalaryMax] = useState("");
+
+  // Debounced auto-suggest: once the admin pauses typing a new company
+  // name, look up a likely website domain and fill it in -- unless they've
+  // already typed/edited the website field themselves.
+  useEffect(() => {
+    if (companyId || websiteEdited || newCompanyName.trim().length < 3) return;
+    const timer = setTimeout(async () => {
+      setSuggestingWebsite(true);
+      const suggestion = await suggestWebsite(newCompanyName.trim());
+      setSuggestingWebsite(false);
+      if (suggestion && !websiteEdited) setNewCompanyWebsite(suggestion);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [newCompanyName, companyId, websiteEdited]);
 
   const title = record.raw_data.title ?? "(untitled)";
   const location = record.raw_data.location?.name ?? "";
@@ -74,6 +107,7 @@ export function RawJobCard({
         careerId: careerId || null,
         companyId: companyId || null,
         newCompanyName: companyId ? null : newCompanyName || null,
+        newCompanyWebsite: companyId ? null : newCompanyWebsite.trim() || null,
         city: city.trim() || null,
         state: state.trim() || null,
         applicationUrl: record.raw_data.absolute_url ?? null,
@@ -162,13 +196,33 @@ export function RawJobCard({
               ))}
             </select>
             {!companyId && (
-              <input
-                type="text"
-                placeholder="New company name"
-                className="w-full border rounded px-2 py-1"
-                value={newCompanyName}
-                onChange={(e) => setNewCompanyName(e.target.value)}
-              />
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="New company name"
+                  className="w-full border rounded px-2 py-1"
+                  value={newCompanyName}
+                  onChange={(e) => setNewCompanyName(e.target.value)}
+                />
+                <div className="relative">
+                  <input
+                    type="url"
+                    placeholder="Website (auto-suggested from the name above)"
+                    className="w-full border rounded px-2 py-1"
+                    value={newCompanyWebsite}
+                    onChange={(e) => {
+                      setNewCompanyWebsite(e.target.value);
+                      setWebsiteEdited(true);
+                    }}
+                  />
+                  {suggestingWebsite && (
+                    <span className="absolute right-2 top-1.5 text-xs text-gray-400">Looking up…</span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-400">
+                  Used to show the employer's real logo across the site — double-check it before approving.
+                </p>
+              </div>
             )}
           </div>
 
