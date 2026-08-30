@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LocationAutocomplete } from "@/components/search/LocationAutocomplete";
+import { KeywordAutocomplete } from "@/components/search/KeywordAutocomplete";
 
 export function SearchBar({
   defaultKeyword = "",
@@ -28,12 +29,11 @@ export function SearchBar({
       onSubmit={handleSubmit}
       className="flex flex-col sm:flex-row gap-2 bg-white rounded-lg border p-2 shadow-sm"
     >
-      <input
-        type="text"
+      <KeywordAutocomplete
         placeholder="Job title, career, or keyword"
-        className="flex-1 px-3 py-2 outline-none"
+        className="w-full px-3 py-2 outline-none"
         value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
+        onChange={setKeyword}
       />
       <div className="hidden sm:block w-px bg-slate-200" />
       <LocationAutocomplete

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { MapPin, Plane } from "lucide-react";
 import { fetchPlaceSuggestions } from "@/lib/mapboxPlaces";
 import { fetchAirportSuggestions } from "@/lib/airportSearch";
+import { useAutocomplete } from "@/components/search/useAutocomplete";
 
 interface Suggestion {
   key: string;
@@ -11,6 +11,14 @@ interface Suggestion {
   sublabel?: string;
   type: "airport" | "place";
   value: string;
+}
+
+async function fetchLocationSuggestions(query: string): Promise<Suggestion[]> {
+  const [airports, places] = await Promise.all([fetchAirportSuggestions(query), fetchPlaceSuggestions(query)]);
+  return [
+    ...airports.map((a) => ({ key: `airport-${a.id}`, label: a.label, sublabel: a.sublabel, type: "airport" as const, value: a.searchValue })),
+    ...places.map((p) => ({ key: `place-${p.id}`, label: p.label, type: "place" as const, value: p.label })),
+  ];
 }
 
 export function LocationAutocomplete({
@@ -24,60 +32,12 @@ export function LocationAutocomplete({
   placeholder?: string;
   className?: string;
 }) {
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [open, setOpen] = useState(false);
-  const [highlighted, setHighlighted] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const requestId = useRef(0);
-
-  useEffect(() => {
-    if (value.trim().length < 2) {
-      setSuggestions([]);
-      return;
-    }
-    const id = ++requestId.current;
-    const timer = setTimeout(async () => {
-      const [airports, places] = await Promise.all([fetchAirportSuggestions(value), fetchPlaceSuggestions(value)]);
-      if (id !== requestId.current) return; // a newer keystroke already superseded this request
-      setSuggestions([
-        ...airports.map((a) => ({ key: `airport-${a.id}`, label: a.label, sublabel: a.sublabel, type: "airport" as const, value: a.searchValue })),
-        ...places.map((p) => ({ key: `place-${p.id}`, label: p.label, type: "place" as const, value: p.label })),
-      ]);
-      setHighlighted(0);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [value]);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  function select(s: Suggestion) {
-    onChange(s.value);
-    setOpen(false);
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (!open || suggestions.length === 0) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlighted((h) => Math.min(h + 1, suggestions.length - 1));
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlighted((h) => Math.max(h - 1, 0));
-    } else if (e.key === "Enter") {
-      if (suggestions[highlighted]) {
-        e.preventDefault();
-        select(suggestions[highlighted]);
-      }
-    } else if (e.key === "Escape") {
-      setOpen(false);
-    }
-  }
+  const { containerRef, open, setOpen, suggestions, highlighted, select, handleKeyDown } = useAutocomplete({
+    value,
+    onChange,
+    fetchSuggestions: fetchLocationSuggestions,
+    getValue: (s) => s.value,
+  });
 
   return (
     <div ref={containerRef} className="relative flex-1">
