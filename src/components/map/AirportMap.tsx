@@ -139,6 +139,28 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
     mapRef.current = map;
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
 
+    // The Streets style's city-name labels (settlement-major/minor-label)
+    // draw a small dot icon next to the text at low zoom, which at a
+    // glance reads as another job-density marker. Clearing icon-image
+    // drops just the dot and keeps the city name for orientation. The
+    // style's own airport-label layer (plane icon + IATA code) is hidden
+    // outright since it would otherwise duplicate our own airport markers
+    // once zoomed in on one.
+    map.on("style.load", () => {
+      for (const layerId of ["settlement-major-label", "settlement-minor-label"]) {
+        try {
+          map.setLayoutProperty(layerId, "icon-image", "");
+        } catch {
+          // Layer id can vary across style versions -- skip if not found.
+        }
+      }
+      try {
+        map.setLayoutProperty("airport-label", "visibility", "none");
+      } catch {
+        // Same as above -- non-fatal if this layer isn't present.
+      }
+    });
+
     const bounds = new mapboxgl.LngLatBounds();
     for (const marker of markers) {
       // Plain div, not a link -- clicking/hovering opens the popup (which
@@ -201,18 +223,21 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
   }
 
   return (
-    <div className="relative">
+    <div>
       <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />
-      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-md border shadow-sm px-2 py-1.5 text-[10px] leading-tight text-slate-600 space-y-0.5">
-        <p className="font-medium text-slate-900 mb-1">Hiring activity</p>
+      {/* Below the map rather than overlaid on it -- an absolutely
+          positioned legend risks sitting right where a popup for a nearby
+          marker opens, which reads as broken rather than informational. */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 px-1 text-[11px] text-slate-500">
+        <span className="font-medium text-slate-700">Hiring activity:</span>
         {TIERS.map((tier) => (
-          <div key={tier.label} className="flex items-center gap-1.5">
+          <span key={tier.label} className="inline-flex items-center gap-1">
             <span
               className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
               style={{ backgroundColor: tier.color, boxShadow: `0 0 3px ${tier.glow}` }}
             />
-            <span>{tier.label}</span>
-          </div>
+            {tier.label}
+          </span>
         ))}
       </div>
     </div>
