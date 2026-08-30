@@ -205,3 +205,15 @@ export async function getFeaturedJobs(limit = 6) {
     .limit(limit);
   return data ?? [];
 }
+
+// Real counts for the homepage hero stat strip -- head:true so these are
+// cheap count-only queries, not full row fetches.
+export async function getHomepageStats() {
+  const supabase = await createServerActionClient();
+  const [{ count: jobCount }, { count: companyCount }, { count: airportCount }] = await Promise.all([
+    supabase.from("jobs").select("id", { count: "exact", head: true }).eq("status", "active"),
+    supabase.from("companies").select("id", { count: "exact", head: true }).eq("status", "active"),
+    supabase.from("airports").select("id", { count: "exact", head: true }).eq("active", true),
+  ]);
+  return { jobCount: jobCount ?? 0, companyCount: companyCount ?? 0, airportCount: airportCount ?? 0 };
+}

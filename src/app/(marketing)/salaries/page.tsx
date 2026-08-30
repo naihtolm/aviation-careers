@@ -17,7 +17,7 @@ export default async function SalaryExplorerPage() {
             <Link
               key={career.id}
               href={`/salaries/${career.slug}/national`}
-              className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
+              className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <p className="font-medium text-slate-900">{career.name}</p>
               <p className="text-xs text-slate-500 mt-1">View national salary data →</p>

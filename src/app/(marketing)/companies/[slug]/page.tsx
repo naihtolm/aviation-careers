@@ -26,7 +26,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             href={company.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm border rounded-md px-3 py-1.5 text-slate-600 hover:border-slate-400 hover:shadow-md transition-all"
+            className="text-sm border rounded-md px-3 py-1.5 text-slate-600 shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
           >
             Visit website
           </a>
@@ -59,7 +59,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3">
                     {jobs.map((j: any) => (
-                      <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400 hover:shadow-md transition-all">
+                      <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                         <p className="font-medium text-slate-900 text-sm">{j.title}</p>
                         <p className="text-xs text-slate-500 mt-0.5 capitalize">{j.employment_type?.replace("_", " ")}</p>
                       </Link>

@@ -25,7 +25,7 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className="block border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
+      className="block border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
