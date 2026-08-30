@@ -138,6 +138,8 @@ export default async function HomePage() {
                     name: a.name,
                     code,
                     jobCount: a.jobCount,
+                    airportType: a.airport_type,
+                    topCareer: a.topCareer,
                     companies: a.companies,
                     href: `/airports/${code}`,
                   };

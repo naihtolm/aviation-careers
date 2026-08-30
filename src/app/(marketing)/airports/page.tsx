@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plane, Briefcase } from "lucide-react";
 import { AirportMap } from "@/components/map/AirportMap";
 import { getAirports } from "@/features/airports/queries";
+import { airportTypeLabel } from "@/lib/airport";
 
 export default async function AirportDirectoryPage() {
   const airports = await getAirports();
@@ -26,6 +27,8 @@ export default async function AirportDirectoryPage() {
                   name: a.name,
                   code,
                   jobCount: a.jobCount,
+                  airportType: a.airport_type,
+                  topCareer: a.topCareer,
                   companies: a.companies,
                   href: `/airports/${code}`,
                 };
@@ -50,10 +53,17 @@ export default async function AirportDirectoryPage() {
                         {a.name} <span className="text-slate-400 font-normal">({code})</span>
                       </p>
                       <p className="text-sm text-slate-500 mt-1">{a.city}, {a.state}</p>
-                      <p className="flex items-center gap-1 text-sm text-slate-500 mt-0.5">
-                        <Briefcase className="w-3.5 h-3.5" />
-                        {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        {airportTypeLabel(a.airport_type) && (
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 bg-slate-100 rounded px-1.5 py-0.5">
+                            {airportTypeLabel(a.airport_type)}
+                          </span>
+                        )}
+                        <p className="flex items-center gap-1 text-sm text-slate-500">
+                          <Briefcase className="w-3.5 h-3.5" />
+                          {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </Link>

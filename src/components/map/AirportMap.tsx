@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { airportTypeLabel } from "@/lib/airport";
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
   hub: "Hub",
@@ -21,6 +22,8 @@ export interface MapMarker {
   name: string;
   code: string;
   jobCount: number;
+  airportType?: string | null;
+  topCareer?: { name: string; count: number } | null;
   companies?: { name: string; relationshipType: string }[];
   href: string;
 }
@@ -51,6 +54,7 @@ function popupHtml(marker: MapMarker) {
   const tier = tierFor(marker.jobCount);
   const companies = marker.companies ?? [];
   const isHub = companies.some((c) => c.relationshipType === "hub" || c.relationshipType === "cargo_hub");
+  const typeLabel = airportTypeLabel(marker.airportType);
   const companiesHtml = companies.length
     ? `<ul style="margin:6px 0 0;padding:0;list-style:none;font-size:12px;color:#475569">
         ${companies
@@ -65,15 +69,29 @@ function popupHtml(marker: MapMarker) {
     : `<p style="margin:6px 0 0;font-size:12px;color:#94a3b8">No listed carriers yet</p>`;
 
   return `
-    <div style="min-width:190px;font-family:inherit">
-      <a href="${escapeHtml(marker.href)}" style="font-weight:600;color:#0f172a;text-decoration:none;font-size:13px">
+    <div style="min-width:200px;font-family:inherit">
+      <a href="${escapeHtml(marker.href)}" style="font-weight:600;color:#0f172a;text-decoration:none;font-size:13px;outline:none">
         ${escapeHtml(marker.name)} (${escapeHtml(marker.code)})
       </a>
-      <div style="font-size:12px;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:5px">
+      ${
+        typeLabel
+          ? `<span style="display:inline-block;margin-top:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;color:#64748b;background:#f1f5f9;border-radius:4px;padding:1px 6px">${escapeHtml(
+              typeLabel
+            )}</span>`
+          : ""
+      }
+      <div style="font-size:12px;color:#64748b;margin-top:5px;display:flex;align-items:center;gap:5px">
         <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${tier.color};flex-shrink:0"></span>
         <span style="color:${tier.color};font-weight:600">${marker.jobCount} open job${marker.jobCount === 1 ? "" : "s"}</span>
         ${isHub ? '<span style="color:#0f172a;font-weight:600">· Hub</span>' : ""}
       </div>
+      ${
+        marker.topCareer
+          ? `<div style="font-size:12px;color:#475569;margin-top:3px">
+              Most in-demand: <strong>${escapeHtml(marker.topCareer.name)}</strong> (${marker.topCareer.count})
+            </div>`
+          : ""
+      }
       ${companiesHtml}
     </div>
   `;

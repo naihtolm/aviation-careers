@@ -7,6 +7,7 @@ import { Tabs } from "@/components/ui/Tabs";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { RelationshipBadge } from "@/components/ui/RelationshipBadge";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { airportTypeLabel } from "@/lib/airport";
 
 export default async function AirportDetailPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
@@ -28,9 +29,16 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
           <Plane className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">
-            {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
-          </h1>
+          <div className="flex items-center gap-2 flex-wrap">
+            <h1 className="text-2xl font-semibold text-slate-900">
+              {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
+            </h1>
+            {airportTypeLabel(airport.airport_type) && (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 bg-slate-100 rounded px-1.5 py-0.5">
+                {airportTypeLabel(airport.airport_type)}
+              </span>
+            )}
+          </div>
           <p className="text-slate-500 mt-0.5 flex items-center gap-1">
             <MapPin className="w-3.5 h-3.5" />
             {airport.city}, {airport.state}

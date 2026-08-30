@@ -5,23 +5,47 @@ export async function getAirports() {
   const supabase = await createServerActionClient();
   const { data: airports } = await supabase
     .from("airports")
-    .select("id, iata_code, icao_code, name, slug, city, state, latitude, longitude")
+    .select("id, iata_code, icao_code, name, slug, city, state, latitude, longitude, airport_type")
     .eq("active", true)
     .order("name");
 
   if (!airports?.length) return [];
 
+  // Joining through jobs (rather than just counting job_locations rows)
+  // both scopes the count to active listings -- the previous version
+  // counted every job_locations row regardless of the job's status -- and
+  // gives us each job's career for the "most in-demand role" figure below.
   const { data: locations } = await supabase
     .from("job_locations")
-    .select("airport_id")
+    .select("airport_id, jobs ( status, careers ( name ) )")
     .in(
       "airport_id",
       airports.map((a) => a.id)
     );
 
   const counts = new Map<string, number>();
+  const careerCountsByAirport = new Map<string, Map<string, number>>();
   for (const row of locations ?? []) {
-    if (row.airport_id) counts.set(row.airport_id, (counts.get(row.airport_id) ?? 0) + 1);
+    const job = row.jobs as any;
+    if (!row.airport_id || !job || job.status !== "active") continue;
+    counts.set(row.airport_id, (counts.get(row.airport_id) ?? 0) + 1);
+
+    const careerName = job.careers?.name;
+    if (careerName) {
+      const careerCounts = careerCountsByAirport.get(row.airport_id) ?? new Map<string, number>();
+      careerCounts.set(careerName, (careerCounts.get(careerName) ?? 0) + 1);
+      careerCountsByAirport.set(row.airport_id, careerCounts);
+    }
+  }
+
+  function topCareerFor(airportId: string) {
+    const careerCounts = careerCountsByAirport.get(airportId);
+    if (!careerCounts?.size) return null;
+    let best: { name: string; count: number } | null = null;
+    for (const [name, count] of careerCounts) {
+      if (!best || count > best.count) best = { name, count };
+    }
+    return best;
   }
 
   // Carrier/hub relationships for the map popup -- "is this airport a
@@ -48,6 +72,7 @@ export async function getAirports() {
     ...a,
     jobCount: counts.get(a.id) ?? 0,
     companies: companiesByAirport.get(a.id) ?? [],
+    topCareer: topCareerFor(a.id),
   }));
 }
 
