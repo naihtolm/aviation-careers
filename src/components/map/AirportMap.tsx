@@ -25,11 +25,30 @@ export interface MapMarker {
   href: string;
 }
 
+// A simple hiring-activity scale so the map reads at a glance -- cool and
+// small for quiet airports, warming up through amber/orange, and glowing
+// red with a pulse for the busiest hiring hubs. Thresholds are picked
+// against the current real spread of job counts (single digits up to
+// ~30), not derived from the dataset, since a fixed, explainable scale is
+// easier for a non-technical admin to reason about than a moving target.
+const TIERS = [
+  { min: 0, max: 0, color: "#94a3b8", glow: "rgba(148,163,184,0.4)", label: "No open jobs", radius: 7, hot: false },
+  { min: 1, max: 3, color: "#38bdf8", glow: "rgba(56,189,248,0.5)", label: "1–3 open jobs", radius: 9, hot: false },
+  { min: 4, max: 7, color: "#fbbf24", glow: "rgba(251,191,36,0.55)", label: "4–7 open jobs", radius: 11, hot: false },
+  { min: 8, max: 15, color: "#fb923c", glow: "rgba(251,146,60,0.6)", label: "8–15 open jobs", radius: 13, hot: false },
+  { min: 16, max: Infinity, color: "#ef4444", glow: "rgba(239,68,68,0.65)", label: "16+ open jobs", radius: 15, hot: true },
+];
+
+function tierFor(jobCount: number) {
+  return TIERS.find((t) => jobCount >= t.min && jobCount <= t.max) ?? TIERS[0];
+}
+
 function escapeHtml(s: string) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function popupHtml(marker: MapMarker) {
+  const tier = tierFor(marker.jobCount);
   const companies = marker.companies ?? [];
   const isHub = companies.some((c) => c.relationshipType === "hub" || c.relationshipType === "cargo_hub");
   const companiesHtml = companies.length
@@ -50,12 +69,48 @@ function popupHtml(marker: MapMarker) {
       <a href="${escapeHtml(marker.href)}" style="font-weight:600;color:#0f172a;text-decoration:none;font-size:13px">
         ${escapeHtml(marker.name)} (${escapeHtml(marker.code)})
       </a>
-      <div style="font-size:12px;color:#64748b;margin-top:3px">
-        ${marker.jobCount} open job${marker.jobCount === 1 ? "" : "s"}${isHub ? ' <span style="color:#0f172a;font-weight:600">· Hub</span>' : ""}
+      <div style="font-size:12px;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:5px">
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${tier.color};flex-shrink:0"></span>
+        <span style="color:${tier.color};font-weight:600">${marker.jobCount} open job${marker.jobCount === 1 ? "" : "s"}</span>
+        ${isHub ? '<span style="color:#0f172a;font-weight:600">· Hub</span>' : ""}
       </div>
       ${companiesHtml}
     </div>
   `;
+}
+
+function ensurePulseKeyframes() {
+  if (document.getElementById("airport-map-pulse-keyframes")) return;
+  const style = document.createElement("style");
+  style.id = "airport-map-pulse-keyframes";
+  style.textContent = `
+    @keyframes airport-marker-pulse {
+      0% { transform: scale(0.6); opacity: 0.75; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function buildMarkerElement(jobCount: number) {
+  const tier = tierFor(jobCount);
+  const size = tier.radius * 2;
+  const el = document.createElement("div");
+  el.style.cssText = `position:relative;width:${size}px;height:${size}px;cursor:pointer;`;
+
+  // Busiest airports get a radar-style pulse ring behind the dot so they
+  // draw the eye immediately instead of blending into the rest of the map.
+  if (tier.hot) {
+    const pulse = document.createElement("div");
+    pulse.style.cssText = `position:absolute;inset:0;border-radius:50%;background:${tier.color};animation:airport-marker-pulse 1.8s ease-out infinite;`;
+    el.appendChild(pulse);
+  }
+
+  const dot = document.createElement("div");
+  dot.style.cssText = `position:absolute;inset:0;border-radius:50%;background:${tier.color};border:2px solid white;box-shadow:0 0 10px ${tier.glow}, 0 1px 3px rgba(0,0,0,0.35);`;
+  el.appendChild(dot);
+
+  return el;
 }
 
 // Static markers only, no routing/navigation — matches the locked
@@ -69,23 +124,27 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     if (!token || !containerRef.current || markers.length === 0) return;
 
+    ensurePulseKeyframes();
+
     mapboxgl.accessToken = token;
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      // Streets style instead of the flat light one -- real roads, parks,
+      // and water give the map actual color to sit behind the colored
+      // job-density markers, instead of everything reading as gray on gray.
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [markers[0].longitude, markers[0].latitude],
       zoom: markers.length === 1 ? 9 : 3,
     });
     mapRef.current = map;
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
 
     const bounds = new mapboxgl.LngLatBounds();
     for (const marker of markers) {
       // Plain div, not a link -- clicking/hovering opens the popup (which
       // has its own link through to the airport page), rather than the
       // marker itself competing with the popup for the click.
-      const el = document.createElement("div");
-      el.style.cssText =
-        "width:14px;height:14px;border-radius:50%;background:#0f172a;border:2px solid white;box-shadow:0 0 0 1px rgba(0,0,0,0.15);cursor:pointer;";
+      const el = buildMarkerElement(marker.jobCount);
 
       const popup = new mapboxgl.Popup({ offset: 12, closeButton: false }).setHTML(popupHtml(marker));
       const mapMarker = new mapboxgl.Marker(el).setLngLat([marker.longitude, marker.latitude]).setPopup(popup).addTo(map);
@@ -125,17 +184,37 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
       <div className="border rounded-lg p-4 bg-slate-50">
         <p className="text-sm text-slate-500 mb-3">Map unavailable — showing airports as a list.</p>
         <ul className="space-y-1">
-          {markers.map((m) => (
-            <li key={m.id}>
-              <a href={m.href} className="text-brand-600 hover:underline text-sm">
-                {m.name} ({m.code}) — {m.jobCount} job{m.jobCount === 1 ? "" : "s"}
-              </a>
-            </li>
-          ))}
+          {markers.map((m) => {
+            const tier = tierFor(m.jobCount);
+            return (
+              <li key={m.id} className="flex items-center gap-2">
+                <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: tier.color }} />
+                <a href={m.href} className="text-brand-600 hover:underline text-sm">
+                  {m.name} ({m.code}) — {m.jobCount} job{m.jobCount === 1 ? "" : "s"}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     );
   }
 
-  return <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />;
+  return (
+    <div className="relative">
+      <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />
+      <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm rounded-lg border shadow-sm px-3 py-2 text-xs text-slate-600 space-y-1">
+        <p className="font-medium text-slate-900 mb-1.5">Hiring activity</p>
+        {TIERS.map((tier) => (
+          <div key={tier.label} className="flex items-center gap-2">
+            <span
+              className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
+              style={{ backgroundColor: tier.color, boxShadow: `0 0 4px ${tier.glow}` }}
+            />
+            <span>{tier.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
