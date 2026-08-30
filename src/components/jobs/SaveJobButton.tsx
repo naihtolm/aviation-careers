@@ -35,7 +35,7 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
         onClick={handleClick}
         disabled={isPending}
         className={`text-sm border rounded-md px-2 py-1 disabled:opacity-50 ${
-          saved ? "bg-slate-900 text-white border-slate-900" : "text-slate-600 hover:border-slate-400"
+          saved ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600 hover:border-slate-400"
         }`}
       >
         {saved ? "Saved ✓" : "Save"}

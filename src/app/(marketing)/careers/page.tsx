@@ -18,7 +18,7 @@ export default async function CareerDirectoryPage({
         <div className="flex flex-wrap gap-2 mt-6">
           <Link
             href="/careers"
-            className={`px-3 py-1.5 rounded-full text-sm border ${!params.category ? "bg-slate-900 text-white border-slate-900" : "text-slate-600"}`}
+            className={`px-3 py-1.5 rounded-full text-sm border ${!params.category ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600"}`}
           >
             All
           </Link>
@@ -26,7 +26,7 @@ export default async function CareerDirectoryPage({
             <Link
               key={cat.id}
               href={`/careers?category=${cat.slug}`}
-              className={`px-3 py-1.5 rounded-full text-sm border ${params.category === cat.slug ? "bg-slate-900 text-white border-slate-900" : "text-slate-600"}`}
+              className={`px-3 py-1.5 rounded-full text-sm border ${params.category === cat.slug ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600"}`}
             >
               {cat.name}
             </Link>
@@ -42,7 +42,7 @@ export default async function CareerDirectoryPage({
             <Link
               key={career.id}
               href={`/careers/${career.slug}`}
-              className="border rounded-lg p-4 bg-white hover:border-slate-400"
+              className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
             >
               <p className="font-medium text-slate-900">{career.name}</p>
               <p className="text-sm text-slate-500 mt-1">{career.short_description}</p>

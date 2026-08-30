@@ -30,7 +30,7 @@ export default async function ProfilePage() {
         <h1 className="text-2xl font-semibold text-slate-900 mt-1">Your Profile</h1>
         <p className="text-sm text-slate-500 mt-1">
           Edit everything manually below, or{" "}
-          <Link href="/dashboard/resume" className="text-blue-600 hover:underline">
+          <Link href="/dashboard/resume" className="text-brand-600 hover:underline">
             upload a resume
           </Link>{" "}
           and we'll pull in your experience, education, skills, and certifications for you to review first.

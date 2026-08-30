@@ -44,7 +44,7 @@ export function SearchBar({
       />
       <button
         type="submit"
-        className="bg-slate-900 text-white px-6 py-2 rounded-md hover:bg-slate-700 whitespace-nowrap"
+        className="bg-brand-600 text-white px-6 py-2 rounded-md hover:bg-brand-700 transition-colors whitespace-nowrap"
       >
         Search Jobs
       </button>

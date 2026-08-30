@@ -16,7 +16,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <h1 className="text-2xl font-semibold text-slate-900">
             {company.name}
             {company.verification_status === "approved" && (
-              <span className="ml-2 text-sm text-blue-600 align-middle" title="Verified employer">✓ Verified</span>
+              <span className="ml-2 text-sm text-brand-600 align-middle" title="Verified employer">✓ Verified</span>
             )}
           </h1>
           <p className="text-slate-500 mt-1 capitalize">{company.company_type?.replace("_", " ")}</p>
@@ -26,7 +26,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             href={company.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm border rounded-md px-3 py-1.5 text-slate-600 hover:border-slate-400"
+            className="text-sm border rounded-md px-3 py-1.5 text-slate-600 hover:border-slate-400 hover:shadow-md transition-all"
           >
             Visit website
           </a>
@@ -59,7 +59,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3">
                     {jobs.map((j: any) => (
-                      <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400">
+                      <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400 hover:shadow-md transition-all">
                         <p className="font-medium text-slate-900 text-sm">{j.title}</p>
                         <p className="text-xs text-slate-500 mt-0.5 capitalize">{j.employment_type?.replace("_", " ")}</p>
                       </Link>
@@ -76,7 +76,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                   <ul className="space-y-1">
                     {airportLinks.map((a: any, i: number) => (
                       <li key={i} className="text-sm">
-                        <Link href={`/airports/${a.airports?.iata_code}`} className="text-blue-600 hover:underline">
+                        <Link href={`/airports/${a.airports?.iata_code}`} className="text-brand-600 hover:underline">
                           {a.airports?.name} ({a.airports?.iata_code})
                         </Link>
                         <span className="text-slate-400 ml-2 capitalize">{a.relationship_type.replace("_", " ")}</span>

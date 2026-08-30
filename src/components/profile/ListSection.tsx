@@ -64,7 +64,7 @@ export function ListSection({
         <button
           type="submit"
           disabled={isPending}
-          className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50 disabled:opacity-50"
+          className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50 transition-colors disabled:opacity-50"
         >
           {isPending ? "Adding…" : "Add"}
         </button>

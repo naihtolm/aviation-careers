@@ -247,7 +247,7 @@ export function JobPostForm({
               </div>
             ))}
             {questions.length < 3 && (
-              <button type="button" onClick={addQuestion} className="text-sm text-blue-600 hover:underline">
+              <button type="button" onClick={addQuestion} className="text-sm text-brand-600 hover:underline">
                 + Add screening question ({questions.length}/3)
               </button>
             )}
@@ -286,7 +286,7 @@ export function JobPostForm({
           <button
             type="submit"
             disabled={isPending}
-            className="bg-slate-900 text-white px-6 py-2.5 rounded-md font-medium disabled:opacity-50"
+            className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-6 py-2.5 rounded-md font-medium disabled:opacity-50"
           >
             {isPending ? "Saving…" : "Save Changes"}
           </button>
@@ -296,14 +296,14 @@ export function JobPostForm({
               type="button"
               disabled={isPending}
               onClick={() => handleSubmit(false)}
-              className="border border-slate-300 px-6 py-2.5 rounded-md font-medium disabled:opacity-50 hover:bg-slate-50"
+              className="border border-slate-300 px-6 py-2.5 rounded-md font-medium disabled:opacity-50 hover:bg-slate-50 transition-colors"
             >
               {isPending ? "Saving…" : "Save as Draft"}
             </button>
             <button
               type="submit"
               disabled={isPending}
-              className="bg-slate-900 text-white px-6 py-2.5 rounded-md font-medium disabled:opacity-50"
+              className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-6 py-2.5 rounded-md font-medium disabled:opacity-50"
             >
               {isPending ? "Publishing…" : "Publish Job"}
             </button>

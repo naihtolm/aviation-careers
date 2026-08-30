@@ -48,8 +48,8 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-3 py-2 text-sm capitalize border-b-2 -mb-px ${
-                tab === t ? "border-slate-900 text-slate-900 font-medium" : "border-transparent text-slate-500"
+              className={`px-3 py-2 text-sm capitalize border-b-2 -mb-px transition-colors ${
+                tab === t ? "border-brand-600 text-slate-900 font-medium" : "border-transparent text-slate-500"
               }`}
             >
               {t} ({count})
@@ -80,7 +80,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                     {job.application_type === "platform_application" && (
                       <>
                         {" · "}
-                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-blue-600 hover:underline">
+                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-brand-600 hover:underline">
                           {job.applicantCount} applicant{job.applicantCount === 1 ? "" : "s"}
                         </Link>
                       </>
@@ -94,7 +94,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
             </div>
             <div className="flex gap-2">
               {(job.derived === "draft" || job.derived === "active" || job.derived === "paused" || job.derived === "expired") && (
-                <Link href={`/employer/jobs/${job.id}/edit`} className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50">
+                <Link href={`/employer/jobs/${job.id}/edit`} className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50 transition-colors">
                   Edit
                 </Link>
               )}
@@ -102,7 +102,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                 <button
                   disabled={isPending}
                   onClick={() => handleRenew(job.id)}
-                  className="text-sm border border-slate-900 bg-slate-900 text-white rounded-md px-3 py-1.5 disabled:opacity-50"
+                  className="text-sm border border-brand-600 bg-brand-600 text-white hover:bg-brand-700 transition-colors rounded-md px-3 py-1.5 disabled:opacity-50"
                 >
                   Renew
                 </button>

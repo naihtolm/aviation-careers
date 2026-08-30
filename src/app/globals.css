@@ -1,1 +1,19 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Brand palette -- replaces the raw slate-900/blue-600 defaults that were
+   used everywhere with no actual brand identity behind them. A confident
+   aviation blue, used consistently for every primary action, link, and
+   filled/active state across the site. */
+@theme {
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #d9e6ff;
+  --color-brand-200: #b3ccff;
+  --color-brand-300: #7fa8ff;
+  --color-brand-400: #4d7fff;
+  --color-brand-500: #2b5cf0;
+  --color-brand-600: #1d47c4;
+  --color-brand-700: #16389a;
+  --color-brand-800: #122c78;
+  --color-brand-900: #101f52;
+}

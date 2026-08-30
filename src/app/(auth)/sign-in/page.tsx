@@ -30,14 +30,14 @@ export default function SignInPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700 disabled:opacity-50"
+          className="w-full bg-brand-600 text-white py-2.5 rounded-md font-medium hover:bg-brand-700 transition-colors disabled:opacity-50"
         >
           {isPending ? "Signing in…" : "Sign In"}
         </button>
       </form>
 
       <div className="flex justify-between text-sm text-slate-500 mt-4">
-        <Link href="/sign-up" className="text-blue-600 hover:underline">
+        <Link href="/sign-up" className="text-brand-600 hover:underline">
           Create an account
         </Link>
         <Link href="/reset-password" className="hover:underline">

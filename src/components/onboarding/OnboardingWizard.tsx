@@ -66,7 +66,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
     <div className="max-w-md mx-auto px-4 py-16">
       <div className="flex gap-1 mb-8">
         {STEPS.map((_, i) => (
-          <div key={i} className={`flex-1 h-1 rounded-full ${i <= step ? "bg-slate-900" : "bg-slate-200"}`} />
+          <div key={i} className={`flex-1 h-1 rounded-full ${i <= step ? "bg-brand-600" : "bg-slate-200"}`} />
         ))}
       </div>
 
@@ -202,7 +202,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
         {step < STEPS.length - 1 ? (
           <button
             onClick={() => setStep((s) => s + 1)}
-            className="bg-slate-900 text-white px-5 py-2 rounded-md text-sm font-medium"
+            className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-5 py-2 rounded-md text-sm font-medium"
           >
             Next
           </button>
@@ -210,7 +210,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
           <button
             onClick={handleFinish}
             disabled={isPending}
-            className="bg-slate-900 text-white px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+            className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
           >
             {isPending ? "Saving…" : "Finish"}
           </button>

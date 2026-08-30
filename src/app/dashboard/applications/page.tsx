@@ -34,7 +34,7 @@ export default async function ApplicationsPage() {
           <p className="text-sm text-slate-500 mt-1">
             When you click Apply on a job, we'll track it here so you can follow up.
           </p>
-          <Link href="/jobs" className="inline-block mt-3 text-sm text-blue-600 hover:underline">
+          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
             Browse jobs →
           </Link>
         </div>

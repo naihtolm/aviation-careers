@@ -40,7 +40,7 @@ export default async function AdminJobsPage({
             </option>
           ))}
         </select>
-        <button type="submit" className="border rounded-md px-3 py-1.5 text-sm bg-slate-900 text-white">
+        <button type="submit" className="border rounded-md px-3 py-1.5 text-sm bg-brand-600 text-white hover:bg-brand-700 transition-colors">
           Filter
         </button>
       </form>
@@ -53,7 +53,7 @@ export default async function AdminJobsPage({
             <a
               key={p}
               href={`/admin/jobs?${new URLSearchParams({ ...params, page: String(p) } as any).toString()}`}
-              className={`px-2.5 py-1 rounded-md border ${p === page ? "bg-slate-900 text-white border-slate-900" : "text-slate-600"}`}
+              className={`px-2.5 py-1 rounded-md border ${p === page ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600"}`}
             >
               {p}
             </a>

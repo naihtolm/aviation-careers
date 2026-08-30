@@ -31,7 +31,7 @@ export default async function EmployerAnalyticsPage() {
                   <span className="text-sm capitalize w-24 text-slate-600">{status}</span>
                   <div className="flex-1 bg-slate-100 rounded-full h-2">
                     <div
-                      className="bg-slate-900 h-2 rounded-full"
+                      className="bg-brand-600 h-2 rounded-full"
                       style={{ width: `${(count / totalApplications) * 100}%` }}
                     />
                   </div>
@@ -61,7 +61,7 @@ export default async function EmployerAnalyticsPage() {
                   <div
                     key={d.date}
                     title={`${d.date}: ${d.count}`}
-                    className="flex-1 bg-slate-900 rounded-t"
+                    className="flex-1 bg-brand-600 rounded-t"
                     style={{ height: `${(d.count / maxDayCount) * 100}%`, minHeight: 2 }}
                   />
                 ))}

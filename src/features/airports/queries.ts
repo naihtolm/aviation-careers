@@ -24,7 +24,31 @@ export async function getAirports() {
     if (row.airport_id) counts.set(row.airport_id, (counts.get(row.airport_id) ?? 0) + 1);
   }
 
-  return airports.map((a) => ({ ...a, jobCount: counts.get(a.id) ?? 0 }));
+  // Carrier/hub relationships for the map popup -- "is this airport a
+  // hub, and for who" per company_airports (005_companies_and_employers.sql).
+  const { data: companyLinks } = await supabase
+    .from("company_airports")
+    .select("airport_id, relationship_type, companies ( name )")
+    .in(
+      "airport_id",
+      airports.map((a) => a.id)
+    )
+    .eq("active", true);
+
+  const companiesByAirport = new Map<string, { name: string; relationshipType: string }[]>();
+  for (const row of companyLinks ?? []) {
+    if (!row.airport_id) continue;
+    const list = companiesByAirport.get(row.airport_id) ?? [];
+    const companyName = (row.companies as any)?.name;
+    if (companyName) list.push({ name: companyName, relationshipType: row.relationship_type });
+    companiesByAirport.set(row.airport_id, list);
+  }
+
+  return airports.map((a) => ({
+    ...a,
+    jobCount: counts.get(a.id) ?? 0,
+    companies: companiesByAirport.get(a.id) ?? [],
+  }));
 }
 
 export async function getAirportByCode(code: string) {

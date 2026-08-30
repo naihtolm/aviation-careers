@@ -101,7 +101,7 @@ export function RawJobCard({
           </p>
         </div>
         <button
-          className="text-sm text-blue-600"
+          className="text-sm text-brand-600"
           onClick={() => setExpanded((e) => !e)}
         >
           {expanded ? "Hide details" : "Review"}

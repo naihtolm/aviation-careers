@@ -114,7 +114,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
       <section className="border-t mt-10 pt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-slate-900">Open jobs</h2>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-blue-600 hover:underline">
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline">
             View salary details →
           </Link>
         </div>
@@ -123,7 +123,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         ) : (
           <div className="grid sm:grid-cols-2 gap-3">
             {jobs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400">
+              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400 hover:shadow-md transition-all">
                 <p className="font-medium text-slate-900 text-sm">{j.title}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{j.companies?.name}</p>
               </Link>

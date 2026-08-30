@@ -246,7 +246,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
       <button
         onClick={handleSave}
         disabled={isPending || totalApproved === 0}
-        className="bg-slate-900 text-white px-5 py-2.5 rounded-md text-sm font-medium disabled:opacity-50"
+        className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-5 py-2.5 rounded-md text-sm font-medium disabled:opacity-50"
       >
         {isPending ? "Saving…" : `Save ${totalApproved} item${totalApproved === 1 ? "" : "s"} to profile`}
       </button>

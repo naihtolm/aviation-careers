@@ -10,7 +10,7 @@ export default function EmployerLandingPage() {
       </p>
       <Link
         href="/employers/sign-up"
-        className="inline-block mt-6 bg-slate-900 text-white px-6 py-3 rounded-md font-medium hover:bg-slate-700"
+        className="inline-block mt-6 bg-brand-600 text-white px-6 py-3 rounded-md font-medium hover:bg-brand-700 transition-colors"
       >
         Post a Job
       </Link>

@@ -39,7 +39,7 @@ export default async function ResumePage() {
             {downloadUrl && (
               <>
                 {" · "}
-                <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className="text-brand-600 hover:underline">
                   View file
                 </a>
               </>
@@ -55,7 +55,7 @@ export default async function ResumePage() {
           {latest.resume.upload_status === "processed" && (
             <div className="mt-3 bg-emerald-50 rounded-md p-3">
               <p className="text-sm text-emerald-800">We found information in your resume.</p>
-              <Link href="/dashboard/resume/review" className="text-sm text-blue-600 hover:underline mt-1 inline-block">
+              <Link href="/dashboard/resume/review" className="text-sm text-brand-600 hover:underline mt-1 inline-block">
                 Review and add to profile →
               </Link>
             </div>
@@ -67,7 +67,7 @@ export default async function ResumePage() {
                 We couldn't process this file automatically. No problem — you can still build out your profile by
                 hand.
               </p>
-              <Link href="/dashboard/profile" className="text-sm text-blue-600 hover:underline mt-1 inline-block">
+              <Link href="/dashboard/profile" className="text-sm text-brand-600 hover:underline mt-1 inline-block">
                 Go to profile →
               </Link>
             </div>

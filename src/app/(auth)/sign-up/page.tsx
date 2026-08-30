@@ -31,7 +31,7 @@ export default function SignUpPage() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full bg-slate-900 text-white py-2.5 rounded-md font-medium hover:bg-slate-700 disabled:opacity-50"
+          className="w-full bg-brand-600 text-white py-2.5 rounded-md font-medium hover:bg-brand-700 transition-colors disabled:opacity-50"
         >
           {isPending ? "Creating account…" : "Sign Up"}
         </button>
@@ -39,7 +39,7 @@ export default function SignUpPage() {
 
       <p className="text-sm text-slate-500 mt-4">
         Already have an account?{" "}
-        <Link href="/sign-in" className="text-blue-600 hover:underline">
+        <Link href="/sign-in" className="text-brand-600 hover:underline">
           Sign in
         </Link>
       </p>

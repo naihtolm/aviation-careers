@@ -46,7 +46,7 @@ export default async function SalaryDetailPage({
       {!aggregate ? (
         <div className="border rounded-lg p-6 bg-slate-50 mt-6 text-center">
           <p className="font-medium text-slate-900">No salary data yet for this location</p>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline mt-2 inline-block">
             View national data instead →
           </Link>
         </div>
@@ -71,7 +71,7 @@ export default async function SalaryDetailPage({
                     <span className="text-xs text-slate-500 w-16">{p.label}</span>
                     <div className="flex-1 bg-slate-100 rounded-full h-2">
                       <div
-                        className="bg-slate-900 h-2 rounded-full"
+                        className="bg-brand-600 h-2 rounded-full"
                         style={{ width: `${(p.value / maxValue) * 100}%` }}
                       />
                     </div>
@@ -97,7 +97,7 @@ export default async function SalaryDetailPage({
           <h2 className="text-lg font-semibold text-slate-900 mb-4">Open {career.name} jobs</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {relatedJobs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400">
+              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white hover:border-slate-400 hover:shadow-md transition-all">
                 <p className="font-medium text-slate-900 text-sm">{j.title}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{j.companies?.name}</p>
               </Link>

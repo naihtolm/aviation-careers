@@ -36,19 +36,19 @@ export default async function EmployerDashboardPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
-        <Link href="/employer/jobs/new" className="block border rounded-lg p-4 bg-slate-900 text-white hover:bg-slate-800">
+        <Link href="/employer/jobs/new" className="block border rounded-lg p-4 bg-brand-600 text-white hover:bg-brand-700 transition-colors">
           <p className="font-medium">Post a Job</p>
           <p className="text-sm text-slate-300 mt-1">Create a new listing.</p>
         </Link>
-        <Link href="/employer/jobs" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/employer/jobs" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Manage Jobs</p>
           <p className="text-sm text-slate-500 mt-1">{jobs.length} total</p>
         </Link>
-        <Link href="/employer/company" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/employer/company" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Company Profile</p>
           <p className="text-sm text-slate-500 mt-1">Edit your company info.</p>
         </Link>
-        <Link href="/employer/analytics" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/employer/analytics" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Analytics</p>
           <p className="text-sm text-slate-500 mt-1">Views and applies over time.</p>
         </Link>

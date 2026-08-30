@@ -39,7 +39,7 @@ export default async function HomePage() {
               <Link
                 key={cat.id}
                 href={`/jobs?career_category=${cat.slug}`}
-                className="border rounded-lg p-4 bg-white hover:border-slate-400"
+                className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
               >
                 <p className="font-medium text-slate-900">{cat.name}</p>
                 {cat.description && <p className="text-xs text-slate-500 mt-1">{cat.description}</p>}
@@ -52,7 +52,7 @@ export default async function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Featured jobs</h2>
-          <Link href="/jobs" className="text-sm text-blue-600 hover:underline">
+          <Link href="/jobs" className="text-sm text-brand-600 hover:underline">
             View all jobs →
           </Link>
         </div>
@@ -73,7 +73,7 @@ export default async function HomePage() {
         <section className="max-w-6xl mx-auto px-4 py-10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Explore by airport</h2>
-            <Link href="/airports" className="text-sm text-blue-600 hover:underline">
+            <Link href="/airports" className="text-sm text-brand-600 hover:underline">
               View all airports →
             </Link>
           </div>
@@ -84,7 +84,10 @@ export default async function HomePage() {
                 id: a.id,
                 latitude: a.latitude,
                 longitude: a.longitude,
-                label: `${a.name} (${code}) — ${a.jobCount} job${a.jobCount === 1 ? "" : "s"}`,
+                name: a.name,
+                code,
+                jobCount: a.jobCount,
+                companies: a.companies,
                 href: `/airports/${code}`,
               };
             })}
@@ -100,7 +103,7 @@ export default async function HomePage() {
               <Link
                 key={c.id}
                 href={`/companies/${c.slug}`}
-                className="border rounded-lg p-4 bg-white hover:border-slate-400"
+                className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
               >
                 <p className="font-medium text-slate-900">{c.name}</p>
                 <p className="text-xs text-slate-500 mt-1">

@@ -22,7 +22,10 @@ export default async function AirportDirectoryPage() {
                   id: a.id,
                   latitude: a.latitude,
                   longitude: a.longitude,
-                  label: `${a.name} (${code})`,
+                  name: a.name,
+                  code,
+                  jobCount: a.jobCount,
+                  companies: a.companies,
                   href: `/airports/${code}`,
                 };
               })}
@@ -35,7 +38,7 @@ export default async function AirportDirectoryPage() {
                 <Link
                   key={a.id}
                   href={`/airports/${code}`}
-                  className="border rounded-lg p-4 bg-white hover:border-slate-400"
+                  className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
                 >
                   <p className="font-medium text-slate-900">
                     {a.name} <span className="text-slate-400 font-normal">({code})</span>

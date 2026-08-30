@@ -22,8 +22,8 @@ export function AdminNav() {
           <Link
             key={link.href}
             href={link.href}
-            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px ${
-              active ? "border-slate-900 text-slate-900 font-medium" : "border-transparent text-slate-500 hover:text-slate-700"
+            className={`px-3 py-2 text-sm whitespace-nowrap border-b-2 -mb-px transition-colors ${
+              active ? "border-brand-600 text-slate-900 font-medium" : "border-transparent text-slate-500 hover:text-slate-700"
             }`}
           >
             {link.label}

@@ -40,17 +40,17 @@ export default async function DashboardPage() {
           <p className="text-sm text-slate-500">{completion}%</p>
         </div>
         <div className="bg-slate-100 rounded-full h-2">
-          <div className="bg-slate-900 h-2 rounded-full" style={{ width: `${completion}%` }} />
+          <div className="bg-brand-600 h-2 rounded-full" style={{ width: `${completion}%` }} />
         </div>
         <p className="text-sm text-slate-500 mt-3">{nextStepSuggestion(data)}</p>
-        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-blue-600 hover:underline">
+        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
           Edit profile →
         </Link>
       </div>
 
       <Link
         href="/dashboard/resume"
-        className="block border rounded-lg p-4 bg-slate-900 text-white mt-4 hover:bg-slate-800"
+        className="block border rounded-lg p-4 bg-brand-600 text-white mt-4 hover:bg-brand-700 transition-colors"
       >
         <p className="font-medium">Upload your resume</p>
         <p className="text-sm text-slate-300 mt-1">
@@ -59,25 +59,25 @@ export default async function DashboardPage() {
       </Link>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
-        <Link href="/jobs" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/jobs" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Browse jobs</p>
           <p className="text-sm text-slate-500 mt-1">Search real aviation openings.</p>
         </Link>
-        <Link href="/dashboard/profile" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/dashboard/profile" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Your profile</p>
           <p className="text-sm text-slate-500 mt-1">
             {data.experience.length} experience · {data.education.length} education · {data.skills.length} skills
           </p>
         </Link>
-        <Link href="/dashboard/saved" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/dashboard/saved" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Saved jobs</p>
           <p className="text-sm text-slate-500 mt-1">{savedJobs.length} saved</p>
         </Link>
-        <Link href="/dashboard/applications" className="border rounded-lg p-4 bg-white hover:border-slate-400">
+        <Link href="/dashboard/applications" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all">
           <p className="font-medium text-slate-900">Applications</p>
           <p className="text-sm text-slate-500 mt-1">{applicationCount} tracked</p>
         </Link>
-        <Link href="/dashboard/alerts" className="border rounded-lg p-4 bg-white hover:border-slate-400 sm:col-span-2">
+        <Link href="/dashboard/alerts" className="border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all sm:col-span-2">
           <p className="font-medium text-slate-900">Job alerts</p>
           <p className="text-sm text-slate-500 mt-1">
             {alerts.filter((a: any) => a.is_active).length} active alert{alerts.filter((a: any) => a.is_active).length === 1 ? "" : "s"}

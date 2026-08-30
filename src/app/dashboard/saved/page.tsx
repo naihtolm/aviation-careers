@@ -21,7 +21,7 @@ export default async function SavedJobsPage() {
         <div className="border rounded-lg p-8 text-center bg-white mt-6">
           <p className="text-slate-900 font-medium">No saved jobs yet</p>
           <p className="text-sm text-slate-500 mt-1">Save jobs you're interested in to find them here later.</p>
-          <Link href="/jobs" className="inline-block mt-3 text-sm text-blue-600 hover:underline">
+          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline">
             Browse jobs →
           </Link>
         </div>

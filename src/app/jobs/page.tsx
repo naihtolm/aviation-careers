@@ -7,6 +7,16 @@ const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "in
 const EXPERIENCE_LEVELS = ["entry_level", "one_to_two", "three_to_five", "five_to_ten", "ten_plus"];
 const WORK_ARRANGEMENTS = ["on_site", "hybrid", "remote"];
 
+// Matches the labeling already used on the profile page's experience
+// level dropdown (components/profile/ProfileDetailsForm.tsx).
+const EXPERIENCE_LABELS: Record<string, string> = {
+  entry_level: "Entry level",
+  one_to_two: "1–2 years",
+  three_to_five: "3–5 years",
+  five_to_ten: "5–10 years",
+  ten_plus: "10+ years",
+};
+
 function label(value: string) {
   return value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
@@ -44,7 +54,7 @@ export default async function JobSearchPage({
       <SearchBar defaultKeyword={params.keyword} defaultLocation={params.location} />
 
       <div className="mt-8 grid md:grid-cols-[220px_1fr] gap-8">
-        <aside className="space-y-6">
+        <aside className="space-y-6 md:sticky md:top-24 md:self-start">
           <div>
             <p className="text-sm font-medium text-slate-900 mb-2">Employment type</p>
             <ul className="space-y-1">
@@ -69,7 +79,7 @@ export default async function JobSearchPage({
                     href={filterHref("experience_level", v)}
                     className={`text-sm block ${params.experience_level === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
                   >
-                    {label(v)}
+                    {EXPERIENCE_LABELS[v]}
                   </a>
                 </li>
               ))}

@@ -53,7 +53,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
                       <Link
                         key={i}
                         href={`/companies/${c.companies?.slug}`}
-                        className="border rounded-lg p-3 bg-white hover:border-slate-400"
+                        className="border rounded-lg p-3 bg-white hover:border-slate-400 hover:shadow-md transition-all"
                       >
                         <p className="font-medium text-slate-900 text-sm">{c.companies?.name}</p>
                         <p className="text-xs text-slate-500 mt-0.5 capitalize">{c.relationship_type.replace("_", " ")}</p>
@@ -80,7 +80,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
               content: (
                 <p className="text-sm text-slate-500">
                   Airport-level salary breakdowns aren't available yet — visit the{" "}
-                  <Link href="/salaries" className="text-blue-600 hover:underline">
+                  <Link href="/salaries" className="text-brand-600 hover:underline">
                     Salary Explorer
                   </Link>{" "}
                   for national data by career.

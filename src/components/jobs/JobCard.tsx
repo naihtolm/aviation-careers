@@ -25,7 +25,7 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className="block border rounded-lg p-4 bg-white hover:border-slate-400 transition-colors"
+      className="block border rounded-lg p-4 bg-white hover:border-slate-400 hover:shadow-md transition-all"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -33,7 +33,7 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
           <p className="text-sm text-slate-500 mt-0.5">
             {job.companies?.name}
             {job.companies?.verification_status === "approved" && (
-              <span className="ml-1 text-blue-600" title="Verified employer">✓</span>
+              <span className="ml-1 text-brand-600" title="Verified employer">✓</span>
             )}
           </p>
         </div>

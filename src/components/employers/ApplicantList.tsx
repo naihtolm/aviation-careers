@@ -56,7 +56,7 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
             </div>
 
             {a.resumeUrl && (
-              <a href={a.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+              <a href={a.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline mt-2 inline-block">
                 View resume{a.resumeFileName ? ` (${a.resumeFileName})` : ""}
               </a>
             )}

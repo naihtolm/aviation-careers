@@ -11,8 +11,8 @@ export function Tabs({ tabs }: { tabs: { label: string; content: ReactNode }[] }
           <button
             key={tab.label}
             onClick={() => setActive(i)}
-            className={`px-4 py-2 text-sm border-b-2 -mb-px ${
-              active === i ? "border-slate-900 text-slate-900 font-medium" : "border-transparent text-slate-500"
+            className={`px-4 py-2 text-sm border-b-2 -mb-px transition-colors ${
+              active === i ? "border-brand-600 text-slate-900 font-medium" : "border-transparent text-slate-500"
             }`}
           >
             {tab.label}
