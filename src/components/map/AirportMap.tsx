@@ -32,11 +32,11 @@ export interface MapMarker {
 // ~30), not derived from the dataset, since a fixed, explainable scale is
 // easier for a non-technical admin to reason about than a moving target.
 const TIERS = [
-  { min: 0, max: 0, color: "#94a3b8", glow: "rgba(148,163,184,0.4)", label: "No open jobs", radius: 7, hot: false },
-  { min: 1, max: 3, color: "#38bdf8", glow: "rgba(56,189,248,0.5)", label: "1–3 open jobs", radius: 9, hot: false },
-  { min: 4, max: 7, color: "#fbbf24", glow: "rgba(251,191,36,0.55)", label: "4–7 open jobs", radius: 11, hot: false },
-  { min: 8, max: 15, color: "#fb923c", glow: "rgba(251,146,60,0.6)", label: "8–15 open jobs", radius: 13, hot: false },
-  { min: 16, max: Infinity, color: "#ef4444", glow: "rgba(239,68,68,0.65)", label: "16+ open jobs", radius: 15, hot: true },
+  { min: 0, max: 0, color: "#94a3b8", glow: "rgba(148,163,184,0.4)", label: "No open jobs", radius: 5, hot: false },
+  { min: 1, max: 3, color: "#38bdf8", glow: "rgba(56,189,248,0.5)", label: "1–3 open jobs", radius: 6.5, hot: false },
+  { min: 4, max: 7, color: "#fbbf24", glow: "rgba(251,191,36,0.55)", label: "4–7 open jobs", radius: 8, hot: false },
+  { min: 8, max: 15, color: "#fb923c", glow: "rgba(251,146,60,0.6)", label: "8–15 open jobs", radius: 9.5, hot: false },
+  { min: 16, max: Infinity, color: "#ef4444", glow: "rgba(239,68,68,0.65)", label: "16+ open jobs", radius: 11, hot: true },
 ];
 
 function tierFor(jobCount: number) {
@@ -203,13 +203,13 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
   return (
     <div className="relative">
       <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />
-      <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm rounded-lg border shadow-sm px-3 py-2 text-xs text-slate-600 space-y-1">
-        <p className="font-medium text-slate-900 mb-1.5">Hiring activity</p>
+      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm rounded-md border shadow-sm px-2 py-1.5 text-[10px] leading-tight text-slate-600 space-y-0.5">
+        <p className="font-medium text-slate-900 mb-1">Hiring activity</p>
         {TIERS.map((tier) => (
-          <div key={tier.label} className="flex items-center gap-2">
+          <div key={tier.label} className="flex items-center gap-1.5">
             <span
-              className="inline-block w-2.5 h-2.5 rounded-full shrink-0"
-              style={{ backgroundColor: tier.color, boxShadow: `0 0 4px ${tier.glow}` }}
+              className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ backgroundColor: tier.color, boxShadow: `0 0 3px ${tier.glow}` }}
             />
             <span>{tier.label}</span>
           </div>
