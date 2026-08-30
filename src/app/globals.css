@@ -46,3 +46,42 @@
   .reveal { opacity: 1; transform: none; transition: none; }
   .animate-float-slow, .animate-float-slow-reverse { animation: none; }
 }
+
+/* Site-wide interaction feedback. Individual components were each adding
+   their own hover color + transition-colors by hand, which meant any link
+   or button someone forgot to update (or adds later) silently had no
+   animation and no felt response to a click. Applying this once, to every
+   <a>/<button>/[role=button] via the base layer, means it's automatic
+   everywhere: whatever hover color/background a component already
+   declares now animates instead of snapping, and every click gets an
+   immediate opacity dip so pressing something is always visibly
+   confirmed -- not something that has to be remembered per element. Layer
+   ordering (this lives in Tailwind's own "base" layer) is what lets a
+   component's own hover/disabled utility classes still win over this
+   whenever they conflict. */
+@layer base {
+  a, button, [role="button"] {
+    transition-property: color, background-color, border-color, text-decoration-color, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  a:active,
+  button:not(:disabled):active,
+  [role="button"]:active {
+    opacity: 0.7;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    a, button, [role="button"] {
+      transition: none;
+    }
+  }
+}
