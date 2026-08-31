@@ -29,21 +29,29 @@
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
-/* A faint brand-tinted glow near the top of every page, echoing the hero's
-   ambient glow blobs at a fraction of the strength. Anchored to the
-   document, not the viewport, so it decays within the first ~300px -- on
-   hero pages that's mostly hidden behind the opaque navy hero anyway, so
-   in practice this one only shows on pages with no hero (sign-in,
-   dashboard). The matching glow for the *bottom* of the page lives on the
-   Footer component itself (see Footer.tsx) rather than here, since a
-   document-relative position can't know where a given page's white content
-   ends and the footer begins -- anchoring to the footer's own box gets
-   that right regardless of how tall the page is. */
 body {
   font-family: var(--font-sans);
   background-color: #f8fafc;
-  background-image: radial-gradient(1100px 480px at 50% -120px, rgba(217, 230, 255, 0.55), transparent 70%);
-  background-repeat: no-repeat;
+}
+
+/* A continuous blue -> baby-blue -> blue wash across the *entire* white
+   content area, not just a glow near the top or bottom. Percentage-based
+   stops on a linear-gradient scale to whatever height <main> actually
+   renders at, so a three-card page and a long scrolling job list both get
+   the full blue-to-baby-blue-to-blue journey top to bottom, proportional
+   to their own length, rather than a fixed-pixel effect that only reaches
+   part of a long page or overwhelms a short one. The top stop mostly sits
+   *behind* the opaque hero on hero pages (harmless -- it's meant to keep
+   going where the top wash used to only reach non-hero pages like
+   sign-in), and the bottom stop is what actually solves the flat gap right
+   before the footer that prompted this in the first place. */
+main {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(77, 127, 255, 0.16) 0%,
+    rgba(217, 230, 255, 0.55) 50%,
+    rgba(77, 127, 255, 0.16) 100%
+  );
 }
 
 /* Slow ambient drift for the hero's background glow shapes. */

@@ -155,10 +155,11 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
     mapboxgl.accessToken = token;
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      // Streets style instead of the flat light one -- real roads, parks,
-      // and water give the map actual color to sit behind the colored
-      // job-density markers, instead of everything reading as gray on gray.
-      style: "mapbox://styles/mapbox/streets-v12",
+      // Dark style rather than Streets -- the colored, glowing job-density
+      // markers (and the white ring around each one) read far more clearly
+      // against a dark basemap than against light streets/parks, and it
+      // matches the navy identity used everywhere else on the site.
+      style: "mapbox://styles/mapbox/dark-v11",
       center: [markers[0].longitude, markers[0].latitude],
       zoom: markers.length === 1 ? 9 : 3,
     });
