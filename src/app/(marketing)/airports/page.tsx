@@ -3,7 +3,7 @@ import { Plane, Briefcase } from "lucide-react";
 import { AirportMap } from "@/components/map/AirportMap";
 import { PageHero } from "@/components/layout/PageHero";
 import { getAirports } from "@/features/airports/queries";
-import { airportTypeLabel } from "@/lib/airport";
+import { airportTypeLabel, airportTypeColorClasses } from "@/lib/airport";
 
 export default async function AirportDirectoryPage() {
   const airports = await getAirports();
@@ -43,6 +43,7 @@ export default async function AirportDirectoryPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
             {airports.map((a: any) => {
               const code = a.iata_code ?? a.icao_code;
+              const typeColors = airportTypeColorClasses(a.airport_type);
               return (
                 <Link
                   key={a.id}
@@ -50,7 +51,7 @@ export default async function AirportDirectoryPage() {
                   className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                    <div className={`w-9 h-9 rounded-lg ${typeColors.badgeBg} ${typeColors.badgeText} flex items-center justify-center shrink-0`}>
                       <Plane className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
@@ -60,7 +61,7 @@ export default async function AirportDirectoryPage() {
                       <p className="text-sm text-slate-500 mt-1">{a.city}, {a.state}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {airportTypeLabel(a.airport_type) && (
-                          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 bg-slate-100 rounded px-1.5 py-0.5">
+                          <span className={`text-[10px] font-semibold uppercase tracking-wide ${typeColors.badgeText} ${typeColors.badgeBg} rounded px-1.5 py-0.5`}>
                             {airportTypeLabel(a.airport_type)}
                           </span>
                         )}
@@ -69,6 +70,14 @@ export default async function AirportDirectoryPage() {
                           {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
                         </p>
                       </div>
+                      {(a.topCareer || a.companies.length > 0) && (
+                        <p className="text-xs text-slate-500 mt-1.5 truncate">
+                          {a.topCareer && <>Top: {a.topCareer.name}</>}
+                          {a.topCareer && a.companies.length > 0 && " · "}
+                          {a.companies.length > 0 &&
+                            `${a.companies.length} employer${a.companies.length === 1 ? "" : "s"}`}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </Link>

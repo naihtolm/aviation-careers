@@ -29,8 +29,17 @@
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* A faint brand-tinted glow behind every page, echoing the hero's ambient
+   glow blobs at a fraction of the strength -- ties the plain white/slate
+   content pages back to the hero's identity instead of dropping into flat
+   gray the moment you scroll past it. Positioned relative to the document,
+   not the viewport, so it sits near the top of each page and fades out
+   before it can compete with content readability. */
 body {
   font-family: var(--font-sans);
+  background-color: #f8fafc;
+  background-image: radial-gradient(1100px 480px at 50% -120px, rgba(217, 230, 255, 0.55), transparent 70%);
+  background-repeat: no-repeat;
 }
 
 /* Slow ambient drift for the hero's background glow shapes. */

@@ -3,8 +3,28 @@ import { createServerActionClient } from "@/lib/supabase/server";
 
 export async function getCareersForSalaryPicker() {
   const supabase = await createServerActionClient();
-  const { data } = await supabase.from("careers").select("id, name, slug").eq("active", true).order("name");
-  return data ?? [];
+  const { data: careers } = await supabase
+    .from("careers")
+    .select("id, name, slug, career_categories ( name, slug )")
+    .eq("active", true)
+    .order("name");
+  if (!careers?.length) return [];
+
+  // National median (location_id + experience_level both null) for each
+  // career, so the picker can show a real pay figure instead of a bare link.
+  const { data: aggregates } = await supabase
+    .from("salary_aggregates")
+    .select("career_id, salary_p50")
+    .in(
+      "career_id",
+      careers.map((c) => c.id)
+    )
+    .is("location_id", null)
+    .is("experience_level", null);
+
+  const medianByCareer = new Map((aggregates ?? []).map((a) => [a.career_id, a.salary_p50]));
+
+  return careers.map((c) => ({ ...c, medianSalary: medianByCareer.get(c.id) ?? null }));
 }
 
 export async function getSalaryDetail(careerSlug: string, locationSlug: string) {
