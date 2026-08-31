@@ -29,12 +29,16 @@
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
-/* A faint brand-tinted glow behind every page, echoing the hero's ambient
-   glow blobs at a fraction of the strength -- ties the plain white/slate
-   content pages back to the hero's identity instead of dropping into flat
-   gray the moment you scroll past it. Positioned relative to the document,
-   not the viewport, so it sits near the top of each page and fades out
-   before it can compete with content readability. */
+/* A faint brand-tinted glow near the top of every page, echoing the hero's
+   ambient glow blobs at a fraction of the strength. Anchored to the
+   document, not the viewport, so it decays within the first ~300px -- on
+   hero pages that's mostly hidden behind the opaque navy hero anyway, so
+   in practice this one only shows on pages with no hero (sign-in,
+   dashboard). The matching glow for the *bottom* of the page lives on the
+   Footer component itself (see Footer.tsx) rather than here, since a
+   document-relative position can't know where a given page's white content
+   ends and the footer begins -- anchoring to the footer's own box gets
+   that right regardless of how tall the page is. */
 body {
   font-family: var(--font-sans);
   background-color: #f8fafc;

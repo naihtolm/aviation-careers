@@ -26,8 +26,18 @@ const COLUMNS: { title: string; icon: LucideIcon; links: { href: string; label: 
 // the very bottom of every page, not only the top of the homepage.
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-navy-950 to-navy-900 border-t border-white/10">
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+    <footer className="relative bg-gradient-to-b from-navy-950 to-navy-900 border-t border-white/10">
+      {/* Bleeds upward out of the footer's own box into whatever content
+          sits right above it -- unlike a document-anchored body gradient,
+          this lands in the same place (the white-to-navy seam) no matter
+          how tall the page's content is, so a short page (three cards) and
+          a long one both get the same soft wash right before the footer
+          instead of a hard, flat cutoff. */}
+      <div
+        className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[360px] rounded-full bg-brand-400/40 blur-3xl"
+        aria-hidden
+      />
+      <div className="relative max-w-6xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2 md:col-span-2">
           <p className="font-display text-white font-semibold">Aviation Careers</p>
           <p className="text-sm text-slate-300 mt-2 max-w-xs">
