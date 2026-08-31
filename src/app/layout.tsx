@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-slate-50 text-slate-900 antialiased">
         <Header />
-        <main className="pb-16 md:pb-0">{children}</main>
+        <main>{children}</main>
         <Footer />
         <MobileNav />
       </body>
