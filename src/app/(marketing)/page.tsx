@@ -128,7 +128,7 @@ export default async function HomePage() {
 
       {airports.length > 0 && (
         <Reveal>
-          <section className="bg-gradient-to-b from-slate-50 to-white py-14">
+          <section className="py-14">
             <div className="max-w-6xl mx-auto px-4">
               <div className="flex items-center justify-between mb-5">
                 <h2 className="font-display text-xl font-semibold text-slate-900">Explore by airport</h2>
@@ -137,6 +137,7 @@ export default async function HomePage() {
                 </Link>
               </div>
               <AirportMap
+                height={260}
                 markers={airports.map((a: any) => {
                   const code = a.iata_code ?? a.icao_code;
                   return {
