@@ -27,6 +27,56 @@ export function CategoryIcon({ name, className = "w-6 h-6" }: { name: string; cl
     );
   }
 
+  if (lower.includes("emergency") || lower.includes("public safety")) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" className={className}>
+        <path
+          d="M12 3l7 3v6c0 4.5-3 8.25-7 9-4-.75-7-4.5-7-9V6l7-3z"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+        />
+        <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("military") || lower.includes("defense")) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" className={className}>
+        <path
+          d="M12 3l7 3v6c0 4.5-3 8.25-7 9-4-.75-7-4.5-7-9V6l7-3z"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinejoin="round"
+        />
+        <path d="M9 12.5l2 2 4-4.5" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("cargo") || lower.includes("logistics")) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" className={className}>
+        <path d="M3 7.5L12 3l9 4.5-9 4.5-9-4.5z" stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" />
+        <path d="M3 7.5V16l9 4.5V12M21 7.5V16l-9 4.5" stroke="currentColor" strokeWidth="1.75" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  if (lower.includes("general aviation") || lower.includes("private")) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" className={className}>
+        <path
+          d="M3 14l7-1.5V6a2 2 0 0 1 4 0v6.5l7 1.5v2l-7-1V18l2.5 1.5V21l-4-1-4 1v-1.5L11 18v-3.5l-8 1v-2z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
   if (lower.includes("flight") || lower.includes("pilot") || lower.includes("operations")) {
     return (
       <svg viewBox="0 0 24 24" fill="none" className={className}>
