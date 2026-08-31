@@ -17,6 +17,9 @@ const COMPANY_TYPES = [
   "government",
   "staffing",
   "training",
+  "ems_operator",
+  "law_enforcement",
+  "military_defense",
   "other",
 ];
 
