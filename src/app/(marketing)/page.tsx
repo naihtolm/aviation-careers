@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Flame } from "lucide-react";
+import { Flame, Bell, UserRound, Building2 } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
 import { AirportMap } from "@/components/map/AirportMap";
@@ -182,6 +182,53 @@ export default async function HomePage() {
           </section>
         </Reveal>
       )}
+
+      <section className="bg-gradient-to-b from-navy-950 to-navy-900 py-14">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="font-display text-xl font-semibold text-white mb-6">Connect with us</h2>
+          <div className="grid sm:grid-cols-3 gap-8">
+            <div>
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+                <Bell className="w-5 h-5" />
+              </div>
+              <h3 className="text-white font-medium mt-3">Get job alerts</h3>
+              <p className="text-slate-300 text-sm mt-1">Be the first to know when new aviation jobs matching your search are posted.</p>
+              <Link
+                href="/dashboard/alerts"
+                className="inline-block mt-4 border border-white/40 text-white text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
+              >
+                Create an alert
+              </Link>
+            </div>
+            <div>
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+                <UserRound className="w-5 h-5" />
+              </div>
+              <h3 className="text-white font-medium mt-3">Build your profile</h3>
+              <p className="text-slate-300 text-sm mt-1">Upload your resume and add your experience so employers can find and match with you.</p>
+              <Link
+                href="/dashboard/profile"
+                className="inline-block mt-4 border border-white/40 text-white text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
+              >
+                Build my profile
+              </Link>
+            </div>
+            <div>
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <h3 className="text-white font-medium mt-3">For employers</h3>
+              <p className="text-slate-300 text-sm mt-1">Post open roles and reach qualified mechanics, pilots, engineers, and more.</p>
+              <Link
+                href="/employers"
+                className="inline-block mt-4 border border-white/40 text-white text-xs font-semibold uppercase tracking-wide px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
+              >
+                Post a job
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

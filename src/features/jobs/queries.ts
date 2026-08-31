@@ -24,6 +24,13 @@ export interface JobSearchParams {
   publishedAfter?: string; // ISO timestamp — used by alert delivery to find only new matches
   page?: number;
   pageSize?: number;
+  sort?: "newest" | "salary_desc";
+}
+
+function maxPublicSalary(comp: any[] | undefined): number {
+  const row = (comp ?? []).find((c) => c.is_public);
+  if (!row) return -1; // jobs with no public salary sort last, not first
+  return row.max_amount ?? row.min_amount ?? -1;
 }
 
 function milesBetween(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -129,6 +136,14 @@ export async function searchJobs(params: JobSearchParams) {
         })
       );
     }
+  }
+
+  // Salary lives in a related table (one job can have multiple compensation
+  // rows), so ranking by it isn't something a single Postgres .order() on
+  // the jobs table can express -- sorted in application code instead, same
+  // place the salaryMin/location filters above already run.
+  if (params.sort === "salary_desc") {
+    results = [...results].sort((a: any, b: any) => maxPublicSalary(b.job_compensation) - maxPublicSalary(a.job_compensation));
   }
 
   return { jobs: results, total: count ?? results.length, page, pageSize };

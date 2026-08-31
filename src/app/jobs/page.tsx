@@ -39,6 +39,7 @@ export default async function JobSearchPage({
       location: params.location,
       radiusMiles: params.radius ? Number(params.radius) : undefined,
       salaryMin: params.salary_min ? Number(params.salary_min) : undefined,
+      sort: params.sort === "salary_desc" ? "salary_desc" : "newest",
     }),
     getCurrentUser(),
   ]);
@@ -116,9 +117,26 @@ export default async function JobSearchPage({
         </aside>
 
         <div>
-          <p className="text-sm text-slate-500 mb-4">
-            {total} job{total === 1 ? "" : "s"} found
-          </p>
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <p className="text-sm text-slate-500">
+              {total} job{total === 1 ? "" : "s"} found
+            </p>
+            <div className="flex items-center gap-1 text-sm">
+              <span className="text-slate-400">Sort:</span>
+              <a
+                href={filterHref("sort", "newest")}
+                className={`px-2 py-1 rounded-md ${!params.sort || params.sort === "newest" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
+              >
+                Newest
+              </a>
+              <a
+                href={filterHref("sort", "salary_desc")}
+                className={`px-2 py-1 rounded-md ${params.sort === "salary_desc" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
+              >
+                Highest salary
+              </a>
+            </div>
+          </div>
 
           {jobs.length === 0 ? (
             <div className="border rounded-lg p-8 text-center bg-white">

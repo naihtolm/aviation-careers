@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { Bookmark } from "lucide-react";
 import { getCurrentUser } from "@/features/profile/queries";
 import { getEmployerContext } from "@/features/employers/queries";
+import { getSavedJobIds } from "@/features/jobs/queries";
 import { signOut } from "@/features/auth/actions";
 import { HeaderNav } from "@/components/layout/HeaderNav";
 
 export async function Header() {
   const user = await getCurrentUser();
   const employerContext = user ? await getEmployerContext(user.id) : null;
+  const savedCount = user && !employerContext ? (await getSavedJobIds(user.id)).size : 0;
 
   return (
     <header className="border-b bg-white sticky top-0 z-40">
@@ -21,6 +24,15 @@ export async function Header() {
           </Link>
           {user ? (
             <>
+              {!employerContext && (
+                <Link
+                  href="/dashboard/saved"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  <Bookmark className="w-4 h-4" />
+                  {savedCount} Saved
+                </Link>
+              )}
               <Link href={employerContext ? "/employer/dashboard" : "/dashboard"} className="text-slate-600 hover:text-slate-900 transition-colors">
                 Dashboard
               </Link>
