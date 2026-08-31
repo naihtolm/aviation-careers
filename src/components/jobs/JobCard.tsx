@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { MapPin, Clock, Home, DollarSign, Tag } from "lucide-react";
+import { MapPin, Clock, Home, DollarSign } from "lucide-react";
 import { SaveJobButton } from "@/components/jobs/SaveJobButton";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { timeAgo, isRecent } from "@/lib/time";
+import { categoryColorClasses } from "@/lib/categoryColor";
 
 function formatSalary(comp: any[] | undefined) {
   const row = (comp ?? []).find((c) => c.is_public);
@@ -27,11 +28,12 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
   const salary = formatSalary(job.job_compensation);
   const posted = job.published_at ? timeAgo(job.published_at) : null;
   const fresh = isRecent(job.published_at);
+  const colors = categoryColorClasses(job.careers?.name);
 
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className="block border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+      className={`block border border-l-4 ${colors.border} rounded-lg p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
     >
       <div className="flex items-start gap-3">
         <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={40} />
@@ -53,15 +55,14 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
               </span>
             )}
           </div>
+          {job.careers?.name && (
+            <span className={`inline-block mt-1.5 text-[11px] font-medium px-1.5 py-0.5 rounded ${colors.tagBg} ${colors.tagText}`}>
+              {job.careers.name}
+            </span>
+          )}
         </div>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
-        {job.careers?.name && (
-          <span className="inline-flex items-center gap-1">
-            <Tag className="w-3.5 h-3.5 shrink-0" />
-            {job.careers.name}
-          </span>
-        )}
         <span className="inline-flex items-center gap-1">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
           {primaryLocation(job.job_locations)}

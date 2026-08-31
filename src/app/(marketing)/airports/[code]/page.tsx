@@ -30,7 +30,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
         </div>
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-semibold text-slate-900">
+            <h1 className="font-display text-2xl font-semibold text-slate-900">
               {airport.name} <span className="text-slate-400 font-normal">({airport.iata_code ?? airport.icao_code})</span>
             </h1>
             {airportTypeLabel(airport.airport_type) && (

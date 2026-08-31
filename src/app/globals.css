@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
@@ -16,6 +17,20 @@
   --color-brand-700: #16389a;
   --color-brand-800: #122c78;
   --color-brand-900: #101f52;
+
+  /* Deep navy for the hero/stats "instrument panel at night" treatment --
+     distinct from --color-brand-900, which is still used for plain solid
+     brand fills elsewhere (buttons, badges). */
+  --color-navy-950: #0b1330;
+  --color-navy-900: #142049;
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+body {
+  font-family: var(--font-sans);
 }
 
 /* Slow ambient drift for the hero's background glow shapes. */

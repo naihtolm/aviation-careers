@@ -10,6 +10,7 @@ import { getFeaturedJobs, getHomepageStats } from "@/features/jobs/queries";
 import { getCareerCategories } from "@/features/careers/queries";
 import { getFeaturedCompanies } from "@/features/companies/queries";
 import { getAirports } from "@/features/airports/queries";
+import { categoryColorClasses } from "@/lib/categoryColor";
 
 export default async function HomePage() {
   const [featuredJobs, categories, companies, airports, stats] = await Promise.all([
@@ -22,45 +23,49 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-700 to-brand-600">
-        {/* Ambient glow shapes -- pure CSS, no images, subtle drift via
-            the animate-float-slow keyframes in globals.css. */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
+        {/* Ambient glow -- pure CSS, no images, subtle drift via the
+            animate-float-slow keyframes in globals.css. Positioned to
+            match the two radial highlights in the approved design comp. */}
         <div
-          className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full bg-brand-400/30 blur-3xl animate-float-slow"
+          className="pointer-events-none absolute -top-24 -left-16 w-96 h-96 rounded-full bg-brand-400/25 blur-3xl animate-float-slow"
           aria-hidden
         />
         <div
-          className="pointer-events-none absolute -bottom-32 -right-16 w-[28rem] h-[28rem] rounded-full bg-brand-300/20 blur-3xl animate-float-slow-reverse"
+          className="pointer-events-none absolute top-0 -right-24 w-[26rem] h-[26rem] rounded-full bg-brand-500/30 blur-3xl animate-float-slow-reverse"
           aria-hidden
         />
 
-        <div className="relative max-w-4xl mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Find your next job in <span className="text-brand-200">aviation</span>
+        <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-10 text-center">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight text-balance">
+            Find your next job in <span className="text-brand-300">aviation</span>
           </h1>
-          <p className="text-brand-100 mt-4 text-lg">
+          <p className="text-slate-300 mt-4 text-lg">
             Mechanics, pilots, engineers, ramp agents, and more — search real openings across the industry.
           </p>
 
-          <div className="mt-8 text-left drop-shadow-xl">
-            <SearchBar />
+          <div className="mt-8 text-left">
+            <SearchBar dark />
           </div>
+        </div>
 
-          <div className="mt-10 flex items-center justify-center gap-8 sm:gap-14 text-white">
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold">{stats.jobCount}+</p>
-              <p className="text-xs sm:text-sm text-brand-100 mt-0.5">Open roles</p>
-            </div>
-            <div className="w-px h-10 bg-white/20" />
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold">{stats.companyCount}</p>
-              <p className="text-xs sm:text-sm text-brand-100 mt-0.5">Employers</p>
-            </div>
-            <div className="w-px h-10 bg-white/20" />
-            <div>
-              <p className="text-2xl sm:text-3xl font-bold">{stats.airportCount}</p>
-              <p className="text-xs sm:text-sm text-brand-100 mt-0.5">Airports</p>
-            </div>
+        <div className="relative max-w-4xl mx-auto px-4 pb-14 flex items-center justify-center gap-8 sm:gap-16 text-white">
+          <div className="text-center">
+            <p className="font-mono-data text-2xl sm:text-3xl font-semibold">
+              {stats.jobCount}
+              <span className="text-brand-300">+</span>
+            </p>
+            <p className="text-[11px] sm:text-xs uppercase tracking-wide text-slate-400 mt-1">Open roles</p>
+          </div>
+          <div className="w-px h-10 bg-white/15" />
+          <div className="text-center">
+            <p className="font-mono-data text-2xl sm:text-3xl font-semibold">{stats.companyCount}</p>
+            <p className="text-[11px] sm:text-xs uppercase tracking-wide text-slate-400 mt-1">Employers</p>
+          </div>
+          <div className="w-px h-10 bg-white/15" />
+          <div className="text-center">
+            <p className="font-mono-data text-2xl sm:text-3xl font-semibold">{stats.airportCount}</p>
+            <p className="text-[11px] sm:text-xs uppercase tracking-wide text-slate-400 mt-1">Airports</p>
           </div>
         </div>
       </section>
@@ -68,21 +73,24 @@ export default async function HomePage() {
       {categories.length > 0 && (
         <Reveal>
           <section className="max-w-6xl mx-auto px-4 py-14">
-            <h2 className="text-xl font-semibold text-slate-900 mb-5">Browse by career category</h2>
+            <h2 className="font-display text-xl font-semibold text-slate-900 mb-5">Browse by career category</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/jobs?career_category=${cat.slug}`}
-                  className="group border rounded-xl p-5 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
-                >
-                  <div className="w-11 h-11 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center group-hover:bg-brand-600 group-hover:text-white transition-colors">
-                    <CategoryIcon name={cat.name} />
-                  </div>
-                  <p className="font-medium text-slate-900 mt-3">{cat.name}</p>
-                  {cat.description && <p className="text-xs text-slate-500 mt-1">{cat.description}</p>}
-                </Link>
-              ))}
+              {categories.map((cat) => {
+                const colors = categoryColorClasses(cat.name);
+                return (
+                  <Link
+                    key={cat.id}
+                    href={`/jobs?career_category=${cat.slug}`}
+                    className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                  >
+                    <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
+                      <CategoryIcon name={cat.name} />
+                    </div>
+                    <p className="font-medium text-slate-900 mt-3">{cat.name}</p>
+                    {cat.description && <p className="text-xs text-slate-500 mt-1">{cat.description}</p>}
+                  </Link>
+                );
+              })}
             </div>
           </section>
         </Reveal>
@@ -92,7 +100,7 @@ export default async function HomePage() {
         <section className="max-w-6xl mx-auto px-4 py-14">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h2 className="text-xl font-semibold text-slate-900">Featured jobs</h2>
+              <h2 className="font-display text-xl font-semibold text-slate-900">Featured jobs</h2>
               {stats.newJobsThisWeek > 0 && (
                 <span className="inline-flex items-center gap-1 text-xs font-medium bg-orange-50 text-orange-600 px-2 py-1 rounded-full">
                   <Flame className="w-3.5 h-3.5" />
@@ -123,7 +131,7 @@ export default async function HomePage() {
           <section className="bg-gradient-to-b from-slate-50 to-white py-14">
             <div className="max-w-6xl mx-auto px-4">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-xl font-semibold text-slate-900">Explore by airport</h2>
+                <h2 className="font-display text-xl font-semibold text-slate-900">Explore by airport</h2>
                 <Link href="/airports" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
                   View all airports →
                 </Link>
@@ -153,7 +161,7 @@ export default async function HomePage() {
       {companies.length > 0 && (
         <Reveal>
           <section className="max-w-6xl mx-auto px-4 py-14">
-            <h2 className="text-xl font-semibold text-slate-900 mb-5">Featured employers</h2>
+            <h2 className="font-display text-xl font-semibold text-slate-900 mb-5">Featured employers</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {companies.map((c) => (
                 <Link

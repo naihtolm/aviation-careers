@@ -39,7 +39,7 @@ export default async function SalaryDetailPage({
       <p className="text-sm text-slate-500">
         <Link href="/salaries" className="hover:underline hover:text-slate-900 transition-colors">Salaries</Link> / {career.name}
       </p>
-      <h1 className="text-2xl font-semibold text-slate-900 mt-1">
+      <h1 className="font-display text-2xl font-semibold text-slate-900 mt-1">
         {career.name} Salary — {locationLabel}
       </h1>
 

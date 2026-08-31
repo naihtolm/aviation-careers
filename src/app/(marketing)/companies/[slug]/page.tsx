@@ -19,7 +19,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         <div className="flex items-start gap-4">
           <CompanyLogo name={company.name} website={company.website} size={56} className="mt-1" />
           <div>
-            <h1 className="text-2xl font-semibold text-slate-900">
+            <h1 className="font-display text-2xl font-semibold text-slate-900">
               {company.name}
               {company.verification_status === "approved" && (
                 <span className="ml-2 text-sm text-brand-600 align-middle" title="Verified employer">✓ Verified</span>

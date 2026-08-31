@@ -55,7 +55,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={48} className="mt-0.5" />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-semibold text-slate-900">{job.title}</h1>
+                <h1 className="font-display text-2xl font-semibold text-slate-900">{job.title}</h1>
                 {fresh && (
                   <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">
                     New

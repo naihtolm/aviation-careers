@@ -4,6 +4,7 @@ import { DollarSign, TrendingUp, GraduationCap, ShieldCheck, Briefcase } from "l
 import { getCareerBySlug } from "@/features/careers/queries";
 import { JobCard } from "@/components/jobs/JobCard";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { categoryColorClasses } from "@/lib/categoryColor";
 
 function fmt(n: number | null) {
   return n ? `$${Math.round(n).toLocaleString()}` : null;
@@ -14,6 +15,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
   const result = await getCareerBySlug(slug);
   if (!result) notFound();
   const { career, content, salary, certRequirements, jobs } = result;
+  const colors = categoryColorClasses(career.career_categories?.name ?? career.name);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -22,11 +24,11 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         {career.career_categories?.name && <> / {career.career_categories.name}</>}
       </p>
       <div className="flex items-center gap-3 mt-3">
-        <div className="w-11 h-11 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+        <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center shrink-0`}>
           <CategoryIcon name={career.career_categories?.name ?? career.name} />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-slate-900">{career.name}</h1>
+          <h1 className="font-display text-2xl font-semibold text-slate-900">{career.name}</h1>
           <p className="text-slate-500 mt-0.5">{career.short_description}</p>
         </div>
       </div>

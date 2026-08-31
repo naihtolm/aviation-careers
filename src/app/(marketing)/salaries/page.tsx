@@ -6,7 +6,7 @@ export default async function SalaryExplorerPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-slate-900">Salary Explorer</h1>
+      <h1 className="font-display text-2xl font-semibold text-slate-900">Salary Explorer</h1>
       <p className="text-slate-500 mt-1">Pick a career to see pay ranges sourced from official labor data.</p>
 
       {careers.length === 0 ? (

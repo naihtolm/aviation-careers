@@ -9,7 +9,7 @@ export default async function AirportDirectoryPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-slate-900">Airport Directory</h1>
+      <h1 className="font-display text-2xl font-semibold text-slate-900">Airport Directory</h1>
       <p className="text-slate-500 mt-1">Browse aviation jobs and employers by airport.</p>
 
       {airports.length === 0 ? (
