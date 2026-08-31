@@ -1,6 +1,7 @@
-import { Clock, TrendingUp, Home } from "lucide-react";
+import { Clock, TrendingUp, Home, Briefcase } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
+import { PageHero } from "@/components/layout/PageHero";
 import { searchJobs, getSavedJobIds } from "@/features/jobs/queries";
 import { getCurrentUser } from "@/features/profile/queries";
 
@@ -51,10 +52,12 @@ export default async function JobSearchPage({
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <SearchBar defaultKeyword={params.keyword} defaultLocation={params.location} />
+    <div>
+      <PageHero title="Browse Aviation Jobs" description={`${total} open role${total === 1 ? "" : "s"} across the industry right now`} icon={Briefcase}>
+        <SearchBar dark defaultKeyword={params.keyword} defaultLocation={params.location} />
+      </PageHero>
 
-      <div className="mt-8 grid md:grid-cols-[220px_1fr] gap-8">
+      <div className="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-[220px_1fr] gap-8">
         <aside className="space-y-6 md:sticky md:top-24 md:self-start">
           <div>
             <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Plane, Briefcase } from "lucide-react";
 import { AirportMap } from "@/components/map/AirportMap";
+import { PageHero } from "@/components/layout/PageHero";
 import { getAirports } from "@/features/airports/queries";
 import { airportTypeLabel } from "@/lib/airport";
 
@@ -8,10 +9,14 @@ export default async function AirportDirectoryPage() {
   const airports = await getAirports();
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="font-display text-2xl font-semibold text-slate-900">Airport Directory</h1>
-      <p className="text-slate-500 mt-1">Browse aviation jobs and employers by airport.</p>
+    <div>
+      <PageHero
+        title="Airport Directory"
+        description="Browse aviation jobs and employers by airport."
+        icon={Plane}
+      />
 
+      <div className="max-w-5xl mx-auto px-4 py-8">
       {airports.length === 0 ? (
         <p className="text-slate-500 mt-8">No airports listed yet.</p>
       ) : (
@@ -72,6 +77,7 @@ export default async function AirportDirectoryPage() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

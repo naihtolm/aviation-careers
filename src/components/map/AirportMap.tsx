@@ -114,7 +114,15 @@ function buildMarkerElement(jobCount: number) {
   const tier = tierFor(jobCount);
   const size = tier.radius * 2;
   const el = document.createElement("div");
-  el.style.cssText = `position:relative;width:${size}px;height:${size}px;cursor:pointer;`;
+  // mapboxgl.Marker positions its element with an absolute-positioned
+  // transform anchored at (0,0) in the canvas container. Setting this to
+  // position:relative kept the element in normal document flow *in
+  // addition* to that transform, so each marker after the first stacked
+  // below the previous ones' natural box height before the transform was
+  // even applied -- the more markers on the map, the further off they'd
+  // drift from their real lat/lng (this is what showed up as markers
+  // sitting in the ocean instead of on their airport).
+  el.style.cssText = `position:absolute;width:${size}px;height:${size}px;cursor:pointer;`;
 
   // Busiest airports get a radar-style pulse ring behind the dot so they
   // draw the eye immediately instead of blending into the rest of the map.
@@ -214,7 +222,23 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
     }
     if (markers.length > 1) map.fitBounds(bounds, { padding: 60, maxZoom: 8 });
 
-    return () => map.remove();
+    // Mapbox sizes its WebGL canvas to the container's dimensions at
+    // construction time. If the container's real size changes afterward --
+    // a web font (Space Grotesk/Inter) finishing its async load and
+    // reflowing the page, a responsive breakpoint, a sidebar toggling --
+    // the canvas keeps its stale internal size while the CSS box moves on,
+    // so every projected marker drifts further from its true lat/lng the
+    // farther it sits from the map's center. This was reported as markers
+    // landing in the ocean instead of on the airports they represent.
+    // ResizeObserver + map.resize() keeps the canvas in sync whenever that
+    // happens, not just once at mount.
+    const resizeObserver = new ResizeObserver(() => map.resize());
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      map.remove();
+    };
   }, [markers]);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;

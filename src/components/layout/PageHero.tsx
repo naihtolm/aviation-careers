@@ -1,0 +1,44 @@
+import type { LucideIcon } from "lucide-react";
+
+// The same navy-glow identity as the homepage hero, in a shorter form, so
+// secondary pages (jobs, careers, airports) carry the same designed,
+// "this is a real product" feel instead of dropping straight into a plain
+// white page the moment you leave the homepage.
+export function PageHero({
+  title,
+  description,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  description?: string;
+  icon?: LucideIcon;
+  children?: React.ReactNode;
+}) {
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
+      <div
+        className="pointer-events-none absolute -top-20 -left-16 w-72 h-72 rounded-full bg-brand-400/20 blur-3xl animate-float-slow"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute -top-10 -right-20 w-80 h-80 rounded-full bg-brand-500/25 blur-3xl animate-float-slow-reverse"
+        aria-hidden
+      />
+      <div className="relative max-w-6xl mx-auto px-4 py-10">
+        <div className="flex items-center gap-3">
+          {Icon && (
+            <div className="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center shrink-0">
+              <Icon className="w-6 h-6" />
+            </div>
+          )}
+          <div>
+            <h1 className="font-display text-2xl md:text-3xl font-bold text-white text-balance">{title}</h1>
+            {description && <p className="text-slate-300 mt-0.5">{description}</p>}
+          </div>
+        </div>
+        {children && <div className="mt-6">{children}</div>}
+      </div>
+    </section>
+  );
+}

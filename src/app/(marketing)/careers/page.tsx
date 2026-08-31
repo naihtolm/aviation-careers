@@ -3,6 +3,7 @@ import { GraduationCap, ShieldCheck } from "lucide-react";
 import { getCareerCategories, getCareers } from "@/features/careers/queries";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { categoryColorClasses } from "@/lib/categoryColor";
+import { PageHero } from "@/components/layout/PageHero";
 
 export default async function CareerDirectoryPage({
   searchParams,
@@ -13,30 +14,38 @@ export default async function CareerDirectoryPage({
   const [categories, careers] = await Promise.all([getCareerCategories(), getCareers(params.category)]);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="font-display text-2xl font-semibold text-slate-900">Aviation Career Guides</h1>
-      <p className="text-slate-500 mt-1">Explore roles across the industry — what they pay, what they require, and how to get started.</p>
-
-      {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-6">
-          <Link
-            href="/careers"
-            className={`px-3 py-1.5 rounded-full text-sm border ${!params.category ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600"}`}
-          >
-            All
-          </Link>
-          {categories.map((cat) => (
+    <div>
+      <PageHero title="Aviation Career Guides" description="Explore roles across the industry — what they pay, what they require, and how to get started.">
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2">
             <Link
-              key={cat.id}
-              href={`/careers?category=${cat.slug}`}
-              className={`px-3 py-1.5 rounded-full text-sm border ${params.category === cat.slug ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors border-brand-600" : "text-slate-600"}`}
+              href="/careers"
+              className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                !params.category
+                  ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                  : "text-white/80 border-white/25 hover:bg-white/10"
+              }`}
             >
-              {cat.name}
+              All
             </Link>
-          ))}
-        </div>
-      )}
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/careers?category=${cat.slug}`}
+                className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                  params.category === cat.slug
+                    ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                    : "text-white/80 border-white/25 hover:bg-white/10"
+                }`}
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+        )}
+      </PageHero>
 
+      <div className="max-w-5xl mx-auto px-4 py-8">
       {careers.length === 0 ? (
         <p className="text-slate-500 mt-8">No career guides published yet for this category.</p>
       ) : (
@@ -73,6 +82,7 @@ export default async function CareerDirectoryPage({
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

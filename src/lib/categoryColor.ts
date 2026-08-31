@@ -5,6 +5,7 @@ export interface CategoryColorClasses {
   tagBg: string;
   tagText: string;
   text: string;
+  cardWash: string;
 }
 
 const ENGINEERING: CategoryColorClasses = {
@@ -14,6 +15,7 @@ const ENGINEERING: CategoryColorClasses = {
   tagBg: "bg-indigo-50",
   tagText: "text-indigo-700",
   text: "text-indigo-600",
+  cardWash: "bg-gradient-to-br from-indigo-50/60 to-white",
 };
 
 const MAINTENANCE: CategoryColorClasses = {
@@ -23,6 +25,7 @@ const MAINTENANCE: CategoryColorClasses = {
   tagBg: "bg-amber-50",
   tagText: "text-amber-800",
   text: "text-amber-700",
+  cardWash: "bg-gradient-to-br from-amber-50/60 to-white",
 };
 
 const FLIGHT: CategoryColorClasses = {
@@ -32,6 +35,7 @@ const FLIGHT: CategoryColorClasses = {
   tagBg: "bg-sky-50",
   tagText: "text-sky-800",
   text: "text-sky-700",
+  cardWash: "bg-gradient-to-br from-sky-50/60 to-white",
 };
 
 const DEFAULT: CategoryColorClasses = {
@@ -41,6 +45,7 @@ const DEFAULT: CategoryColorClasses = {
   tagBg: "bg-brand-50",
   tagText: "text-brand-700",
   text: "text-brand-600",
+  cardWash: "bg-gradient-to-br from-brand-50/60 to-white",
 };
 
 // Same substring matching as CategoryIcon so a career/category always gets
