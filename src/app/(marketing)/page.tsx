@@ -23,7 +23,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
+      <section className="relative overflow-hidden -mt-16 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
         {/* Ambient glow -- pure CSS, no images, subtle drift via the
             animate-float-slow keyframes in globals.css. Positioned to
             match the two radial highlights in the approved design comp. */}
@@ -36,7 +36,7 @@ export default async function HomePage() {
           aria-hidden
         />
 
-        <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-10 text-center">
+        <div className="relative max-w-4xl mx-auto px-4 pt-36 pb-10 text-center">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight text-balance">
             Find your next job in <span className="text-brand-300">aviation</span>
           </h1>

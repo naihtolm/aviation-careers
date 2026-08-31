@@ -16,7 +16,7 @@ export function PageHero({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
+    <section className="relative overflow-hidden -mt-16 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
       <div
         className="pointer-events-none absolute -top-20 -left-16 w-72 h-72 rounded-full bg-brand-400/20 blur-3xl animate-float-slow"
         aria-hidden
@@ -25,7 +25,7 @@ export function PageHero({
         className="pointer-events-none absolute -top-10 -right-20 w-80 h-80 rounded-full bg-brand-500/25 blur-3xl animate-float-slow-reverse"
         aria-hidden
       />
-      <div className="relative max-w-6xl mx-auto px-4 py-10">
+      <div className="relative max-w-6xl mx-auto px-4 pt-[6.5rem] pb-10">
         <div className="flex items-center gap-3">
           {Icon && (
             <div className="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center shrink-0">
