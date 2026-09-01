@@ -18,6 +18,11 @@ const TITLE_RULES: Array<{ career: string; terms: RegExp[] }> = [
   { career: "Airline Pilot", terms: [/\bairline pilot\b/i, /\bfirst officer\b/i, /\bcaptain\b/i] },
   { career: "Flight Instructor", terms: [/\bflight instructor\b/i, /\bcfi\b/i] },
   { career: "Ramp Agent", terms: [/\bramp agent\b/i, /\bground handler\b/i] },
+  { career: "Human Resources Specialist", terms: [/\bcompensation\b/i, /\bpeople operations\b/i] },
+  // Generic engineering catch-all -- checked last, after every more specific
+  // rule above, so a role like "Aircraft Dynamics Engineer" or "Staff GNC
+  // Engineer" still gets a reasonable suggestion instead of none at all.
+  { career: "Aerospace Engineer", terms: [/\bengineer(ing)?\b/i] },
 ];
 
 export function suggestCareerId(title: string, careers: CareerOption[]): string | null {
