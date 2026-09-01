@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { approveRawJob, rejectRawJob } from "./actions";
 import { decodeHtmlEntities } from "@/lib/html";
+import { groupCareers, suggestCareerId } from "@/lib/careerMatching";
 
 // Clearbit's free, unauthenticated company-lookup API -- used only to
 // suggest a website domain as the admin types a new company name so they
@@ -24,6 +25,7 @@ async function suggestWebsite(companyName: string): Promise<string | null> {
 interface Career {
   id: string;
   name: string;
+  categoryName?: string | null;
 }
 
 interface Company {
@@ -67,9 +69,12 @@ export function RawJobCard({
   careers: Career[];
   companies: Company[];
 }) {
+  const title = record.raw_data.title ?? "(untitled)";
+  const suggestedCareerId = suggestCareerId(title, careers);
+  const careerGroups = groupCareers(careers);
   const [isPending, startTransition] = useTransition();
   const [expanded, setExpanded] = useState(false);
-  const [careerId, setCareerId] = useState("");
+  const [careerId, setCareerId] = useState(suggestedCareerId ?? "");
   const [companyId, setCompanyId] = useState("");
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyWebsite, setNewCompanyWebsite] = useState("");
@@ -92,7 +97,6 @@ export function RawJobCard({
     return () => clearTimeout(timer);
   }, [newCompanyName, companyId, websiteEdited]);
 
-  const title = record.raw_data.title ?? "(untitled)";
   const location = record.raw_data.location?.name ?? "";
   const parsedLocation = parseLocation(location);
   const [city, setCity] = useState(parsedLocation.city);
@@ -145,19 +149,24 @@ export function RawJobCard({
       {expanded && (
         <div className="mt-4 space-y-3 border-t pt-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Career category</label>
+            <label className="block text-sm font-medium mb-1">Career role</label>
             <select
               className="w-full border rounded px-2 py-1"
               value={careerId}
               onChange={(e) => setCareerId(e.target.value)}
             >
-              <option value="">— Select career —</option>
-              {careers.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
+              <option value="">— Select career role —</option>
+              {careerGroups.map((group) => (
+                <optgroup key={group.category} label={group.category}>
+                  {group.options.map((career) => (
+                    <option key={career.id} value={career.id}>{career.name}</option>
+                  ))}
+                </optgroup>
               ))}
             </select>
+            {suggestedCareerId && careerId === suggestedCareerId && (
+              <p className="text-xs text-emerald-700 mt-1">Suggested from the job title — please confirm before publishing.</p>
+            )}
           </div>
 
           <div className="flex gap-2">

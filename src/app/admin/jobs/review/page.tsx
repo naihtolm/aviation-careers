@@ -38,7 +38,7 @@ export default async function JobReviewPage() {
   // Careers list for the approve-form dropdown.
   const { data: careers } = await supabase
     .from("careers")
-    .select("id, name")
+    .select("id, name, career_categories ( name )")
     .eq("active", true)
     .order("name");
 
@@ -72,7 +72,11 @@ export default async function JobReviewPage() {
           <RawJobCard
             key={record.id}
             record={record}
-            careers={careers ?? []}
+            careers={(careers ?? []).map((career: any) => ({
+              id: career.id,
+              name: career.name,
+              categoryName: career.career_categories?.name ?? null,
+            }))}
             companies={companies ?? []}
           />
         ))}
