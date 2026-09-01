@@ -48,9 +48,6 @@ interface RawJobRecord {
   source_id: string;
 }
 
-// Roughly matches the site's job-card treatment elsewhere (e.g. the
-// companies directory), so this admin screen looks like part of the same
-// product instead of a bare internal tool.
 function timeAgo(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   const hours = Math.floor(ms / 3_600_000);
@@ -58,6 +55,18 @@ function timeAgo(iso: string): string {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
+}
+
+// Date.now() returns a different value on the server (at request time) than
+// on the client (at hydration time) -- with 300+ records on this page, the
+// odds that at least one crosses an hour/day boundary in between are high
+// enough that it reliably triggered a React hydration mismatch. Computing
+// it only after mount keeps the server-rendered HTML and the first client
+// render identical; the real value fills in a moment later.
+function TimeAgo({ iso }: { iso: string }) {
+  const [label, setLabel] = useState<string | null>(null);
+  useEffect(() => setLabel(timeAgo(iso)), [iso]);
+  return <>{label ?? "…"}</>;
 }
 
 // Greenhouse location strings vary a lot: "Irvine, CA", "Manassas, VA",
@@ -179,7 +188,7 @@ export function RawJobCard({
             </span>
             <span className="inline-flex items-center gap-1 text-slate-400">
               <Clock className="w-3.5 h-3.5" />
-              {timeAgo(record.received_at)}
+              <TimeAgo iso={record.received_at} />
             </span>
           </div>
         </div>
