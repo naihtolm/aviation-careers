@@ -1,5 +1,38 @@
 // features/companies/queries.ts
 import { createServerActionClient } from "@/lib/supabase/server";
+import { getSectorBySlug } from "@/lib/sectors";
+
+export async function getAllCompanies(sectorSlug?: string) {
+  const supabase = await createServerActionClient();
+  let query = supabase
+    .from("companies")
+    .select("id, name, slug, logo_path, website, company_type, veteran_friendly, verification_status")
+    .eq("status", "active");
+
+  if (sectorSlug) {
+    const sector = getSectorBySlug(sectorSlug);
+    if (sector) query = query.in("company_type", sector.companyTypes);
+  }
+
+  const { data: companies } = await query;
+  if (!companies?.length) return [];
+
+  const { data: jobCounts } = await supabase
+    .from("jobs")
+    .select("company_id")
+    .eq("status", "active")
+    .in(
+      "company_id",
+      companies.map((c) => c.id)
+    );
+  const counts = new Map<string, number>();
+  for (const row of jobCounts ?? []) {
+    counts.set(row.company_id, (counts.get(row.company_id) ?? 0) + 1);
+  }
+  return companies
+    .map((c) => ({ ...c, jobCount: counts.get(c.id) ?? 0 }))
+    .sort((a, b) => b.jobCount - a.jobCount);
+}
 
 export async function getFeaturedCompanies(limit = 6) {
   const supabase = await createServerActionClient();

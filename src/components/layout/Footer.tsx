@@ -18,6 +18,7 @@ const COLUMNS: { title: string; icon: LucideIcon; links: { href: string; label: 
     links: [
       { href: "/airports", label: "Airports", icon: Plane },
       { href: "/sectors", label: "Sectors", icon: LayoutGrid },
+      { href: "/companies", label: "Employers", icon: Building2 },
       { href: "/employers", label: "For Employers", icon: Building2 },
     ],
   },
