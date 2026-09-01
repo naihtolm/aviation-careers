@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { airportTypeLabel } from "@/lib/airport";
+import { SECTORS, sectorColorClasses } from "@/lib/sectors";
 
 const RELATIONSHIP_LABELS: Record<string, string> = {
   hub: "Hub",
@@ -24,7 +25,7 @@ export interface MapMarker {
   jobCount: number;
   airportType?: string | null;
   topCareer?: { name: string; count: number } | null;
-  companies?: { name: string; relationshipType: string }[];
+  companies?: { name: string; relationshipType: string; companyType?: string | null }[];
   href: string;
 }
 
@@ -145,7 +146,35 @@ function buildMarkerElement(jobCount: number) {
 export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; height?: number }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  const mapReadyRef = useRef(false);
+  const [mapReady, setMapReady] = useState(false);
+  const mapMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const [sectorFilter, setSectorFilter] = useState<string | null>(null);
 
+  // Only sectors with at least one company actually linked to one of these
+  // airports get a filter pill -- showing all 9 when 8 of them would just
+  // filter down to zero markers reads as broken, not as a feature.
+  const availableSectors = useMemo(() => {
+    const presentTypes = new Set<string>();
+    for (const m of markers) {
+      for (const c of m.companies ?? []) {
+        if (c.companyType) presentTypes.add(c.companyType);
+      }
+    }
+    return SECTORS.filter((s) => s.companyTypes.some((t) => presentTypes.has(t)));
+  }, [markers]);
+
+  const visibleMarkers = useMemo(() => {
+    if (!sectorFilter) return markers;
+    const sector = SECTORS.find((s) => s.slug === sectorFilter);
+    if (!sector) return markers;
+    return markers.filter((m) => m.companies?.some((c) => c.companyType && sector.companyTypes.includes(c.companyType)));
+  }, [markers, sectorFilter]);
+
+  // Map creation runs once on mount, independent of filtering -- rebuilding
+  // the whole WebGL map (and losing the user's pan/zoom) every time a
+  // filter pill is clicked would be a much worse experience than just
+  // swapping which markers are shown on the same map instance.
   useEffect(() => {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
     if (!token || !containerRef.current || markers.length === 0) return;
@@ -188,8 +217,42 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
       }
     });
 
+    // Mapbox sizes its WebGL canvas to the container's dimensions at
+    // construction time. If the container's real size changes afterward --
+    // a web font (Space Grotesk/Inter) finishing its async load and
+    // reflowing the page, a responsive breakpoint, a sidebar toggling --
+    // the canvas keeps its stale internal size while the CSS box moves on,
+    // so every projected marker drifts further from its true lat/lng the
+    // farther it sits from the map's center. This was reported as markers
+    // landing in the ocean instead of on the airports they represent.
+    // ResizeObserver + map.resize() keeps the canvas in sync whenever that
+    // happens, not just once at mount.
+    const resizeObserver = new ResizeObserver(() => map.resize());
+    resizeObserver.observe(containerRef.current);
+
+    mapReadyRef.current = true;
+    setMapReady(true);
+
+    return () => {
+      resizeObserver.disconnect();
+      mapReadyRef.current = false;
+      map.remove();
+    };
+  }, [markers]);
+
+  // Marker rendering: re-runs whenever the sector filter changes (or the
+  // underlying marker list changes), clearing whatever markers are
+  // currently on the map and adding the visible set -- without touching
+  // the map instance itself, so pan/zoom state survives a filter click.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+
+    for (const m of mapMarkersRef.current) m.remove();
+    mapMarkersRef.current = [];
+
     const bounds = new mapboxgl.LngLatBounds();
-    for (const marker of markers) {
+    for (const marker of visibleMarkers) {
       // Plain div, not a link -- clicking/hovering opens the popup (which
       // has its own link through to the airport page), rather than the
       // marker itself competing with the popup for the click.
@@ -197,6 +260,7 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
 
       const popup = new mapboxgl.Popup({ offset: 12, closeButton: false }).setHTML(popupHtml(marker));
       const mapMarker = new mapboxgl.Marker(el).setLngLat([marker.longitude, marker.latitude]).setPopup(popup).addTo(map);
+      mapMarkersRef.current.push(mapMarker);
 
       let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
       el.addEventListener("mouseenter", () => {
@@ -221,26 +285,8 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
 
       bounds.extend([marker.longitude, marker.latitude]);
     }
-    if (markers.length > 1) map.fitBounds(bounds, { padding: 60, maxZoom: 8 });
-
-    // Mapbox sizes its WebGL canvas to the container's dimensions at
-    // construction time. If the container's real size changes afterward --
-    // a web font (Space Grotesk/Inter) finishing its async load and
-    // reflowing the page, a responsive breakpoint, a sidebar toggling --
-    // the canvas keeps its stale internal size while the CSS box moves on,
-    // so every projected marker drifts further from its true lat/lng the
-    // farther it sits from the map's center. This was reported as markers
-    // landing in the ocean instead of on the airports they represent.
-    // ResizeObserver + map.resize() keeps the canvas in sync whenever that
-    // happens, not just once at mount.
-    const resizeObserver = new ResizeObserver(() => map.resize());
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-      map.remove();
-    };
-  }, [markers]);
+    if (visibleMarkers.length > 1) map.fitBounds(bounds, { padding: 60, maxZoom: 8 });
+  }, [visibleMarkers, mapReady]);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
   if (!token) {
@@ -267,6 +313,38 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
 
   return (
     <div>
+      {availableSectors.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <button
+            type="button"
+            onClick={() => setSectorFilter(null)}
+            className={`text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
+              sectorFilter === null
+                ? "bg-slate-900 text-white border-slate-900"
+                : "text-slate-600 border-slate-300 hover:bg-slate-50"
+            }`}
+          >
+            All sectors
+          </button>
+          {availableSectors.map((sector) => {
+            const colors = sectorColorClasses(sector.colorKey);
+            const active = sectorFilter === sector.slug;
+            return (
+              <button
+                key={sector.slug}
+                type="button"
+                onClick={() => setSectorFilter(active ? null : sector.slug)}
+                className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
+                  active ? `${colors.tagBg} ${colors.tagText} border-current` : "text-slate-600 border-slate-300 hover:bg-slate-50"
+                }`}
+              >
+                <sector.icon className="w-3 h-3" />
+                {sector.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />
       {/* Below the map rather than overlaid on it -- an absolutely
           positioned legend risks sitting right where a popup for a nearby

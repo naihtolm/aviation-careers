@@ -52,19 +52,19 @@ export async function getAirports() {
   // hub, and for who" per company_airports (005_companies_and_employers.sql).
   const { data: companyLinks } = await supabase
     .from("company_airports")
-    .select("airport_id, relationship_type, companies ( name )")
+    .select("airport_id, relationship_type, companies ( name, company_type )")
     .in(
       "airport_id",
       airports.map((a) => a.id)
     )
     .eq("active", true);
 
-  const companiesByAirport = new Map<string, { name: string; relationshipType: string }[]>();
+  const companiesByAirport = new Map<string, { name: string; relationshipType: string; companyType: string | null }[]>();
   for (const row of companyLinks ?? []) {
     if (!row.airport_id) continue;
     const list = companiesByAirport.get(row.airport_id) ?? [];
-    const companyName = (row.companies as any)?.name;
-    if (companyName) list.push({ name: companyName, relationshipType: row.relationship_type });
+    const company = row.companies as any;
+    if (company?.name) list.push({ name: company.name, relationshipType: row.relationship_type, companyType: company.company_type ?? null });
     companiesByAirport.set(row.airport_id, list);
   }
 
