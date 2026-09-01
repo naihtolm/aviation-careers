@@ -27,6 +27,33 @@ export async function getFeaturedCompanies(limit = 6) {
     .sort((a, b) => b.jobCount - a.jobCount);
 }
 
+export async function getVeteranFriendlyCompanies(limit = 12) {
+  const supabase = await createServerActionClient();
+  const { data: companies } = await supabase
+    .from("companies")
+    .select("id, name, slug, logo_path, website, company_type")
+    .eq("status", "active")
+    .eq("veteran_friendly", true)
+    .limit(limit);
+  if (!companies?.length) return [];
+
+  const { data: jobCounts } = await supabase
+    .from("jobs")
+    .select("company_id")
+    .eq("status", "active")
+    .in(
+      "company_id",
+      companies.map((c) => c.id)
+    );
+  const counts = new Map<string, number>();
+  for (const row of jobCounts ?? []) {
+    counts.set(row.company_id, (counts.get(row.company_id) ?? 0) + 1);
+  }
+  return companies
+    .map((c) => ({ ...c, jobCount: counts.get(c.id) ?? 0 }))
+    .sort((a, b) => b.jobCount - a.jobCount);
+}
+
 export async function getCompanyBySlug(slug: string) {
   const supabase = await createServerActionClient();
   const { data: company } = await supabase

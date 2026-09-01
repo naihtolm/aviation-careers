@@ -20,6 +20,7 @@ export async function registerEmployer(formData: FormData) {
   const companyType = String(formData.get("companyType") ?? "other");
   const website = String(formData.get("website") ?? "").trim();
   const verificationMethod = String(formData.get("verificationMethod") ?? "").trim();
+  const veteranFriendly = formData.get("veteranFriendly") === "on";
 
   if (!companyName) return { error: "Company name is required." };
 
@@ -48,6 +49,7 @@ export async function registerEmployer(formData: FormData) {
       website: website || null,
       status: "pending",
       verification_status: "pending",
+      veteran_friendly: veteranFriendly,
     })
     .select("id")
     .single();

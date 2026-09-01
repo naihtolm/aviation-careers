@@ -66,6 +66,10 @@ export default function EmployerSignUpPage() {
             className="w-full border rounded-md px-3 py-2 mt-1"
           />
         </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input name="veteranFriendly" type="checkbox" className="rounded border-slate-300" />
+          We actively welcome veteran applicants
+        </label>
 
         {state?.error && (
           <p className="text-sm text-red-600">

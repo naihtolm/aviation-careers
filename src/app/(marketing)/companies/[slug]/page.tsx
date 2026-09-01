@@ -26,6 +26,11 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               )}
             </h1>
             <p className="text-slate-500 mt-1">{companyTypeLabel(company.company_type)}</p>
+            {company.veteran_friendly && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full mt-1.5">
+                Veteran-friendly employer
+              </span>
+            )}
           </div>
         </div>
         {company.website && (
