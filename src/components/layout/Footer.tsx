@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Briefcase, GraduationCap, DollarSign, Plane, Building2, Compass, type LucideIcon } from "lucide-react";
+import { Briefcase, GraduationCap, DollarSign, Plane, Building2, Compass, LayoutGrid, type LucideIcon } from "lucide-react";
 
 const COLUMNS: { title: string; icon: LucideIcon; links: { href: string; label: string; icon: LucideIcon }[] }[] = [
   {
@@ -16,6 +16,7 @@ const COLUMNS: { title: string; icon: LucideIcon; links: { href: string; label: 
     icon: Compass,
     links: [
       { href: "/airports", label: "Airports", icon: Plane },
+      { href: "/sectors", label: "Sectors", icon: LayoutGrid },
       { href: "/employers", label: "For Employers", icon: Building2 },
     ],
   },

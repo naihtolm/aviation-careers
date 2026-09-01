@@ -10,15 +10,18 @@ import { getFeaturedJobs, getHomepageStats } from "@/features/jobs/queries";
 import { getCareerCategories } from "@/features/careers/queries";
 import { getFeaturedCompanies } from "@/features/companies/queries";
 import { getAirports } from "@/features/airports/queries";
+import { getSectorStats } from "@/features/sectors/queries";
 import { categoryColorClasses } from "@/lib/categoryColor";
+import { sectorColorClasses } from "@/lib/sectors";
 
 export default async function HomePage() {
-  const [featuredJobs, categories, companies, airports, stats] = await Promise.all([
+  const [featuredJobs, categories, companies, airports, stats, sectors] = await Promise.all([
     getFeaturedJobs(6),
     getCareerCategories(),
     getFeaturedCompanies(6),
     getAirports(),
     getHomepageStats(),
+    getSectorStats(),
   ]);
 
   return (
@@ -95,6 +98,37 @@ export default async function HomePage() {
           </section>
         </Reveal>
       )}
+
+      <Reveal>
+        <section className="max-w-6xl mx-auto px-4 py-14">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="font-display text-xl font-semibold text-slate-900">Browse by sector</h2>
+            <Link href="/sectors" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
+              View all sectors →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {sectors.map((sector) => {
+              const colors = sectorColorClasses(sector.colorKey);
+              return (
+                <Link
+                  key={sector.slug}
+                  href={`/sectors/${sector.slug}`}
+                  className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                >
+                  <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
+                    <sector.icon className="w-5 h-5" />
+                  </div>
+                  <p className="font-medium text-slate-900 mt-3">{sector.name}</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    {sector.companyCount} employer{sector.companyCount === 1 ? "" : "s"}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </Reveal>
 
       <Reveal>
         <section className="max-w-6xl mx-auto px-4 py-14">
