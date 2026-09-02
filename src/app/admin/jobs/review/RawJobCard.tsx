@@ -128,8 +128,15 @@ export function RawJobCard({
   // Only reachable when nothing was suggested; a low-confidence guess
   // still shows in the select so switching to it stays one click either
   // way instead of retyping a name that's already right there.
+  //
+  // newCareerName deliberately does NOT default to the raw job title --
+  // that produced a real published career called "Associate General
+  // Counsel, Employment" (the literal req title) instead of a reusable
+  // category, because it was one less thing to type so the exact title
+  // just got approved as-is. Starting blank forces a deliberate, general
+  // name -- this is a permanent public taxonomy entry, not per-job data.
   const [creatingCareer, setCreatingCareer] = useState(false);
-  const [newCareerName, setNewCareerName] = useState(title);
+  const [newCareerName, setNewCareerName] = useState("");
   const [newCareerCategoryId, setNewCareerCategoryId] = useState("");
   // Every ingestion source maps to exactly one real employer (migration
   // 028), so defaultCompanyId is reliable — no need to fuzzy-match

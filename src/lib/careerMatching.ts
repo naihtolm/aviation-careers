@@ -41,6 +41,14 @@ const TITLE_RULES: Array<{ career: string; confidence: "high" | "low"; terms: Re
   { career: "Airline Pilot", confidence: "high", terms: [/\bairline pilot\b/i, /\bfirst officer\b/i, /\bcaptain\b/i] },
   { career: "Flight Instructor", confidence: "high", terms: [/\bflight instructor\b/i, /\bcfi\b/i] },
   { career: "Ramp Agent", confidence: "high", terms: [/\bramp agent\b/i, /\bground handler\b/i] },
+  { career: "Customer Service Representative", confidence: "high", terms: [/\bcustomer service\b/i] },
+  { career: "Quality Assurance Inspector", confidence: "high", terms: [/\bquality (assurance|control)\b/i, /\bquality inspector\b/i, /\bndt\b/i, /\bcmm (operator|programmer)\b/i, /\breceiving inspector\b/i] },
+  { career: "Configuration Management Specialist", confidence: "high", terms: [/\bconfiguration\b/i] },
+  // Specific hands-on manufacturing/production titles -- checked ahead of
+  // the generic technician catch-all below, and deliberately not a bare
+  // "manufacturing" term (that would misfire on adjacent roles like "Staff
+  // Manufacturing Systems Analyst", which isn't hands-on production work).
+  { career: "Manufacturing Technician", confidence: "high", terms: [/\bcnc machinist\b/i, /\bmaterial handler\b/i, /\bassembly (team|technician|operator)\b/i, /\bmanufacturing technician\b/i] },
   // Generic hands-on technician catch-all -- checked after Avionics
   // Technician above, so an avionics-specific title still wins that more
   // precise match; a plain "Composites Technician" or "EPS Manufacturing
@@ -48,8 +56,9 @@ const TITLE_RULES: Array<{ career: string; confidence: "high" | "low"; terms: Re
   { career: "Aircraft Mechanic (A&P)", confidence: "low", terms: [/\btechnician\b/i] },
   // The literal word "engineer"/"engineering" in a title is about as
   // reliable a signal as this file has -- kept high confidence, separate
-  // from the softer indirect signals below.
-  { career: "Aerospace Engineer", confidence: "high", terms: [/\bengineer(ing)?\b/i] },
+  // from the softer indirect signals below. Structural/stress analysts are
+  // aerospace engineers by function even though "analyst" is the title.
+  { career: "Aerospace Engineer", confidence: "high", terms: [/\bengineer(ing)?\b/i, /\bstructural analyst\b/i, /\bstress analyst\b/i] },
   // Indirect engineering signals -- a hardware/software/design-lead role,
   // or a bare "EE" abbreviation, that would otherwise fall through to the
   // generic manager catch-all below even when this is the closer fit.
