@@ -6,6 +6,9 @@ import { MapPin, Clock, Building2, ChevronDown, Check, X } from "lucide-react";
 import { approveRawJob, rejectRawJob } from "./actions";
 import { decodeHtmlEntities } from "@/lib/html";
 import { groupCareers, suggestCareerId } from "@/lib/careerMatching";
+import { titleCase } from "@/lib/text";
+
+const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"] as const;
 
 // Clearbit's free, unauthenticated company-lookup API -- used only to
 // suggest a website domain as the admin types a new company name so they
@@ -86,19 +89,52 @@ function parseLocation(raw: string): { city: string; state: string } {
 // Structured Greenhouse fields never carry compensation, but the
 // description text almost always does -- pay-transparency laws mean most
 // postings include a line like "targeting a base pay between $144,000 -
-// $180,000" or "offering $242,873 to $255,016.65 per year" in the body
-// itself. Strip tags and pull the first "$X - $Y" / "$X to $Y" range out of
-// the plain text, rather than leaving the field blank just because the
-// source's own salary fields are empty.
-function parseSalaryFromDescription(html: string): { min: number; max: number } | null {
+// $180,000" or "$28.00 - $35.00 per hour" in the body itself. Strip tags and
+// scan for a "$X - $Y" / "$X to $Y" range, using the text right after the
+// match ("/hr", "per hour", "/yr", "annually") to tell an hourly rate apart
+// from a salary -- and falling back to the numbers' own magnitude when
+// there's no unit word at all, since a bare "$18 - $24" is never an annual
+// figure. Skips a match that fails a sanity check for its guessed period
+// (e.g. "$3 - $4" is too small to be a real hourly rate either) and keeps
+// scanning, rather than returning a false positive off the first $ sign in
+// the text.
+function parseSalaryFromDescription(html: string): { min: number; max: number; period: "hour" | "year" } | null {
   const text = html.replace(/<[^>]+>/g, " ");
-  const match = text.match(/\$\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$\s*([\d,]+(?:\.\d+)?)/i);
-  if (!match) return null;
-  const min = Number(match[1].replace(/,/g, ""));
-  const max = Number(match[2].replace(/,/g, ""));
-  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return null;
-  if (min < 10_000 || max > 5_000_000) return null;
-  return { min, max };
+  const rangePattern = /\$\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$\s*([\d,]+(?:\.\d+)?)/gi;
+  let match: RegExpExecArray | null;
+  while ((match = rangePattern.exec(text))) {
+    const min = Number(match[1].replace(/,/g, ""));
+    const max = Number(match[2].replace(/,/g, ""));
+    if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) continue;
+
+    const after = text.slice(match.index + match[0].length, match.index + match[0].length + 20);
+    const isHourly = /^\s*\/?\s*(hr|hour)\b/i.test(after) || /^\s*per\s+hour\b/i.test(after);
+    const isAnnual = /^\s*\/?\s*(yr|year)\b/i.test(after) || /^\s*(per\s+year|annually)\b/i.test(after);
+
+    if (isHourly || (!isAnnual && max < 300)) {
+      if (min < 5 || max > 500) continue;
+      return { min, max, period: "hour" };
+    }
+    if (min < 10_000 || max > 5_000_000) continue;
+    return { min, max, period: "year" };
+  }
+  return null;
+}
+
+// Most sources don't have a structured employment-type field either, but
+// contract/temp/intern roles are almost always called out explicitly in the
+// title or body ("6-month contract", "Summer Internship", "Temporary
+// Warehouse Associate"). Checked most-specific first, since a posting can
+// mention more than one of these words in unrelated contexts. Anything with
+// no signal at all is left for the admin to pick (defaults to Full Time in
+// the form below), rather than guessing.
+function detectEmploymentType(title: string, html: string): (typeof EMPLOYMENT_TYPES)[number] | null {
+  const text = `${title} ${html.replace(/<[^>]+>/g, " ")}`;
+  if (/\bintern(ship)?\b/i.test(text)) return "internship";
+  if (/\btemporary\b|\bseasonal\b/i.test(text)) return "temporary";
+  if (/\bcontract(or)?\b|\bcontract-to-hire\b|\bc2h\b|\bfixed[- ]term\b/i.test(text)) return "contract";
+  if (/\bpart[- ]time\b/i.test(text)) return "part_time";
+  return null;
 }
 
 export function RawJobCard({
@@ -147,6 +183,9 @@ export function RawJobCard({
   const parsedSalary = parseSalaryFromDescription(record.raw_data.content ?? "");
   const [salaryMin, setSalaryMin] = useState(parsedSalary ? String(parsedSalary.min) : "");
   const [salaryMax, setSalaryMax] = useState(parsedSalary ? String(parsedSalary.max) : "");
+  const [salaryPeriod, setSalaryPeriod] = useState<"hour" | "year">(parsedSalary?.period ?? "year");
+  const detectedEmploymentType = detectEmploymentType(title, record.raw_data.content ?? "");
+  const [employmentType, setEmploymentType] = useState(detectedEmploymentType ?? "full_time");
   // Once a company is auto-matched via the ingestion source, show it as a
   // confirmed fact rather than an editable dropdown -- "Change" drops back
   // to the old picker for the rare case the source's default is wrong.
@@ -186,6 +225,8 @@ export function RawJobCard({
         applicationUrl: record.raw_data.absolute_url ?? null,
         salaryMin: salaryMin ? Number(salaryMin) : null,
         salaryMax: salaryMax ? Number(salaryMax) : null,
+        salaryPeriod,
+        employmentType,
       });
       setOutcome("approved");
       setTimeout(() => setCollapsing(true), 220);
@@ -274,6 +315,21 @@ export function RawJobCard({
             )}
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Employment type</label>
+            <select className={fieldClass} value={employmentType} onChange={(e) => setEmploymentType(e.target.value as typeof employmentType)}>
+              {EMPLOYMENT_TYPES.map((t) => (
+                <option key={t} value={t}>{titleCase(t)}</option>
+              ))}
+            </select>
+            {detectedEmploymentType && employmentType === detectedEmploymentType && (
+              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+                <Check className="w-3.5 h-3.5" />
+                Detected from the posting — please confirm before publishing.
+              </p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">City</label>
@@ -356,17 +412,25 @@ export function RawJobCard({
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Salary <span className="font-normal text-slate-400">(optional)</span>
             </label>
+            <div className="flex gap-3 mb-2">
+              {(["year", "hour"] as const).map((p) => (
+                <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-600">
+                  <input type="radio" name={`salaryPeriod-${record.id}`} checked={salaryPeriod === p} onChange={() => setSalaryPeriod(p)} />
+                  {p === "year" ? "Yearly salary" : "Hourly rate"}
+                </label>
+              ))}
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <input
                 type="number"
-                placeholder="Min"
+                placeholder={salaryPeriod === "hour" ? "Min $/hr" : "Min $/yr"}
                 className={fieldClass}
                 value={salaryMin}
                 onChange={(e) => setSalaryMin(e.target.value)}
               />
               <input
                 type="number"
-                placeholder="Max"
+                placeholder={salaryPeriod === "hour" ? "Max $/hr" : "Max $/yr"}
                 className={fieldClass}
                 value={salaryMax}
                 onChange={(e) => setSalaryMax(e.target.value)}
@@ -375,7 +439,7 @@ export function RawJobCard({
             {parsedSalary ? (
               <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" />
-                Detected from the job description — please confirm before publishing.
+                Detected {parsedSalary.period === "hour" ? "an hourly rate" : "a salary range"} from the job description — please confirm before publishing.
               </p>
             ) : (
               <p className="text-xs text-slate-400 mt-1.5">Not mentioned anywhere in this source.</p>

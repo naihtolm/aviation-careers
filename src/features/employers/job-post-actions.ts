@@ -24,6 +24,7 @@ export interface JobPostInput {
   requiredCertifications: string[];
   salaryMin: number | null;
   salaryMax: number | null;
+  salaryPeriod: "hour" | "year";
   salaryPublic: boolean;
   applicationType: "external_url" | "platform_application";
   applicationUrl: string | null;
@@ -103,7 +104,7 @@ async function writeJobChildren(supabase: Awaited<ReturnType<typeof createServer
       currency: "USD",
       min_amount: input.salaryMin,
       max_amount: input.salaryMax,
-      period: "year",
+      period: input.salaryPeriod,
       is_public: input.salaryPublic,
       source: "employer_direct",
     });

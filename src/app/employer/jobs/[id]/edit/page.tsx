@@ -30,6 +30,7 @@ export default async function EditJobPage({ params }: { params: Promise<{ id: st
     certsInput: (job.job_certifications ?? []).map((c: any) => c.certifications?.name).filter(Boolean).join(", "),
     salaryMin: compensation?.min_amount != null ? String(compensation.min_amount) : "",
     salaryMax: compensation?.max_amount != null ? String(compensation.max_amount) : "",
+    salaryPeriod: compensation?.period === "hour" ? "hour" : "year",
     salaryPublic: compensation?.is_public ?? true,
     applicationType: job.application_type,
     applicationUrl: job.application_url ?? "",
@@ -45,7 +46,11 @@ export default async function EditJobPage({ params }: { params: Promise<{ id: st
       <p className="text-sm text-slate-500 mb-6">
         {initial.alreadyLive ? `Editing as ${context.company.name}` : `Finish this draft for ${context.company.name}`}
       </p>
-      <JobPostForm careers={careers.map((c: any) => ({ id: c.id, name: c.name }))} jobId={job.id} initial={initial} />
+      <JobPostForm careers={careers.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        categoryName: c.career_categories?.name ?? null,
+      }))} jobId={job.id} initial={initial} />
     </div>
   );
 }

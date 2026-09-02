@@ -18,7 +18,11 @@ export default async function NewJobPage() {
     <div className="max-w-2xl mx-auto px-4 py-10">
       <h1 className="text-2xl font-semibold text-slate-900 mb-1">Post a Job</h1>
       <p className="text-sm text-slate-500 mb-6">Posting as {context.company.name}</p>
-      <JobPostForm careers={careers.map((c: any) => ({ id: c.id, name: c.name }))} />
+      <JobPostForm careers={careers.map((c: any) => ({
+        id: c.id,
+        name: c.name,
+        categoryName: c.career_categories?.name ?? null,
+      }))} />
     </div>
   );
 }

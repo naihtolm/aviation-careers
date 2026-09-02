@@ -80,7 +80,7 @@ export async function getJobForEdit(jobId: string, companyId: string) {
       `id, title, career_id, employment_type, work_arrangement, status, application_type, application_url,
        screening_questions, description, expires_at,
        job_locations ( is_primary, locations ( city, state_code ) ),
-       job_compensation ( min_amount, max_amount, is_public ),
+       job_compensation ( min_amount, max_amount, period, is_public ),
        job_skills ( skills ( name ) ),
        job_certifications ( certifications ( name ) )`
     )

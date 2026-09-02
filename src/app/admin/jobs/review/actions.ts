@@ -35,6 +35,8 @@ export interface ApproveRawJobInput {
   applicationUrl: string | null;
   salaryMin: number | null;
   salaryMax: number | null;
+  salaryPeriod: "hour" | "year";
+  employmentType: string | null;
 }
 
 export async function approveRawJob(input: ApproveRawJobInput) {
@@ -95,6 +97,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       // dangerouslySetInnerHTML on the job detail page expects and
       // keeping search_vector built from actual words, not entity tokens.
       description: decodeHtmlEntities(input.description),
+      employment_type: input.employmentType,
       status: "active",
       source_type: "feed",
       application_type: "external_url",
@@ -120,7 +123,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       currency: "USD",
       min_amount: input.salaryMin,
       max_amount: input.salaryMax,
-      period: "year",
+      period: input.salaryPeriod,
       is_estimated: false,
       is_public: true,
       source: "employer_feed",

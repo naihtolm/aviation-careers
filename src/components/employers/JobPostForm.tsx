@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { createJobPosting, updateJobPosting, type ScreeningQuestion } from "@/features/employers/job-post-actions";
 import { titleCase } from "@/lib/text";
+import { groupCareers, suggestCareerId } from "@/lib/careerMatching";
 
 const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"];
 const WORK_ARRANGEMENTS = ["on_site", "hybrid", "remote"];
@@ -18,6 +19,7 @@ export interface JobPostFormInitial {
   certsInput: string;
   salaryMin: string;
   salaryMax: string;
+  salaryPeriod: "hour" | "year";
   salaryPublic: boolean;
   applicationType: "external_url" | "platform_application";
   applicationUrl: string;
@@ -32,7 +34,7 @@ export function JobPostForm({
   jobId,
   initial,
 }: {
-  careers: { id: string; name: string }[];
+  careers: { id: string; name: string; categoryName?: string | null }[];
   jobId?: string;
   initial?: JobPostFormInitial;
 }) {
@@ -49,6 +51,7 @@ export function JobPostForm({
   const [certsInput, setCertsInput] = useState(initial?.certsInput ?? "");
   const [salaryMin, setSalaryMin] = useState(initial?.salaryMin ?? "");
   const [salaryMax, setSalaryMax] = useState(initial?.salaryMax ?? "");
+  const [salaryPeriod, setSalaryPeriod] = useState<"hour" | "year">(initial?.salaryPeriod ?? "year");
   const [salaryPublic, setSalaryPublic] = useState(initial?.salaryPublic ?? true);
   const [applicationType, setApplicationType] = useState<"external_url" | "platform_application">(
     initial?.applicationType ?? "external_url"
@@ -57,6 +60,13 @@ export function JobPostForm({
   const [description, setDescription] = useState(initial?.description ?? "");
   const [questions, setQuestions] = useState<ScreeningQuestion[]>(initial?.questions ?? []);
   const [expiresAt, setExpiresAt] = useState(initial?.expiresAt ?? "");
+  const careerGroups = groupCareers(careers);
+
+  useEffect(() => {
+    if (initial?.careerId || careerId || title.trim().length < 3) return;
+    const suggestion = suggestCareerId(title, careers);
+    if (suggestion) setCareerId(suggestion);
+  }, [title, careers, careerId, initial?.careerId]);
 
   const alreadyLive = initial?.alreadyLive ?? false;
 
@@ -87,6 +97,7 @@ export function JobPostForm({
         requiredCertifications: certsInput.split(",").map((s) => s.trim()).filter(Boolean),
         salaryMin: salaryMin ? Number(salaryMin) : null,
         salaryMax: salaryMax ? Number(salaryMax) : null,
+        salaryPeriod,
         salaryPublic,
         applicationType,
         applicationUrl: applicationUrl || null,
@@ -115,13 +126,15 @@ export function JobPostForm({
           <input value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full border rounded-md px-3 py-2 mt-1" />
         </label>
         <label className="block text-sm">
-          Career category
+          Career role
           <select value={careerId} onChange={(e) => setCareerId(e.target.value)} className="w-full border rounded-md px-3 py-2 mt-1">
             <option value="">Not specified</option>
-            {careers.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
+            {careerGroups.map((group) => (
+              <optgroup key={group.category} label={group.category}>
+                {group.options.map((career) => (
+                  <option key={career.id} value={career.id}>{career.name}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
@@ -154,9 +167,29 @@ export function JobPostForm({
 
       <section className="border rounded-lg p-4 bg-white space-y-3">
         <p className="font-medium text-slate-900">Compensation (optional)</p>
+        <div className="flex gap-4">
+          {(["year", "hour"] as const).map((p) => (
+            <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-600">
+              <input type="radio" name="salaryPeriod" checked={salaryPeriod === p} onChange={() => setSalaryPeriod(p)} />
+              {p === "year" ? "Yearly salary" : "Hourly rate"}
+            </label>
+          ))}
+        </div>
         <div className="grid grid-cols-2 gap-3">
-          <input type="number" placeholder="Min ($/yr)" value={salaryMin} onChange={(e) => setSalaryMin(e.target.value)} className="border rounded-md px-3 py-2" />
-          <input type="number" placeholder="Max ($/yr)" value={salaryMax} onChange={(e) => setSalaryMax(e.target.value)} className="border rounded-md px-3 py-2" />
+          <input
+            type="number"
+            placeholder={salaryPeriod === "hour" ? "Min ($/hr)" : "Min ($/yr)"}
+            value={salaryMin}
+            onChange={(e) => setSalaryMin(e.target.value)}
+            className="border rounded-md px-3 py-2"
+          />
+          <input
+            type="number"
+            placeholder={salaryPeriod === "hour" ? "Max ($/hr)" : "Max ($/yr)"}
+            value={salaryMax}
+            onChange={(e) => setSalaryMax(e.target.value)}
+            className="border rounded-md px-3 py-2"
+          />
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={salaryPublic} onChange={(e) => setSalaryPublic(e.target.checked)} />
