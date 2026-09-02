@@ -37,6 +37,7 @@ export interface ApproveRawJobInput {
   salaryMax: number | null;
   salaryPeriod: "hour" | "year";
   employmentType: string | null;
+  workArrangement: string;
 }
 
 export async function approveRawJob(input: ApproveRawJobInput) {
@@ -92,6 +93,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       salaryMax: input.salaryMax,
       salaryPeriod: input.salaryPeriod,
       employmentType: input.employmentType,
+      workArrangement: input.workArrangement,
     },
     { userId: adminUserId, action: "approve_raw_job" }
   );

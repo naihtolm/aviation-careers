@@ -5,9 +5,16 @@ import { useEffect, useState, useTransition } from "react";
 import { MapPin, Clock, Building2, ChevronDown, Check, X } from "lucide-react";
 import { approveRawJob, rejectRawJob } from "./actions";
 import { decodeHtmlEntities } from "@/lib/html";
-import { groupCareers, suggestCareerId } from "@/lib/careerMatching";
+import { groupCareers, suggestCareerMatch } from "@/lib/careerMatching";
 import { titleCase } from "@/lib/text";
-import { EMPLOYMENT_TYPES, parseLocation, parseSalaryFromDescription, detectEmploymentType } from "@/lib/rawJobParsing";
+import {
+  EMPLOYMENT_TYPES,
+  WORK_ARRANGEMENTS,
+  parseLocation,
+  parseSalaryFromDescription,
+  detectEmploymentType,
+  detectWorkArrangement,
+} from "@/lib/rawJobParsing";
 
 // Clearbit's free, unauthenticated company-lookup API -- used only to
 // suggest a website domain as the admin types a new company name so they
@@ -85,7 +92,8 @@ export function RawJobCard({
   onSettled: (id: string) => void;
 }) {
   const title = record.raw_data.title ?? "(untitled)";
-  const suggestedCareerId = suggestCareerId(title, careers);
+  const suggestedCareer = suggestCareerMatch(title, careers);
+  const suggestedCareerId = suggestedCareer?.id ?? null;
   const careerGroups = groupCareers(careers);
   const matchedCompany = defaultCompanyId ? companies.find((c) => c.id === defaultCompanyId) : undefined;
   const [isPending, startTransition] = useTransition();
@@ -143,6 +151,8 @@ export function RawJobCard({
   const parsedLocation = parseLocation(location);
   const [city, setCity] = useState(parsedLocation.city);
   const [state, setState] = useState(parsedLocation.state);
+  const detectedWorkArrangement = detectWorkArrangement(location, title);
+  const [workArrangement, setWorkArrangement] = useState(detectedWorkArrangement ?? "on_site");
 
   function handleApprove() {
     startTransition(async () => {
@@ -161,6 +171,7 @@ export function RawJobCard({
         salaryMax: salaryMax ? Number(salaryMax) : null,
         salaryPeriod,
         employmentType,
+        workArrangement,
       });
       setOutcome("approved");
       setTimeout(() => setCollapsing(true), 220);
@@ -242,10 +253,18 @@ export function RawJobCard({
               ))}
             </select>
             {suggestedCareerId && careerId === suggestedCareerId && (
-              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" />
-                Suggested from the job title — please confirm before publishing.
-              </p>
+              suggestedCareer?.confidence === "high" ? (
+                <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" />
+                  Suggested from the job title — please confirm before publishing.
+                </p>
+              ) : (
+                <p className="text-xs text-amber-700 mt-1.5 inline-flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" />
+                  Broad guess from the job title, not an exact match — please double-check this one. (Suggestions
+                  this loose don't qualify for auto-publish.)
+                </p>
+              )
             )}
           </div>
 
@@ -264,13 +283,32 @@ export function RawJobCard({
             )}
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Work arrangement</label>
+            <select className={fieldClass} value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value as typeof workArrangement)}>
+              {WORK_ARRANGEMENTS.map((w) => (
+                <option key={w} value={w}>{titleCase(w)}</option>
+              ))}
+            </select>
+            {detectedWorkArrangement && workArrangement === detectedWorkArrangement && (
+              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+                <Check className="w-3.5 h-3.5" />
+                Detected from the posting — please confirm before publishing.
+              </p>
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">City</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                City {workArrangement === "remote" && <span className="font-normal text-slate-400">(optional — remote)</span>}
+              </label>
               <input type="text" className={fieldClass} value={city} onChange={(e) => setCity(e.target.value)} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">State</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                State {workArrangement === "remote" && <span className="font-normal text-slate-400">(optional — remote)</span>}
+              </label>
               <input type="text" className={fieldClass} value={state} onChange={(e) => setState(e.target.value)} />
             </div>
           </div>

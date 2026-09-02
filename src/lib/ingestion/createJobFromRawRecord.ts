@@ -27,6 +27,7 @@ export interface CreateJobFromRawRecordInput {
   salaryMax: number | null;
   salaryPeriod: "hour" | "year";
   employmentType: string | null;
+  workArrangement: string;
 }
 
 export async function createJobFromRawRecord(
@@ -54,6 +55,7 @@ export async function createJobFromRawRecord(
       // keeping search_vector built from actual words, not entity tokens.
       description: decodeHtmlEntities(input.description),
       employment_type: input.employmentType,
+      work_arrangement: input.workArrangement,
       status: "active",
       source_type: "feed",
       application_type: "external_url",

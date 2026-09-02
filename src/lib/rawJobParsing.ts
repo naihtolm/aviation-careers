@@ -12,18 +12,39 @@
 export const EMPLOYMENT_TYPES = ["full_time", "part_time", "contract", "temporary", "internship"] as const;
 export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number];
 
+export const WORK_ARRANGEMENTS = ["on_site", "hybrid", "remote"] as const;
+export type WorkArrangement = (typeof WORK_ARRANGEMENTS)[number];
+
 // Greenhouse location strings vary a lot: "Irvine, CA", "Manassas, VA",
 // "Manchester, Connecticut, United States", or with a street address
 // prefixed on -- "9990 Wakeman Drive, Manassas, VA 20110". A naive
 // split(",")[0,1] reads that last one as city="9990 Wakeman Drive",
 // state="Manassas". Drop a leading segment that looks like a street
-// address, and strip a trailing ZIP off the state segment.
+// address, and strip a trailing ZIP off the state segment. A remote
+// posting's location is often just "Remote" or "Remote - US" -- that's
+// not a real city, so blank it out rather than publishing "Remote" as if
+// it were one (detectWorkArrangement below is what actually flags the job
+// as remote).
 export function parseLocation(raw: string): { city: string; state: string } {
   const parts = raw.split(",").map((s) => s.trim()).filter(Boolean);
   if (parts.length > 2 && /^\d/.test(parts[0])) parts.shift();
-  const city = parts[0] ?? "";
+  let city = parts[0] ?? "";
   const state = (parts[1] ?? "").replace(/\s*\d{5}(-\d{4})?$/, "").trim();
+  if (/\bremote\b/i.test(city)) city = "";
   return { city, state };
+}
+
+// Location field is the authoritative signal when a source sets it
+// ("Remote", "Remote - US", "Hybrid - Austin, TX"); title sometimes
+// carries it too ("Senior Engineer (Remote)"). Deliberately doesn't scan
+// the full description body -- that risks false positives from unrelated
+// mentions ("occasional remote work days" in a benefits blurb) that the
+// short, purpose-built location/title fields don't have.
+export function detectWorkArrangement(locationRaw: string, title: string): WorkArrangement | null {
+  const text = `${locationRaw} ${title}`;
+  if (/\bremote\b/i.test(text)) return "remote";
+  if (/\bhybrid\b/i.test(text)) return "hybrid";
+  return null;
 }
 
 // Structured Greenhouse fields never carry compensation, but the

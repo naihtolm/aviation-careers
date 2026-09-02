@@ -12,19 +12,22 @@
 //   - a *specific* career-role match (TITLE_RULES confidence: "high" in
 //     careerMatching.ts) -- the broad engineer/technician/manager
 //     catch-alls are real guesses and are excluded on purpose
-//   - a parseable city and state
+//   - a parseable city and state -- UNLESS the posting is confidently
+//     remote (detectWorkArrangement), in which case there's no real city
+//     to require: publishing with a blank location is correct, not missing
+//     data
 //   - a salary or hourly rate actually stated in the posting
-// Employment type is auto-filled/defaulted when detected but never gates
-// approval -- unlike the above, an imprecise employment type doesn't
-// misrepresent the listing the way a wrong career category or a
-// fabricated location would.
+// Employment type and work arrangement auto-fill/default when detected but
+// never gate approval -- unlike the above, an imprecise employment type or
+// work arrangement doesn't misrepresent the listing the way a wrong career
+// category or a fabricated location would.
 //
 // Anything that doesn't clear this bar is left in raw_job_records with
 // status 'received', same as before this existed -- the review queue then
 // only shows what genuinely needs a human.
 
 import { getServiceClient } from "@/lib/supabase/service";
-import { parseLocation, parseSalaryFromDescription, detectEmploymentType } from "@/lib/rawJobParsing";
+import { parseLocation, parseSalaryFromDescription, detectEmploymentType, detectWorkArrangement } from "@/lib/rawJobParsing";
 import { suggestCareerMatch } from "@/lib/careerMatching";
 import { createJobFromRawRecord } from "./createJobFromRawRecord";
 
@@ -63,7 +66,12 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
   const db = getServiceClient();
 
   const [{ data: rawRecords }, { data: sources }, { data: careers }] = await Promise.all([
-    db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received").limit(MAX_RECORDS_PER_RUN),
+    // Ordered oldest-first, same as the review page's own query -- without
+    // an explicit order, which ~150 of a large backlog land in a given run
+    // isn't guaranteed, so a job visibly sitting at the top of the review
+    // queue could keep getting skipped by runs that happen to fetch a
+    // different slice than the one shown on screen.
+    db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received").order("received_at", { ascending: true }).limit(MAX_RECORDS_PER_RUN),
     db.from("job_ingestion_sources").select("id, company_id"),
     db.from("careers").select("id, name").eq("active", true),
   ]);
@@ -71,7 +79,16 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
   const companyIdBySource = new Map((sources ?? []).map((s) => [s.id, s.company_id]));
   const careerOptions = careers ?? [];
 
-  const qualifying: { record: RawJobRecordRow; companyId: string; city: string; state: string; careerId: string; salary: { min: number; max: number; period: "hour" | "year" }; employmentType: string }[] = [];
+  const qualifying: {
+    record: RawJobRecordRow;
+    companyId: string;
+    city: string;
+    state: string;
+    careerId: string;
+    salary: { min: number; max: number; period: "hour" | "year" };
+    employmentType: string;
+    workArrangement: string;
+  }[] = [];
 
   for (const record of (rawRecords ?? []) as RawJobRecordRow[]) {
     const title = record.raw_data.title?.trim() ?? "";
@@ -81,8 +98,11 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     const companyId = companyIdBySource.get(record.source_id);
     if (!companyId) continue;
 
-    const { city, state } = parseLocation(record.raw_data.location?.name ?? "");
-    if (!city.trim() || !state.trim()) continue;
+    const locationRaw = record.raw_data.location?.name ?? "";
+    const workArrangement = detectWorkArrangement(locationRaw, title) ?? "on_site";
+    const { city, state } = parseLocation(locationRaw);
+    const hasLocation = city.trim() && state.trim();
+    if (!hasLocation && workArrangement !== "remote") continue;
 
     const careerMatch = suggestCareerMatch(title, careerOptions);
     if (!careerMatch || careerMatch.confidence !== "high") continue;
@@ -98,6 +118,7 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
       careerId: careerMatch.id,
       salary,
       employmentType: detectEmploymentType(title, content) ?? "full_time",
+      workArrangement,
     });
   }
 
@@ -127,6 +148,7 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
             salaryMax: q.salary.max,
             salaryPeriod: q.salary.period,
             employmentType: q.employmentType,
+            workArrangement: q.workArrangement,
           },
           { userId: null, action: "auto_approve_raw_job" }
         ).then((jobId) => ({ jobId, rawRecordId: q.record.id }))
