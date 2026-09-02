@@ -23,7 +23,7 @@ export function HeaderNav() {
             key={link.href}
             href={link.href}
             className={`inline-flex items-center gap-1.5 transition-colors ${
-              active ? "text-brand-300 font-medium" : "text-white/80 hover:text-white"
+              active ? "text-accent-200 font-medium" : "text-white/80 hover:text-white"
             }`}
           >
             <link.icon className="w-4 h-4" />

@@ -35,6 +35,14 @@
   --color-accent-600: #a66f00;
   --color-accent-700: #8a6300;
 
+  /* The "board" -- the near-black gate-signage bar that's the Departure
+     Board system's other signature, alongside the amber accent above.
+     Deliberately a true near-black, not a tint of --color-navy-950 (which
+     has a real blue cast) -- the board reads as neutral signage, not
+     "more brand blue." */
+  --color-board: #14161a;
+  --color-board-2: #1d2027;
+
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;

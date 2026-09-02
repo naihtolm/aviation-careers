@@ -12,10 +12,10 @@ export async function Header() {
   const savedCount = user && !employerContext ? (await getSavedJobIds(user.id)).size : 0;
 
   return (
-    <header className="sticky top-0 z-40 bg-navy-950/60 backdrop-blur-md border-b border-white/10">
+    <header className="sticky top-0 z-40 bg-board">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="font-display font-semibold text-lg text-white">
-          Aviation Careers
+        <Link href="/" className="font-display font-bold text-lg tracking-tight text-white uppercase">
+          Aviation<span className="text-accent-200">.</span>Careers
         </Link>
         <HeaderNav />
         <div className="flex items-center gap-3 text-sm">
@@ -45,7 +45,7 @@ export async function Header() {
           ) : (
             <Link
               href="/sign-in"
-              className="bg-brand-600 text-white px-4 py-2 rounded-md hover:bg-brand-700 transition-colors"
+              className="bg-accent-200 text-board font-semibold px-4 py-2 rounded-md hover:bg-accent-100 transition-colors"
             >
               Sign In
             </Link>
