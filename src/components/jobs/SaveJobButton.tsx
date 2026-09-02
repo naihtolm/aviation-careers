@@ -8,6 +8,11 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
   const [saved, setSaved] = useState(initialSaved);
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
+  // Bumped on every successful toggle and used as the icon's `key` --
+  // remounting it is what replays .animate-pop each click, instead of the
+  // animation only ever playing once. The click needs to read as landed
+  // every time, not just the first time.
+  const [popKey, setPopKey] = useState(0);
 
   function handleClick(e: React.MouseEvent) {
     // JobCard wraps this in a <Link> for the card-click-through; stop the
@@ -18,7 +23,10 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
     startTransition(async () => {
       if (saved) {
         const result = await unsaveJob(jobId);
-        if (!result.error) setSaved(false);
+        if (!result.error) {
+          setSaved(false);
+          setPopKey((k) => k + 1);
+        }
         return;
       }
       const result = await saveJob(jobId);
@@ -26,7 +34,10 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
         setMessage("Sign in to save jobs.");
         return;
       }
-      if (!result.error) setSaved(true);
+      if (!result.error) {
+        setSaved(true);
+        setPopKey((k) => k + 1);
+      }
     });
   }
 
@@ -39,11 +50,15 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
         aria-label={saved ? "Remove from saved jobs" : "Save job"}
         className={`w-8 h-8 flex items-center justify-center rounded-md border disabled:opacity-50 ${
           saved
-            ? "bg-brand-50 border-brand-200 text-brand-600"
+            ? "bg-accent-50 border-accent-200 text-accent-700"
             : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"
         }`}
       >
-        {saved ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+        {saved ? (
+          <BookmarkCheck key={popKey} className={`w-4 h-4 ${popKey > 0 ? "animate-pop" : ""}`} />
+        ) : (
+          <Bookmark key={popKey} className={`w-4 h-4 ${popKey > 0 ? "animate-pop" : ""}`} />
+        )}
       </button>
       {message && (
         <span className="absolute top-full right-0 mt-1 text-xs text-red-600 bg-white border rounded px-2 py-1 whitespace-nowrap z-10">

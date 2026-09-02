@@ -24,6 +24,17 @@
   --color-navy-950: #0b1330;
   --color-navy-900: #142049;
 
+  /* Departure Board accent -- the amber from the interaction/motion design
+     pass, first applied here (SaveJobButton). Reserved specifically for
+     "action taken / status" moments (a save, a fresh badge) -- never used
+     for plain informational fills, which stay on --color-brand-*. Not a
+     site-wide reskin yet, just this one component's real starting point. */
+  --color-accent-50: #fff8e6;
+  --color-accent-100: #ffedb8;
+  --color-accent-200: #ffe08a;
+  --color-accent-600: #a66f00;
+  --color-accent-700: #8a6300;
+
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
@@ -81,6 +92,20 @@ main {
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   .animate-float-slow, .animate-float-slow-reverse { animation: none; }
+}
+
+/* "Pop" -- the micro-feedback motion from the interaction/motion design
+   pass, for a click that toggles state directly (a save/bookmark, a small
+   yes-no action). Deliberately not used for anything heavier than a small
+   icon: this is quick punctuation, not a transition. */
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+.animate-pop { animation: pop 320ms cubic-bezier(0.2, 0, 0, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .animate-pop { animation: none; }
 }
 
 /* Site-wide interaction feedback. Individual components were each adding
