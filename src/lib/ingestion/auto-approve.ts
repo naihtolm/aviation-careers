@@ -49,13 +49,18 @@ interface RawJobRecordRow {
   };
 }
 
-// Upper bound on how many raw records a single call inspects. Matched
-// records are marked 'processed' as they're created, so a batch this size
-// isn't a hard cap on throughput -- it just means a backlog bigger than
-// this takes more than one call (one cron run, or one click of "Auto-publish
-// qualifying jobs now") to fully clear, which keeps each individual call
-// comfortably inside a serverless function's wall-clock limit.
-const MAX_RECORDS_PER_RUN = 150;
+// Upper bound on how many raw records a single call inspects, ordered
+// oldest-first with no offset -- so this isn't just a throughput cap.
+// Non-qualifying records never leave 'received' on their own, which means
+// a cap too close to the real backlog size permanently blocks the sweep
+// from ever reaching anything past it: with a 150 backlog sitting at ~190
+// pending and only a handful qualifying per run, a 150 cap re-scanned the
+// same oldest 150 every single time and could never reach records 151+.
+// The actual cost that matters here is the concurrent DB-write phase for
+// records that qualify (see CONCURRENCY below) -- scanning is cheap even
+// at four figures -- so this only needs to be large enough that a single
+// run can see the whole realistic backlog, not tuned for wall-clock safety.
+const MAX_RECORDS_PER_RUN = 2000;
 // How many qualifying records get created concurrently. Each one is a
 // handful of independent Supabase round trips (see
 // createJobFromRawRecord) -- doing them one record at a time in a loop is
