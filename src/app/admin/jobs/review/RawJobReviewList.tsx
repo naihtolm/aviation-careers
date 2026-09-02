@@ -17,6 +17,11 @@ interface Company {
   name: string;
 }
 
+interface CareerCategory {
+  id: string;
+  name: string;
+}
+
 interface RawJobRecord {
   id: string;
   external_id: string | null;
@@ -44,18 +49,29 @@ export function RawJobReviewList({
   careers,
   companies,
   companyIdBySource,
+  careerCategories,
 }: {
   initialRecords: RawJobRecord[];
   careers: Career[];
   companies: Company[];
   companyIdBySource: Record<string, string | null>;
+  careerCategories: CareerCategory[];
 }) {
   const [records, setRecords] = useState(initialRecords);
+  // Local copy, not just the prop -- when a card creates a brand-new career
+  // role (no existing one fit), every other card still in this batch
+  // should see it in their own dropdown immediately, instead of each one
+  // independently creating a duplicate for the same role.
+  const [careerOptions, setCareerOptions] = useState(careers);
   const [isPending, startTransition] = useTransition();
   const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   function handleSettled(id: string) {
     setRecords((prev) => prev.filter((r) => r.id !== id));
+  }
+
+  function handleCareerCreated(career: Career) {
+    setCareerOptions((prev) => [...prev, career]);
   }
 
   function handleAutoApprove() {
@@ -104,10 +120,12 @@ export function RawJobReviewList({
         <RawJobCard
           key={record.id}
           record={record}
-          careers={careers}
+          careers={careerOptions}
+          careerCategories={careerCategories}
           companies={companies}
           defaultCompanyId={companyIdBySource[record.source_id] ?? null}
           onSettled={handleSettled}
+          onCareerCreated={handleCareerCreated}
         />
       ))}
     </div>

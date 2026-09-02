@@ -27,6 +27,8 @@ export interface ApproveRawJobInput {
   title: string;
   description: string;
   careerId: string | null;
+  newCareerName: string | null; // set if admin is creating a career role inline
+  newCareerCategoryId: string | null;
   companyId: string | null;
   newCompanyName: string | null; // set if admin is creating a company inline
   newCompanyWebsite: string | null;
@@ -43,6 +45,37 @@ export interface ApproveRawJobInput {
 export async function approveRawJob(input: ApproveRawJobInput) {
   const adminUserId = await assertIsAdmin();
   const db = getServiceClient();
+
+  // 0. Resolve or create the career role. Mirrors the company-creation
+  // block below: an admin approving a raw job has already judged the new
+  // role belongs in the taxonomy, so it goes in active immediately rather
+  // than some separate "activate this role" step nothing else in the app
+  // has. It starts with just a name and category -- no guide content --
+  // same as a newly-created company starts as company_type 'other' with no
+  // further detail until someone fills it in later.
+  let careerId = input.careerId;
+  let createdCareer: { id: string; name: string; categoryName: string | null } | null = null;
+  if (!careerId && input.newCareerName && input.newCareerCategoryId) {
+    const slug = input.newCareerName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    const { data: career, error: careerError } = await db
+      .from("careers")
+      .insert({
+        category_id: input.newCareerCategoryId,
+        name: input.newCareerName,
+        slug,
+        active: true,
+      })
+      .select("id, name, career_categories ( name )")
+      .single();
+
+    if (careerError) throw new Error(`Failed to create career role: ${careerError.message}`);
+    careerId = career.id;
+    createdCareer = { id: career.id, name: career.name, categoryName: (career.career_categories as any)?.name ?? null };
+  }
 
   // 1. Resolve or create the company
   let companyId = input.companyId;
@@ -84,7 +117,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
       rawRecordId: input.rawRecordId,
       title: input.title,
       description: input.description,
-      careerId: input.careerId,
+      careerId,
       companyId,
       city: input.city,
       state: input.state,
@@ -99,7 +132,7 @@ export async function approveRawJob(input: ApproveRawJobInput) {
   );
 
   revalidatePath("/admin/jobs/review");
-  return { jobId };
+  return { jobId, createdCareer };
 }
 
 // Manual trigger for the same sweep the ingestion cron runs automatically --

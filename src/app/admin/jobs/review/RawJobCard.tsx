@@ -43,6 +43,11 @@ interface Company {
   name: string;
 }
 
+interface CareerCategory {
+  id: string;
+  name: string;
+}
+
 interface RawJobRecord {
   id: string;
   external_id: string | null;
@@ -81,15 +86,19 @@ function TimeAgo({ iso }: { iso: string }) {
 export function RawJobCard({
   record,
   careers,
+  careerCategories,
   companies,
   defaultCompanyId,
   onSettled,
+  onCareerCreated,
 }: {
   record: RawJobRecord;
   careers: Career[];
+  careerCategories: CareerCategory[];
   companies: Company[];
   defaultCompanyId?: string | null;
   onSettled: (id: string) => void;
+  onCareerCreated: (career: Career) => void;
 }) {
   const title = record.raw_data.title ?? "(untitled)";
   const suggestedCareer = suggestCareerMatch(title, careers);
@@ -113,6 +122,15 @@ export function RawJobCard({
     return () => clearTimeout(timer);
   }, [collapsing, onSettled, record.id]);
   const [careerId, setCareerId] = useState(suggestedCareerId ?? "");
+  // No existing career fit at all -- rather than force a pick from the
+  // list or leave it uncategorized forever, let the admin add a new one
+  // right here (mirrors the inline "create a new company" flow below).
+  // Only reachable when nothing was suggested; a low-confidence guess
+  // still shows in the select so switching to it stays one click either
+  // way instead of retyping a name that's already right there.
+  const [creatingCareer, setCreatingCareer] = useState(false);
+  const [newCareerName, setNewCareerName] = useState(title);
+  const [newCareerCategoryId, setNewCareerCategoryId] = useState("");
   // Every ingestion source maps to exactly one real employer (migration
   // 028), so defaultCompanyId is reliable — no need to fuzzy-match
   // raw_data.company_name ("Archer") against the company's display name
@@ -156,11 +174,13 @@ export function RawJobCard({
 
   function handleApprove() {
     startTransition(async () => {
-      await approveRawJob({
+      const result = await approveRawJob({
         rawRecordId: record.id,
         title,
         description: record.raw_data.content ?? "",
         careerId: careerId || null,
+        newCareerName: careerId ? null : newCareerName.trim() || null,
+        newCareerCategoryId: careerId ? null : newCareerCategoryId || null,
         companyId: companyId || null,
         newCompanyName: companyId ? null : newCompanyName || null,
         newCompanyWebsite: companyId ? null : newCompanyWebsite.trim() || null,
@@ -173,6 +193,7 @@ export function RawJobCard({
         employmentType,
         workArrangement,
       });
+      if (result.createdCareer) onCareerCreated(result.createdCareer);
       setOutcome("approved");
       setTimeout(() => setCollapsing(true), 220);
     });
@@ -265,6 +286,50 @@ export function RawJobCard({
                   this loose don't qualify for auto-publish.)
                 </p>
               )
+            )}
+
+            {!creatingCareer ? (
+              <button
+                type="button"
+                onClick={() => setCreatingCareer(true)}
+                className="text-xs text-brand-600 underline underline-offset-2 mt-1.5"
+              >
+                Can't find the right fit? Create a new career role
+              </button>
+            ) : (
+              <div className="mt-2 space-y-2 border border-slate-200 rounded-lg p-3 bg-slate-50">
+                <input
+                  type="text"
+                  placeholder="New career role name"
+                  className={fieldClass}
+                  value={newCareerName}
+                  onChange={(e) => setNewCareerName(e.target.value)}
+                />
+                <select
+                  className={fieldClass}
+                  value={newCareerCategoryId}
+                  onChange={(e) => setNewCareerCategoryId(e.target.value)}
+                >
+                  <option value="">— Select a category —</option>
+                  {careerCategories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-slate-400">
+                  Adds this as a new career role (with no guide content yet — refine it later) and links this job to
+                  it. It'll be selectable for every other job going forward.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreatingCareer(false);
+                    setNewCareerCategoryId("");
+                  }}
+                  className="text-xs text-slate-500 underline underline-offset-2"
+                >
+                  Cancel — pick from the list instead
+                </button>
+              </div>
             )}
           </div>
 
@@ -431,7 +496,12 @@ export function RawJobCard({
 
           <div className="flex gap-2 pt-1">
             <button
-              disabled={isPending || outcome !== null || (!careerId && !companyId && !newCompanyName)}
+              disabled={
+                isPending ||
+                outcome !== null ||
+                (!careerId && !companyId && !newCompanyName) ||
+                (creatingCareer && (!newCareerName.trim() || !newCareerCategoryId))
+              }
               onClick={handleApprove}
               className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
             >

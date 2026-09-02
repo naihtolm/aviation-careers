@@ -36,6 +36,15 @@ export default async function JobReviewPage() {
     .eq("active", true)
     .order("name");
 
+  // Categories for the "create a new career role" picker -- a career
+  // needs one (career.category_id is required), so an admin creating a
+  // role that doesn't fit anything existing still has to place it
+  // somewhere in the taxonomy.
+  const { data: careerCategories } = await supabase
+    .from("career_categories")
+    .select("id, name")
+    .order("display_order");
+
   // Companies list for matching against an existing employer. Uses the
   // service client (not the RLS-respecting one) because new companies
   // default to status='pending' — the public-read policy only shows
@@ -86,6 +95,7 @@ export default async function JobReviewPage() {
         }))}
         companies={companies ?? []}
         companyIdBySource={companyIdBySource}
+        careerCategories={careerCategories ?? []}
       />
     </div>
   );
