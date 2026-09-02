@@ -7,6 +7,8 @@ import { Resend } from "resend";
 import { runAllIngestion } from "@/lib/ingestion/run-ingestion";
 import { autoApproveQualifyingRawJobs } from "@/lib/ingestion/auto-approve";
 
+export const maxDuration = 60;
+
 export async function GET(request: Request) {
   const cronSecret = process.env.CRON_SECRET;
   const authHeader = request.headers.get("authorization");

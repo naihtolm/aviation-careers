@@ -3,6 +3,13 @@ import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
 import { RawJobReviewList } from "./RawJobReviewList";
 
+// "Auto-publish qualifying jobs now" (RawJobReviewList) invokes
+// runAutoApproveNow, which can walk up to ~150 raw records -- Server
+// Actions inherit the route segment's maxDuration, and the platform
+// default is too short for that sweep, same reason the cron routes that
+// call the same code declare this.
+export const maxDuration = 60;
+
 export default async function JobReviewPage() {
   // Admin auth is checked once in app/admin/layout.tsx (requireAdmin()) --
   // no need to repeat it here.

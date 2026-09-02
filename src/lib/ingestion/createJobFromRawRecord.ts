@@ -65,37 +65,51 @@ export async function createJobFromRawRecord(
 
   if (jobError) throw new Error(`Failed to create job: ${jobError.message}`);
 
+  // These four writes don't depend on each other (only on job.id, already
+  // in hand) -- running them concurrently instead of one-at-a-time matters
+  // a lot when auto-approve calls this in a loop over a couple hundred
+  // records in a single serverless invocation with a hard wall-clock limit.
+  const tasks: PromiseLike<unknown>[] = [];
+
   if (input.city && input.state) {
-    const locationId = await findOrCreateLocation(input.city, input.state);
-    await db.from("job_locations").insert({ job_id: job.id, location_id: locationId, is_primary: true });
+    tasks.push(
+      findOrCreateLocation(input.city, input.state).then((locationId) =>
+        db.from("job_locations").insert({ job_id: job.id, location_id: locationId, is_primary: true })
+      )
+    );
   }
 
   if (input.salaryMin || input.salaryMax) {
-    await db.from("job_compensation").insert({
-      job_id: job.id,
-      pay_type: "base",
-      currency: "USD",
-      min_amount: input.salaryMin,
-      max_amount: input.salaryMax,
-      period: input.salaryPeriod,
-      is_estimated: false,
-      is_public: true,
-      source: "employer_feed",
-    });
+    tasks.push(
+      db.from("job_compensation").insert({
+        job_id: job.id,
+        pay_type: "base",
+        currency: "USD",
+        min_amount: input.salaryMin,
+        max_amount: input.salaryMax,
+        period: input.salaryPeriod,
+        is_estimated: false,
+        is_public: true,
+        source: "employer_feed",
+      })
+    );
   }
 
-  await db
-    .from("raw_job_records")
-    .update({ status: "processed", processed_at: new Date().toISOString() })
-    .eq("id", input.rawRecordId);
+  tasks.push(
+    db.from("raw_job_records").update({ status: "processed", processed_at: new Date().toISOString() }).eq("id", input.rawRecordId)
+  );
 
-  await db.from("audit_logs").insert({
-    actor_user_id: actor.userId,
-    action: actor.action,
-    entity_type: "jobs",
-    entity_id: job.id,
-    new_data: { raw_record_id: input.rawRecordId },
-  });
+  tasks.push(
+    db.from("audit_logs").insert({
+      actor_user_id: actor.userId,
+      action: actor.action,
+      entity_type: "jobs",
+      entity_id: job.id,
+      new_data: { raw_record_id: input.rawRecordId },
+    })
+  );
+
+  await Promise.all(tasks);
 
   return job.id;
 }

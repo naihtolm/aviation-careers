@@ -46,19 +46,32 @@ interface RawJobRecordRow {
   };
 }
 
+// Upper bound on how many raw records a single call inspects. Matched
+// records are marked 'processed' as they're created, so a batch this size
+// isn't a hard cap on throughput -- it just means a backlog bigger than
+// this takes more than one call (one cron run, or one click of "Auto-publish
+// qualifying jobs now") to fully clear, which keeps each individual call
+// comfortably inside a serverless function's wall-clock limit.
+const MAX_RECORDS_PER_RUN = 150;
+// How many qualifying records get created concurrently. Each one is a
+// handful of independent Supabase round trips (see
+// createJobFromRawRecord) -- doing them one record at a time in a loop is
+// what actually risked timing out a run over a large backlog.
+const CONCURRENCY = 8;
+
 export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult> {
   const db = getServiceClient();
 
   const [{ data: rawRecords }, { data: sources }, { data: careers }] = await Promise.all([
-    db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received"),
+    db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received").limit(MAX_RECORDS_PER_RUN),
     db.from("job_ingestion_sources").select("id, company_id"),
     db.from("careers").select("id, name").eq("active", true),
   ]);
 
   const companyIdBySource = new Map((sources ?? []).map((s) => [s.id, s.company_id]));
   const careerOptions = careers ?? [];
-  const jobIds: string[] = [];
-  const rawRecordIds: string[] = [];
+
+  const qualifying: { record: RawJobRecordRow; companyId: string; city: string; state: string; careerId: string; salary: { min: number; max: number; period: "hour" | "year" }; employmentType: string }[] = [];
 
   for (const record of (rawRecords ?? []) as RawJobRecordRow[]) {
     const title = record.raw_data.title?.trim() ?? "";
@@ -77,27 +90,54 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     const salary = parseSalaryFromDescription(content);
     if (!salary) continue;
 
-    const employmentType = detectEmploymentType(title, content) ?? "full_time";
+    qualifying.push({
+      record,
+      companyId,
+      city,
+      state,
+      careerId: careerMatch.id,
+      salary,
+      employmentType: detectEmploymentType(title, content) ?? "full_time",
+    });
+  }
 
-    const jobId = await createJobFromRawRecord(
-      {
-        rawRecordId: record.id,
-        title,
-        description: content,
-        careerId: careerMatch.id,
-        companyId,
-        city,
-        state,
-        applicationUrl: record.raw_data.absolute_url ?? null,
-        salaryMin: salary.min,
-        salaryMax: salary.max,
-        salaryPeriod: salary.period,
-        employmentType,
-      },
-      { userId: null, action: "auto_approve_raw_job" }
+  const jobIds: string[] = [];
+  const rawRecordIds: string[] = [];
+
+  for (let i = 0; i < qualifying.length; i += CONCURRENCY) {
+    const batch = qualifying.slice(i, i + CONCURRENCY);
+    // allSettled, not all -- one record failing (a transient DB hiccup, a
+    // slug collision) shouldn't take the rest of the batch down with it.
+    // A failed record simply stays 'received' and shows up in the review
+    // queue like any other unqualified job, instead of the whole sweep
+    // erroring out.
+    const results = await Promise.allSettled(
+      batch.map((q) =>
+        createJobFromRawRecord(
+          {
+            rawRecordId: q.record.id,
+            title: q.record.raw_data.title!.trim(),
+            description: q.record.raw_data.content!.trim(),
+            careerId: q.careerId,
+            companyId: q.companyId,
+            city: q.city,
+            state: q.state,
+            applicationUrl: q.record.raw_data.absolute_url ?? null,
+            salaryMin: q.salary.min,
+            salaryMax: q.salary.max,
+            salaryPeriod: q.salary.period,
+            employmentType: q.employmentType,
+          },
+          { userId: null, action: "auto_approve_raw_job" }
+        ).then((jobId) => ({ jobId, rawRecordId: q.record.id }))
+      )
     );
-    jobIds.push(jobId);
-    rawRecordIds.push(record.id);
+    for (const r of results) {
+      if (r.status === "fulfilled") {
+        jobIds.push(r.value.jobId);
+        rawRecordIds.push(r.value.rawRecordId);
+      }
+    }
   }
 
   return { evaluated: rawRecords?.length ?? 0, approved: jobIds.length, jobIds, rawRecordIds };
