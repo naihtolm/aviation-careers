@@ -79,10 +79,17 @@ export function RawJobReviewList({
     startTransition(async () => {
       const result = await runAutoApproveNow();
       setRecords((prev) => prev.filter((r) => !result.rawRecordIds.includes(r.id)));
+      if (result.createdCareers.length > 0) {
+        setCareerOptions((prev) => [...prev, ...result.createdCareers]);
+      }
+      const careerNote =
+        result.createdCareers.length > 0
+          ? ` Added ${result.createdCareers.length} new career role${result.createdCareers.length === 1 ? "" : "s"} along the way: ${result.createdCareers.map((c) => c.name).join(", ")}.`
+          : "";
       setResultMessage(
-        result.approved > 0
+        (result.approved > 0
           ? `Auto-published ${result.approved} of ${result.evaluated} pending jobs — the rest still need a look.`
-          : `None of the ${result.evaluated} pending jobs cleared the auto-publish bar — nothing changed.`
+          : `None of the ${result.evaluated} pending jobs cleared the auto-publish bar — nothing changed.`) + careerNote
       );
     });
   }

@@ -6,12 +6,19 @@
 // run, and manually from the review page (runAutoApproveNow) to sweep the
 // existing backlog.
 //
-// The bar, deliberately conservative:
+// The bar:
 //   - the source's own company is known (always true in practice -- every
 //     ingestion source maps 1:1 to a company, migration 028)
-//   - a *specific* career-role match (TITLE_RULES confidence: "high" in
-//     careerMatching.ts) -- the broad engineer/technician/manager
-//     catch-alls are real guesses and are excluded on purpose
+//   - a career role, resolved one of two ways: a *specific* keyword match
+//     (TITLE_RULES confidence: "high" in careerMatching.ts) first, since
+//     that's free and instant; when nothing matches, a fallback AI call
+//     (aiCareerClassifier) that either recognizes an existing career the
+//     keywords missed, or creates a new one with a clean, general,
+//     reusable name -- never the raw job title verbatim (see
+//     careerResolution.ts). A "reject" classification (not a real
+//     distinguishable career -- a generic resume drop-off, a vague
+//     internship posting) leaves the record for human review like
+//     anything else that doesn't qualify.
 //   - a parseable city and state -- UNLESS the posting is confidently
 //     remote (detectWorkArrangement), in which case there's no real city
 //     to require: publishing with a blank location is correct, not missing
@@ -29,6 +36,8 @@
 import { getServiceClient } from "@/lib/supabase/service";
 import { parseLocation, parseSalaryFromDescription, detectEmploymentType, detectWorkArrangement } from "@/lib/rawJobParsing";
 import { suggestCareerMatch } from "@/lib/careerMatching";
+import { classifyCareerWithAI } from "./aiCareerClassifier";
+import { createCareer } from "./careerResolution";
 import { createJobFromRawRecord } from "./createJobFromRawRecord";
 
 export interface AutoApproveResult {
@@ -36,6 +45,7 @@ export interface AutoApproveResult {
   approved: number;
   jobIds: string[];
   rawRecordIds: string[];
+  createdCareers: { id: string; name: string; categoryName: string | null }[];
 }
 
 interface RawJobRecordRow {
@@ -47,6 +57,12 @@ interface RawJobRecordRow {
     location?: { name?: string } | null;
     absolute_url?: string;
   };
+}
+
+interface CareerOption {
+  id: string;
+  name: string;
+  categoryName: string | null;
 }
 
 // Upper bound on how many raw records a single call inspects, ordered
@@ -66,11 +82,30 @@ const MAX_RECORDS_PER_RUN = 2000;
 // createJobFromRawRecord) -- doing them one record at a time in a loop is
 // what actually risked timing out a run over a large backlog.
 const CONCURRENCY = 8;
+// AI classification calls run in smaller batches than the DB-write phase,
+// and -- unlike that phase -- sequentially between batches rather than all
+// at once: the growing `careerOptions` list is refreshed between batches so
+// a career created by the first few records in a run is visible to later
+// ones in the same run, instead of five near-duplicate "Quality Inspector"-
+// ish careers getting created in parallel before any of them can see the
+// others.
+const AI_CONCURRENCY = 5;
+
+interface PendingCreate {
+  record: RawJobRecordRow;
+  companyId: string;
+  city: string;
+  state: string;
+  careerId: string;
+  salary: { min: number; max: number; period: "hour" | "year" };
+  employmentType: string;
+  workArrangement: string;
+}
 
 export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult> {
   const db = getServiceClient();
 
-  const [{ data: rawRecords }, { data: sources }, { data: careers }] = await Promise.all([
+  const [{ data: rawRecords }, { data: sources }, { data: careersRaw }, { data: categories }] = await Promise.all([
     // Ordered oldest-first, same as the review page's own query -- without
     // an explicit order, which ~150 of a large backlog land in a given run
     // isn't guaranteed, so a job visibly sitting at the top of the review
@@ -78,22 +113,20 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     // different slice than the one shown on screen.
     db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received").order("received_at", { ascending: true }).limit(MAX_RECORDS_PER_RUN),
     db.from("job_ingestion_sources").select("id, company_id"),
-    db.from("careers").select("id, name").eq("active", true),
+    db.from("careers").select("id, name, career_categories ( name )").eq("active", true),
+    db.from("career_categories").select("id, name"),
   ]);
 
   const companyIdBySource = new Map((sources ?? []).map((s) => [s.id, s.company_id]));
-  const careerOptions = careers ?? [];
+  let careerOptions: CareerOption[] = (careersRaw ?? []).map((c: any) => ({
+    id: c.id,
+    name: c.name,
+    categoryName: c.career_categories?.name ?? null,
+  }));
+  const categoryOptions = categories ?? [];
 
-  const qualifying: {
-    record: RawJobRecordRow;
-    companyId: string;
-    city: string;
-    state: string;
-    careerId: string;
-    salary: { min: number; max: number; period: "hour" | "year" };
-    employmentType: string;
-    workArrangement: string;
-  }[] = [];
+  const readyToCreate: PendingCreate[] = [];
+  const needsAIClassification: { record: RawJobRecordRow; companyId: string; city: string; state: string; salary: { min: number; max: number; period: "hour" | "year" }; employmentType: string; workArrangement: string }[] = [];
 
   for (const record of (rawRecords ?? []) as RawJobRecordRow[]) {
     const title = record.raw_data.title?.trim() ?? "";
@@ -109,29 +142,65 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     const hasLocation = city.trim() && state.trim();
     if (!hasLocation && workArrangement !== "remote") continue;
 
-    const careerMatch = suggestCareerMatch(title, careerOptions);
-    if (!careerMatch || careerMatch.confidence !== "high") continue;
-
     const salary = parseSalaryFromDescription(content);
     if (!salary) continue;
 
-    qualifying.push({
-      record,
-      companyId,
-      city,
-      state,
-      careerId: careerMatch.id,
-      salary,
-      employmentType: detectEmploymentType(title, content) ?? "full_time",
-      workArrangement,
-    });
+    const employmentType = detectEmploymentType(title, content) ?? "full_time";
+
+    const careerMatch = suggestCareerMatch(title, careerOptions);
+    if (careerMatch && careerMatch.confidence === "high") {
+      readyToCreate.push({ record, companyId, city, state, careerId: careerMatch.id, salary, employmentType, workArrangement });
+    } else {
+      // No confident keyword match -- worth an AI call only once every
+      // other bar has already passed, so nothing gets spent classifying a
+      // record that's going to be skipped for a missing salary anyway.
+      needsAIClassification.push({ record, companyId, city, state, salary, employmentType, workArrangement });
+    }
+  }
+
+  const createdCareers: { id: string; name: string; categoryName: string | null }[] = [];
+
+  for (let i = 0; i < needsAIClassification.length; i += AI_CONCURRENCY) {
+    const batch = needsAIClassification.slice(i, i + AI_CONCURRENCY);
+    const results = await Promise.allSettled(
+      batch.map(async (q) => {
+        const title = q.record.raw_data.title!.trim();
+        const classification = await classifyCareerWithAI({
+          title,
+          descriptionSnippet: q.record.raw_data.content!.trim(),
+          existingCareers: careerOptions,
+          categories: categoryOptions,
+        });
+        return { q, title, classification };
+      })
+    );
+
+    for (const r of results) {
+      if (r.status !== "fulfilled") continue;
+      const { q, classification } = r.value;
+      if (!classification) continue;
+
+      if (classification.decision === "existing" && classification.existingCareerId) {
+        readyToCreate.push({ ...q, careerId: classification.existingCareerId });
+      } else if (classification.decision === "new" && classification.newCareerName && classification.newCareerCategoryId) {
+        const created = await createCareer(db, {
+          name: classification.newCareerName,
+          categoryId: classification.newCareerCategoryId,
+          shortDescription: classification.newCareerShortDescription,
+        });
+        createdCareers.push(created);
+        careerOptions = [...careerOptions, created]; // visible to the next batch
+        readyToCreate.push({ ...q, careerId: created.id });
+      }
+      // 'reject' (or a malformed response): leave the record in 'received'.
+    }
   }
 
   const jobIds: string[] = [];
   const rawRecordIds: string[] = [];
 
-  for (let i = 0; i < qualifying.length; i += CONCURRENCY) {
-    const batch = qualifying.slice(i, i + CONCURRENCY);
+  for (let i = 0; i < readyToCreate.length; i += CONCURRENCY) {
+    const batch = readyToCreate.slice(i, i + CONCURRENCY);
     // allSettled, not all -- one record failing (a transient DB hiccup, a
     // slug collision) shouldn't take the rest of the batch down with it.
     // A failed record simply stays 'received' and shows up in the review
@@ -167,5 +236,5 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     }
   }
 
-  return { evaluated: rawRecords?.length ?? 0, approved: jobIds.length, jobIds, rawRecordIds };
+  return { evaluated: rawRecords?.length ?? 0, approved: jobIds.length, jobIds, rawRecordIds, createdCareers };
 }
