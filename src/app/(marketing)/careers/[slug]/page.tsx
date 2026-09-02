@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { DollarSign, TrendingUp, GraduationCap, ShieldCheck, Briefcase } from "lucide-react";
+import { DollarSign, TrendingUp, GraduationCap, ShieldCheck, Briefcase, LineChart } from "lucide-react";
 import { getCareerBySlug } from "@/features/careers/queries";
 import { JobCard } from "@/components/jobs/JobCard";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
@@ -33,7 +33,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-6">
         <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center gap-1.5 text-slate-500">
             <DollarSign className="w-3.5 h-3.5" />
@@ -52,6 +52,15 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         </div>
         <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
           <div className="flex items-center gap-1.5 text-slate-500">
+            <LineChart className="w-3.5 h-3.5" />
+            <p className="text-xs">Job outlook</p>
+          </div>
+          <p className="font-semibold text-slate-900 mt-1">
+            {content?.outlook_growth_pct != null ? `+${content.outlook_growth_pct}%` : "—"}
+          </p>
+        </div>
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <GraduationCap className="w-3.5 h-3.5" />
             <p className="text-xs">Entry-level friendly</p>
           </div>
@@ -65,6 +74,11 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
           <p className="font-semibold text-slate-900 mt-1">{career.regulated ? "Yes" : "No"}</p>
         </div>
       </div>
+      {content?.outlook_narrative && (
+        <p className="text-xs text-slate-500 mt-2">
+          {content.outlook_label} ({content.outlook_period}). {content.outlook_narrative}
+        </p>
+      )}
 
       {!content ? (
         <div className="border rounded-lg p-6 bg-slate-50 mt-8 text-center">
