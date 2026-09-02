@@ -1,22 +1,7 @@
 // app/admin/jobs/review/page.tsx
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
-import { RawJobCard } from "./RawJobCard";
-import { Inbox } from "lucide-react";
-
-interface RawJobRecord {
-  id: string;
-  external_id: string | null;
-  raw_data: {
-    title?: string;
-    location?: { name?: string } | null;
-    content?: string;
-    absolute_url?: string;
-    company_name?: string;
-  };
-  received_at: string;
-  source_id: string;
-}
+import { RawJobReviewList } from "./RawJobReviewList";
 
 export default async function JobReviewPage() {
   // Admin auth is checked once in app/admin/layout.tsx (requireAdmin()) --
@@ -58,7 +43,11 @@ export default async function JobReviewPage() {
   // 028) — resolving that link here means the reviewer never has to pick or
   // type the company by hand for an ingested job, only confirm it.
   const { data: sources } = await db.from("job_ingestion_sources").select("id, company_id");
-  const companyIdBySource = new Map((sources ?? []).map((s) => [s.id, s.company_id]));
+  // Plain object, not a Map -- this crosses the server/client boundary as a
+  // prop to RawJobReviewList, and Maps aren't serializable there.
+  const companyIdBySource: Record<string, string | null> = Object.fromEntries(
+    (sources ?? []).map((s) => [s.id, s.company_id])
+  );
 
   if (error) {
     return <p className="text-red-600">Failed to load raw job records: {error.message}</p>;
@@ -81,28 +70,16 @@ export default async function JobReviewPage() {
         </div>
       </div>
 
-      {(!rawRecords || rawRecords.length === 0) && (
-        <div className="flex flex-col items-center text-center gap-2 border border-dashed rounded-xl py-16 text-slate-500">
-          <Inbox className="w-8 h-8 text-slate-300" />
-          <p>Nothing waiting for review right now.</p>
-        </div>
-      )}
-
-      <div className="space-y-3">
-        {rawRecords?.map((record: RawJobRecord) => (
-          <RawJobCard
-            key={record.id}
-            record={record}
-            careers={(careers ?? []).map((career: any) => ({
-              id: career.id,
-              name: career.name,
-              categoryName: career.career_categories?.name ?? null,
-            }))}
-            companies={companies ?? []}
-            defaultCompanyId={companyIdBySource.get(record.source_id) ?? null}
-          />
-        ))}
-      </div>
+      <RawJobReviewList
+        initialRecords={rawRecords ?? []}
+        careers={(careers ?? []).map((career: any) => ({
+          id: career.id,
+          name: career.name,
+          categoryName: career.career_categories?.name ?? null,
+        }))}
+        companies={companies ?? []}
+        companyIdBySource={companyIdBySource}
+      />
     </div>
   );
 }

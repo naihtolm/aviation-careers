@@ -83,16 +83,36 @@ function parseLocation(raw: string): { city: string; state: string } {
   return { city, state };
 }
 
+// Structured Greenhouse fields never carry compensation, but the
+// description text almost always does -- pay-transparency laws mean most
+// postings include a line like "targeting a base pay between $144,000 -
+// $180,000" or "offering $242,873 to $255,016.65 per year" in the body
+// itself. Strip tags and pull the first "$X - $Y" / "$X to $Y" range out of
+// the plain text, rather than leaving the field blank just because the
+// source's own salary fields are empty.
+function parseSalaryFromDescription(html: string): { min: number; max: number } | null {
+  const text = html.replace(/<[^>]+>/g, " ");
+  const match = text.match(/\$\s*([\d,]+(?:\.\d+)?)\s*(?:-|–|—|to)\s*\$\s*([\d,]+(?:\.\d+)?)/i);
+  if (!match) return null;
+  const min = Number(match[1].replace(/,/g, ""));
+  const max = Number(match[2].replace(/,/g, ""));
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return null;
+  if (min < 10_000 || max > 5_000_000) return null;
+  return { min, max };
+}
+
 export function RawJobCard({
   record,
   careers,
   companies,
   defaultCompanyId,
+  onSettled,
 }: {
   record: RawJobRecord;
   careers: Career[];
   companies: Company[];
   defaultCompanyId?: string | null;
+  onSettled: (id: string) => void;
 }) {
   const title = record.raw_data.title ?? "(untitled)";
   const suggestedCareerId = suggestCareerId(title, careers);
@@ -100,6 +120,20 @@ export function RawJobCard({
   const matchedCompany = defaultCompanyId ? companies.find((c) => c.id === defaultCompanyId) : undefined;
   const [isPending, startTransition] = useTransition();
   const [expanded, setExpanded] = useState(false);
+  // Approve/reject don't just remove the card -- they flash a confirmation
+  // color first, then collapse it away, so the outcome of a click actually
+  // registers before the item disappears. `outcome` drives the color/label,
+  // `collapsing` (set a beat later) drives the height/fade-out; onSettled
+  // (which removes this record from the parent's list) fires only once the
+  // collapse transition has actually finished.
+  const [outcome, setOutcome] = useState<"approved" | "rejected" | null>(null);
+  const [collapsing, setCollapsing] = useState(false);
+
+  useEffect(() => {
+    if (!collapsing) return;
+    const timer = setTimeout(() => onSettled(record.id), 260);
+    return () => clearTimeout(timer);
+  }, [collapsing, onSettled, record.id]);
   const [careerId, setCareerId] = useState(suggestedCareerId ?? "");
   // Every ingestion source maps to exactly one real employer (migration
   // 028), so defaultCompanyId is reliable — no need to fuzzy-match
@@ -110,8 +144,9 @@ export function RawJobCard({
   const [newCompanyWebsite, setNewCompanyWebsite] = useState("");
   const [websiteEdited, setWebsiteEdited] = useState(false);
   const [suggestingWebsite, setSuggestingWebsite] = useState(false);
-  const [salaryMin, setSalaryMin] = useState("");
-  const [salaryMax, setSalaryMax] = useState("");
+  const parsedSalary = parseSalaryFromDescription(record.raw_data.content ?? "");
+  const [salaryMin, setSalaryMin] = useState(parsedSalary ? String(parsedSalary.min) : "");
+  const [salaryMax, setSalaryMax] = useState(parsedSalary ? String(parsedSalary.max) : "");
   // Once a company is auto-matched via the ingestion source, show it as a
   // confirmed fact rather than an editable dropdown -- "Change" drops back
   // to the old picker for the rare case the source's default is wrong.
@@ -152,6 +187,8 @@ export function RawJobCard({
         salaryMin: salaryMin ? Number(salaryMin) : null,
         salaryMax: salaryMax ? Number(salaryMax) : null,
       });
+      setOutcome("approved");
+      setTimeout(() => setCollapsing(true), 220);
     });
   }
 
@@ -159,6 +196,8 @@ export function RawJobCard({
     const reason = prompt("Reason for rejecting (optional):") ?? "";
     startTransition(async () => {
       await rejectRawJob(record.id, reason);
+      setOutcome("rejected");
+      setTimeout(() => setCollapsing(true), 220);
     });
   }
 
@@ -166,13 +205,29 @@ export function RawJobCard({
     "w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-colors";
 
   return (
-    <div
-      className={`border rounded-xl bg-white shadow-sm transition-all ${
-        expanded ? "border-brand-200 shadow-md" : "border-slate-200"
-      }`}
-    >
+    // The grid/overflow-hidden pair is what makes the collapse smooth without
+    // a fixed pixel height: animating grid-template-rows from 1fr to 0fr
+    // shrinks this row's track to nothing, and overflow-hidden clips the
+    // content (border, padding, the pb-3 gap below) along with it, so there's
+    // no leftover space once the card is actually removed from the list.
+    <div className={`grid transition-[grid-template-rows] duration-[260ms] ease-in-out ${collapsing ? "grid-rows-[0fr]" : "grid-rows-[1fr]"}`}>
+      <div className="overflow-hidden">
+        <div className="pb-3">
+          <div
+            className={`border rounded-xl shadow-sm transition-all duration-200 ${
+              collapsing
+                ? "opacity-0 scale-[0.97]"
+                : outcome === "approved"
+                  ? "bg-emerald-50 border-emerald-300"
+                  : outcome === "rejected"
+                    ? "bg-slate-100 border-slate-300"
+                    : expanded
+                      ? "bg-white border-brand-200 shadow-md"
+                      : "bg-white border-slate-200"
+            }`}
+          >
       <button
-        onClick={() => setExpanded((e) => !e)}
+        onClick={() => !outcome && setExpanded((e) => !e)}
         className="w-full flex items-start justify-between gap-4 p-4 text-left"
       >
         <div className="min-w-0">
@@ -299,7 +354,7 @@ export function RawJobCard({
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              Salary <span className="font-normal text-slate-400">(optional — not provided by this source)</span>
+              Salary <span className="font-normal text-slate-400">(optional)</span>
             </label>
             <div className="grid grid-cols-2 gap-3">
               <input
@@ -317,6 +372,14 @@ export function RawJobCard({
                 onChange={(e) => setSalaryMax(e.target.value)}
               />
             </div>
+            {parsedSalary ? (
+              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+                <Check className="w-3.5 h-3.5" />
+                Detected from the job description — please confirm before publishing.
+              </p>
+            ) : (
+              <p className="text-xs text-slate-400 mt-1.5">Not mentioned anywhere in this source.</p>
+            )}
           </div>
 
           <details className="group">
@@ -332,24 +395,27 @@ export function RawJobCard({
 
           <div className="flex gap-2 pt-1">
             <button
-              disabled={isPending || (!careerId && !companyId && !newCompanyName)}
+              disabled={isPending || outcome !== null || (!careerId && !companyId && !newCompanyName)}
               onClick={handleApprove}
               className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
             >
               <Check className="w-4 h-4" />
-              {isPending ? "Working…" : "Approve & Publish"}
+              {outcome === "approved" ? "Approved" : isPending ? "Working…" : "Approve & Publish"}
             </button>
             <button
-              disabled={isPending}
+              disabled={isPending || outcome !== null}
               onClick={handleReject}
               className="inline-flex items-center gap-1.5 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-50 disabled:opacity-50"
             >
               <X className="w-4 h-4" />
-              Reject
+              {outcome === "rejected" ? "Rejected" : "Reject"}
             </button>
           </div>
         </div>
       )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
