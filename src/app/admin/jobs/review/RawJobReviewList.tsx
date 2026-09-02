@@ -1,9 +1,10 @@
 // app/admin/jobs/review/RawJobReviewList.tsx
 "use client";
 
-import { useState } from "react";
-import { Inbox } from "lucide-react";
+import { useState, useTransition } from "react";
+import { Inbox, Sparkles } from "lucide-react";
 import { RawJobCard } from "./RawJobCard";
+import { runAutoApproveNow } from "./actions";
 
 interface Career {
   id: string;
@@ -50,22 +51,55 @@ export function RawJobReviewList({
   companyIdBySource: Record<string, string | null>;
 }) {
   const [records, setRecords] = useState(initialRecords);
+  const [isPending, startTransition] = useTransition();
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   function handleSettled(id: string) {
     setRecords((prev) => prev.filter((r) => r.id !== id));
   }
 
+  function handleAutoApprove() {
+    setResultMessage(null);
+    startTransition(async () => {
+      const result = await runAutoApproveNow();
+      setRecords((prev) => prev.filter((r) => !result.rawRecordIds.includes(r.id)));
+      setResultMessage(
+        result.approved > 0
+          ? `Auto-published ${result.approved} of ${result.evaluated} pending jobs — the rest still need a look.`
+          : `None of the ${result.evaluated} pending jobs cleared the auto-publish bar — nothing changed.`
+      );
+    });
+  }
+
+  const autoApproveButton = (
+    <div className="mb-4">
+      <button
+        onClick={handleAutoApprove}
+        disabled={isPending}
+        className="inline-flex items-center gap-1.5 border border-brand-200 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-brand-100 disabled:opacity-50"
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+        {isPending ? "Checking the backlog…" : "Auto-publish qualifying jobs now"}
+      </button>
+      {resultMessage && <p className="text-sm text-slate-500 mt-1.5">{resultMessage}</p>}
+    </div>
+  );
+
   if (records.length === 0) {
     return (
-      <div className="flex flex-col items-center text-center gap-2 border border-dashed rounded-xl py-16 text-slate-500">
-        <Inbox className="w-8 h-8 text-slate-300" />
-        <p>Nothing waiting for review right now.</p>
+      <div>
+        {autoApproveButton}
+        <div className="flex flex-col items-center text-center gap-2 border border-dashed rounded-xl py-16 text-slate-500">
+          <Inbox className="w-8 h-8 text-slate-300" />
+          <p>Nothing waiting for review right now.</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div>
+      {autoApproveButton}
       {records.map((record) => (
         <RawJobCard
           key={record.id}

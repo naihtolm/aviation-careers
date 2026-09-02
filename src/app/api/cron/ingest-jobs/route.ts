@@ -5,6 +5,7 @@
 
 import { Resend } from "resend";
 import { runAllIngestion } from "@/lib/ingestion/run-ingestion";
+import { autoApproveQualifyingRawJobs } from "@/lib/ingestion/auto-approve";
 
 export async function GET(request: Request) {
   const cronSecret = process.env.CRON_SECRET;
@@ -14,13 +15,16 @@ export async function GET(request: Request) {
   }
 
   const results = await runAllIngestion();
+  // Runs after ingestion, not in parallel with it -- it needs today's
+  // freshly-inserted raw_job_records to already be there to evaluate.
+  const autoApproved = await autoApproveQualifyingRawJobs();
 
   const errors = results.flatMap((result) => result.errors.map((message) => ({ sourceId: result.sourceId, message })));
   if (errors.length > 0) {
     await notifyIngestionFailure(errors);
   }
 
-  return Response.json({ results });
+  return Response.json({ results, autoApproved });
 }
 
 // Reuses the same Resend setup as features/alerts/delivery.ts — no-ops

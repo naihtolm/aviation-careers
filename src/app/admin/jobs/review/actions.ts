@@ -4,8 +4,8 @@
 import { revalidatePath } from "next/cache";
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
-import { decodeHtmlEntities } from "@/lib/html";
-import { findOrCreateLocation } from "@/lib/locations";
+import { createJobFromRawRecord } from "@/lib/ingestion/createJobFromRawRecord";
+import { autoApproveQualifyingRawJobs } from "@/lib/ingestion/auto-approve";
 
 async function assertIsAdmin() {
   const supabase = await createServerActionClient();
@@ -78,74 +78,36 @@ export async function approveRawJob(input: ApproveRawJobInput) {
     throw new Error("A company must be selected or created before approving.");
   }
 
-  // 2. Create the job
-  const jobSlug = input.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-
-  const { data: job, error: jobError } = await db
-    .from("jobs")
-    .insert({
-      company_id: companyId,
-      career_id: input.careerId,
+  const jobId = await createJobFromRawRecord(
+    {
+      rawRecordId: input.rawRecordId,
       title: input.title,
-      slug: jobSlug,
-      // Greenhouse's API returns `content` already HTML-entity-escaped
-      // (e.g. "&lt;div&gt;" instead of "<div>") — decode once here so the
-      // stored description is real HTML, not escaped text, matching what
-      // dangerouslySetInnerHTML on the job detail page expects and
-      // keeping search_vector built from actual words, not entity tokens.
-      description: decodeHtmlEntities(input.description),
-      employment_type: input.employmentType,
-      status: "active",
-      source_type: "feed",
-      application_type: "external_url",
-      application_url: input.applicationUrl,
-      published_at: new Date().toISOString(),
-    })
-    .select("id")
-    .single();
-
-  if (jobError) throw new Error(`Failed to create job: ${jobError.message}`);
-
-  // 3. Location
-  if (input.city && input.state) {
-    const locationId = await findOrCreateLocation(input.city, input.state);
-    await db.from("job_locations").insert({ job_id: job.id, location_id: locationId, is_primary: true });
-  }
-
-  // 4. Compensation
-  if (input.salaryMin || input.salaryMax) {
-    await db.from("job_compensation").insert({
-      job_id: job.id,
-      pay_type: "base",
-      currency: "USD",
-      min_amount: input.salaryMin,
-      max_amount: input.salaryMax,
-      period: input.salaryPeriod,
-      is_estimated: false,
-      is_public: true,
-      source: "employer_feed",
-    });
-  }
-
-  // 5. Mark the raw record processed + audit log
-  await db
-    .from("raw_job_records")
-    .update({ status: "processed", processed_at: new Date().toISOString() })
-    .eq("id", input.rawRecordId);
-
-  await db.from("audit_logs").insert({
-    actor_user_id: adminUserId,
-    action: "approve_raw_job",
-    entity_type: "jobs",
-    entity_id: job.id,
-    new_data: { raw_record_id: input.rawRecordId },
-  });
+      description: input.description,
+      careerId: input.careerId,
+      companyId,
+      city: input.city,
+      state: input.state,
+      applicationUrl: input.applicationUrl,
+      salaryMin: input.salaryMin,
+      salaryMax: input.salaryMax,
+      salaryPeriod: input.salaryPeriod,
+      employmentType: input.employmentType,
+    },
+    { userId: adminUserId, action: "approve_raw_job" }
+  );
 
   revalidatePath("/admin/jobs/review");
-  return { jobId: job.id };
+  return { jobId };
+}
+
+// Manual trigger for the same sweep the ingestion cron runs automatically --
+// lets the admin clear the *existing* backlog against the current matching
+// rules right now, instead of waiting for tomorrow's cron run.
+export async function runAutoApproveNow() {
+  await assertIsAdmin();
+  const result = await autoApproveQualifyingRawJobs();
+  revalidatePath("/admin/jobs/review");
+  return result;
 }
 
 export async function rejectRawJob(rawRecordId: string, reason: string) {
