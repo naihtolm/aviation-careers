@@ -51,14 +51,14 @@ export default async function DashboardPage() {
 
       <Link
         href="/dashboard/resume"
-        className="flex items-center gap-3 border rounded-lg p-4 bg-brand-600 text-white mt-4 hover:bg-brand-700 transition-colors"
+        className="flex items-center gap-3 border rounded-lg p-4 bg-accent-200 text-board mt-4 hover:bg-accent-100 transition-colors"
       >
-        <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-board/10 flex items-center justify-center shrink-0">
           <Upload className="w-5 h-5" />
         </div>
         <div>
           <p className="font-medium">Upload your resume</p>
-          <p className="text-sm text-brand-100 mt-0.5">
+          <p className="text-sm text-board/70 mt-0.5">
             We'll pull out your experience, education, skills, and certifications — you review before anything saves.
           </p>
         </div>

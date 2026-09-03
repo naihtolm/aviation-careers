@@ -27,7 +27,7 @@ export default async function SectorDetailPage({ params }: { params: Promise<{ s
             </p>
             <Link
               href="/employers/sign-up"
-              className="inline-block mt-4 bg-brand-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-brand-700 transition-colors"
+              className="inline-block mt-4 bg-accent-200 text-board text-sm font-medium px-4 py-2 rounded-md hover:bg-accent-100 transition-colors"
             >
               Register your company
             </Link>

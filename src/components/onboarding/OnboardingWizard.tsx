@@ -202,7 +202,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
         {step < STEPS.length - 1 ? (
           <button
             onClick={() => setStep((s) => s + 1)}
-            className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-5 py-2 rounded-md text-sm font-medium"
+            className="bg-accent-200 text-board hover:bg-accent-100 transition-colors px-5 py-2 rounded-md text-sm font-medium"
           >
             Next
           </button>
@@ -210,7 +210,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
           <button
             onClick={handleFinish}
             disabled={isPending}
-            className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+            className="bg-accent-200 text-board hover:bg-accent-100 transition-colors px-5 py-2 rounded-md text-sm font-medium disabled:opacity-50"
           >
             {isPending ? "Saving…" : "Finish"}
           </button>

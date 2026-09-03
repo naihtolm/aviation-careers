@@ -22,7 +22,7 @@ export default async function CareerDirectoryPage({
               href="/careers"
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                 !params.category
-                  ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                  ? "bg-accent-200 text-board border-accent-200 hover:bg-accent-100"
                   : "text-white/80 border-white/25 hover:bg-white/10"
               }`}
             >
@@ -34,7 +34,7 @@ export default async function CareerDirectoryPage({
                 href={`/careers?category=${cat.slug}`}
                 className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                   params.category === cat.slug
-                    ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                    ? "bg-accent-200 text-board border-accent-200 hover:bg-accent-100"
                     : "text-white/80 border-white/25 hover:bg-white/10"
                 }`}
               >

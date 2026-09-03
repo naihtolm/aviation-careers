@@ -24,7 +24,7 @@ export function MatchCard({ jobId }: { jobId: string }) {
         <button
           onClick={handleCheck}
           disabled={isPending}
-          className="mt-3 text-sm bg-brand-600 text-white hover:bg-brand-700 transition-colors px-4 py-1.5 rounded-md disabled:opacity-50"
+          className="mt-3 text-sm bg-accent-200 text-board hover:bg-accent-100 transition-colors px-4 py-1.5 rounded-md disabled:opacity-50"
         >
           {isPending ? "Checking…" : "Check My Match"}
         </button>

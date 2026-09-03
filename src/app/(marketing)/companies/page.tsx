@@ -27,7 +27,7 @@ export default async function CompanyDirectoryPage({
             href="/companies"
             className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
               !params.sector
-                ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                ? "bg-accent-200 text-board border-accent-200 hover:bg-accent-100"
                 : "text-white/80 border-white/25 hover:bg-white/10"
             }`}
           >
@@ -39,7 +39,7 @@ export default async function CompanyDirectoryPage({
               href={`/companies?sector=${sector.slug}`}
               className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
                 params.sector === sector.slug
-                  ? "bg-brand-600 text-white border-brand-600 hover:bg-brand-700"
+                  ? "bg-accent-200 text-board border-accent-200 hover:bg-accent-100"
                   : "text-white/80 border-white/25 hover:bg-white/10"
               }`}
             >

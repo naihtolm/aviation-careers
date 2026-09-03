@@ -49,7 +49,7 @@ export function UploadForm() {
       <button
         type="submit"
         disabled={isPending || !fileName}
-        className="mt-4 bg-brand-600 text-white hover:bg-brand-700 transition-colors px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+        className="mt-4 bg-accent-200 text-board hover:bg-accent-100 transition-colors px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
       >
         {isPending ? "Processing… this usually takes under a minute" : "Upload & Process"}
       </button>
