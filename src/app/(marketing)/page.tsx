@@ -26,10 +26,13 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="relative overflow-hidden -mt-16 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900">
+      <section className="relative overflow-hidden -mt-16 bg-gradient-to-b from-board via-board-2 to-board-2">
         {/* Ambient glow -- pure CSS, no images, subtle drift via the
-            animate-float-slow keyframes in globals.css. Positioned to
-            match the two radial highlights in the approved design comp. */}
+            animate-float-slow keyframes in globals.css. Kept as a cool
+            blue wash (not amber) -- amber is reserved for actionable
+            elements (the search button below, badges), so it stays
+            legible as "the one accent that means action" instead of
+            bleeding into ambient atmosphere. */}
         <div
           className="pointer-events-none absolute -top-24 -left-16 w-96 h-96 rounded-full bg-brand-400/25 blur-3xl animate-float-slow"
           aria-hidden
@@ -41,7 +44,7 @@ export default async function HomePage() {
 
         <div className="relative max-w-4xl mx-auto px-4 pt-36 pb-10 text-center">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight text-balance">
-            Find your next job in <span className="text-brand-300">aviation</span>
+            Find your next job in <span className="text-accent-200">aviation</span>
           </h1>
           <p className="text-slate-300 mt-4 text-lg">
             Mechanics, pilots, engineers, ramp agents, and more — search real openings across the industry.
@@ -56,7 +59,7 @@ export default async function HomePage() {
           <div className="text-center">
             <p className="font-mono-data text-2xl sm:text-3xl font-semibold">
               {stats.jobCount}
-              <span className="text-brand-300">+</span>
+              <span className="text-accent-200">+</span>
             </p>
             <p className="text-[11px] sm:text-xs uppercase tracking-wide text-slate-400 mt-1">Open roles</p>
           </div>
@@ -218,12 +221,12 @@ export default async function HomePage() {
         </Reveal>
       )}
 
-      <section className="bg-gradient-to-b from-navy-950 to-navy-900 py-14">
+      <section className="bg-gradient-to-b from-board to-board-2 py-14">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="font-display text-xl font-semibold text-white mb-6">Connect with us</h2>
           <div className="grid sm:grid-cols-3 gap-8">
             <div>
-              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-accent-200 flex items-center justify-center">
                 <Bell className="w-5 h-5" />
               </div>
               <h3 className="text-white font-medium mt-3">Get job alerts</h3>
@@ -236,7 +239,7 @@ export default async function HomePage() {
               </Link>
             </div>
             <div>
-              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-accent-200 flex items-center justify-center">
                 <UserRound className="w-5 h-5" />
               </div>
               <h3 className="text-white font-medium mt-3">Build your profile</h3>
@@ -249,7 +252,7 @@ export default async function HomePage() {
               </Link>
             </div>
             <div>
-              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-brand-300 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-accent-200 flex items-center justify-center">
                 <Building2 className="w-5 h-5" />
               </div>
               <h3 className="text-white font-medium mt-3">For employers</h3>

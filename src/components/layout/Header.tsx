@@ -12,7 +12,7 @@ export async function Header() {
   const savedCount = user && !employerContext ? (await getSavedJobIds(user.id)).size : 0;
 
   return (
-    <header className="sticky top-0 z-40 bg-board">
+    <header className="sticky top-0 z-40 bg-board/95 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="font-display font-bold text-lg tracking-tight text-white uppercase">
           Aviation<span className="text-accent-200">.</span>Careers
