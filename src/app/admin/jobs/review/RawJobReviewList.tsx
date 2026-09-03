@@ -99,7 +99,7 @@ export function RawJobReviewList({
       <button
         onClick={handleAutoApprove}
         disabled={isPending}
-        className="inline-flex items-center gap-1.5 border border-brand-200 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-brand-100 disabled:opacity-50"
+        className="inline-flex items-center gap-1.5 border border-accent-200 bg-accent-200 text-board px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-accent-100 disabled:opacity-50"
       >
         <Sparkles className="w-3.5 h-3.5" />
         {isPending ? "Checking the backlog…" : "Auto-publish qualifying jobs now"}

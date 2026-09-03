@@ -49,7 +49,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
               key={t}
               onClick={() => setTab(t)}
               className={`px-3 py-2 text-sm capitalize border-b-2 -mb-px transition-colors ${
-                tab === t ? "border-brand-600 text-slate-900 font-medium" : "border-transparent text-slate-500"
+                tab === t ? "border-accent-600 text-slate-900 font-medium" : "border-transparent text-slate-500"
               }`}
             >
               {t} ({count})
