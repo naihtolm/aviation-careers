@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { Clock, TrendingUp, Home, Briefcase } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { JobCard } from "@/components/jobs/JobCard";
 import { PageHero } from "@/components/layout/PageHero";
+import { FlipCounter } from "@/components/ui/FlipCounter";
 import { searchJobs, getSavedJobIds } from "@/features/jobs/queries";
 import { getCurrentUser } from "@/features/profile/queries";
 
@@ -68,12 +70,12 @@ export default async function JobSearchPage({
             <ul className="space-y-1">
               {EMPLOYMENT_TYPES.map((v) => (
                 <li key={v}>
-                  <a
+                  <Link
                     href={filterHref("employment_type", v)}
                     className={`text-sm block ${params.employment_type === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
                   >
                     {label(v)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -86,12 +88,12 @@ export default async function JobSearchPage({
             <ul className="space-y-1">
               {EXPERIENCE_LEVELS.map((v) => (
                 <li key={v}>
-                  <a
+                  <Link
                     href={filterHref("experience_level", v)}
                     className={`text-sm block ${params.experience_level === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
                   >
                     {EXPERIENCE_LABELS[v]}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -104,12 +106,12 @@ export default async function JobSearchPage({
             <ul className="space-y-1">
               {WORK_ARRANGEMENTS.map((v) => (
                 <li key={v}>
-                  <a
+                  <Link
                     href={filterHref("work_arrangement", v)}
                     className={`text-sm block ${params.work_arrangement === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
                   >
                     {label(v)}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -119,22 +121,22 @@ export default async function JobSearchPage({
         <div>
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <p className="text-sm text-slate-500">
-              {total} job{total === 1 ? "" : "s"} found
+              <FlipCounter value={total} /> job{total === 1 ? "" : "s"} found
             </p>
             <div className="flex items-center gap-1 text-sm">
               <span className="text-slate-400">Sort:</span>
-              <a
+              <Link
                 href={filterHref("sort", "newest")}
                 className={`px-2 py-1 rounded-md ${!params.sort || params.sort === "newest" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
               >
                 Newest
-              </a>
-              <a
+              </Link>
+              <Link
                 href={filterHref("sort", "salary_desc")}
                 className={`px-2 py-1 rounded-md ${params.sort === "salary_desc" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
               >
                 Highest salary
-              </a>
+              </Link>
             </div>
           </div>
 

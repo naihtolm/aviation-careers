@@ -102,20 +102,17 @@ export function ApplyPanel({
     });
   }
 
-  // Built up-front, then portalled straight to document.body below rather
-  // than rendered inline. This panel lives inside a `position: sticky`
-  // sidebar (see app/jobs/[slug]/page.tsx) -- a `fixed` modal nested that
-  // deep is a well-known cross-browser stacking-context footgun (sticky
-  // ancestors don't reliably keep fixed descendants painting above
-  // unrelated siblings in every browser, which is exactly what caused the
-  // "Similar jobs" cards to render on top of this modal). Portalling to
-  // body sidesteps the whole class of bug instead of chasing it
-  // ancestor-by-ancestor.
-  const modalContent = (
-    <>
-      {modal === "confirming" && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+  // One step's inner content -- title, body, controls -- for whichever
+  // `modal` state is current. Deliberately NOT the backdrop/box itself:
+  // those mount once for the whole flow (see modalContent below) so
+  // moving between steps (e.g. confirming -> didYouApply) cross-fades the
+  // content in place instead of the modal visibly closing and reopening
+  // four separate times.
+  function renderStepContent() {
+    switch (modal) {
+      case "confirming":
+        return (
+          <>
             <h3 className="font-medium text-slate-900">You'll be redirected to {companyName}'s site</h3>
             <p className="text-sm text-slate-500 mt-2">
               We'll track that you clicked apply, but you'll submit your application directly through{" "}
@@ -136,13 +133,12 @@ export function ApplyPanel({
                 {isPending ? "Opening…" : "Continue"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        );
 
-      {modal === "didYouApply" && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+      case "didYouApply":
+        return (
+          <>
             <h3 className="font-medium text-slate-900">Did you apply to this job?</h3>
             <p className="text-sm text-slate-500 mt-2">
               We opened {companyName}'s application page in a new tab. Let us know if you finished applying so we
@@ -163,13 +159,12 @@ export function ApplyPanel({
                 {isPending ? "Saving…" : "Yes, I applied"}
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        );
 
-      {modal === "nativeApply" && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full max-h-[85vh] overflow-y-auto">
+      case "nativeApply":
+        return (
+          <>
             <h3 className="font-medium text-slate-900">Apply to {companyName}</h3>
             <p className="text-sm text-slate-500 mt-2">
               Your saved resume and profile will be sent with this application.
@@ -256,13 +251,12 @@ export function ApplyPanel({
                 </div>
               </>
             )}
-          </div>
-        </div>
-      )}
+          </>
+        );
 
-      {modal === "appliedConfirmation" && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+      case "appliedConfirmation":
+        return (
+          <div className="text-center">
             <h3 className="font-medium text-slate-900">Application submitted</h3>
             <p className="text-sm text-slate-500 mt-2">
               {companyName} will review your application. You can track its status from your dashboard.
@@ -274,9 +268,37 @@ export function ApplyPanel({
               Done
             </button>
           </div>
+        );
+
+      default:
+        return null;
+    }
+  }
+
+  // Built up-front, then portalled straight to document.body below rather
+  // than rendered inline. This panel lives inside a `position: sticky`
+  // sidebar (see app/jobs/[slug]/page.tsx) -- a `fixed` modal nested that
+  // deep is a well-known cross-browser stacking-context footgun (sticky
+  // ancestors don't reliably keep fixed descendants painting above
+  // unrelated siblings in every browser, which is exactly what caused the
+  // "Similar jobs" cards to render on top of this modal). Portalling to
+  // body sidesteps the whole class of bug instead of chasing it
+  // ancestor-by-ancestor.
+  //
+  // The backdrop and box below mount exactly once per open (the whole
+  // `modal !== "closed"` block), so they only ever play their entrance
+  // animation on open, not on every step change -- .animate-modal-content
+  // is keyed on `modal` so just the content fades in fresh each step,
+  // which is what makes this read as one continuous flow instead of four
+  // popups closing and reopening.
+  const modalContent = (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50 animate-modal-backdrop">
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full max-h-[85vh] overflow-y-auto animate-modal-box">
+        <div key={modal} className="animate-modal-content">
+          {renderStepContent()}
         </div>
-      )}
-    </>
+      </div>
+    </div>
   );
 
   return (
