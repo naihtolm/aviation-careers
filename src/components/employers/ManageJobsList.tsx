@@ -102,7 +102,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                 <button
                   disabled={isPending}
                   onClick={() => handleRenew(job.id)}
-                  className="text-sm border border-brand-600 bg-brand-600 text-white hover:bg-brand-700 transition-colors rounded-md px-3 py-1.5 disabled:opacity-50"
+                  className="text-sm border border-accent-200 bg-accent-200 text-board hover:bg-accent-100 transition-colors rounded-md px-3 py-1.5 disabled:opacity-50"
                 >
                   Renew
                 </button>

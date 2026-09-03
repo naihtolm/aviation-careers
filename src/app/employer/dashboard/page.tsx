@@ -46,7 +46,7 @@ export default async function EmployerDashboardPage() {
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
-        <Link href="/employer/jobs/new" className="flex items-center gap-3 border rounded-lg p-4 bg-brand-600 text-white hover:bg-brand-700 transition-colors">
+        <Link href="/employer/jobs/new" className="flex items-center gap-3 border rounded-lg p-4 bg-accent-200 text-board hover:bg-accent-100 transition-colors">
           <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
             <Plus className="w-5 h-5" />
           </div>

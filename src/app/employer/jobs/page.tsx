@@ -18,7 +18,7 @@ export default async function EmployerJobsPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold text-slate-900">Your Jobs</h1>
-        <Link href="/employer/jobs/new" className="bg-brand-600 text-white hover:bg-brand-700 transition-colors px-4 py-2 rounded-md text-sm font-medium">
+        <Link href="/employer/jobs/new" className="bg-accent-200 text-board hover:bg-accent-100 transition-colors px-4 py-2 rounded-md text-sm font-medium">
           Post a Job
         </Link>
       </div>

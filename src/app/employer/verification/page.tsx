@@ -48,7 +48,7 @@ export default async function EmployerVerificationPage() {
       {status === "approved" && (
         <Link
           href="/employer/jobs/new"
-          className="inline-block mt-4 bg-brand-600 text-white hover:bg-brand-700 transition-colors px-4 py-2 rounded-md text-sm font-medium"
+          className="inline-block mt-4 bg-accent-200 text-board hover:bg-accent-100 transition-colors px-4 py-2 rounded-md text-sm font-medium"
         >
           Post a job →
         </Link>
