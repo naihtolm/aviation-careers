@@ -26,12 +26,12 @@ const COLUMNS: { title: string; icon: LucideIcon; links: { href: string; label: 
   },
 ];
 
-// Deliberately the same navy identity as the homepage hero/CTA band, not
-// just a plain light footer -- so the design language carries through to
-// the very bottom of every page, not only the top of the homepage.
+// Deliberately the same board identity as the header/hero, not just a
+// plain light footer -- so the design language carries through to the
+// very bottom of every page, not only the top of the homepage.
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-navy-950 to-navy-900 border-t border-white/10">
+    <footer className="bg-gradient-to-b from-board to-board-2 border-t border-white/10">
       <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2 md:col-span-2">
           <p className="font-display text-white font-semibold">Aviation Careers</p>
@@ -43,7 +43,7 @@ export function Footer() {
         {COLUMNS.map((col) => (
           <div key={col.title}>
             <p className="text-sm font-medium text-white mb-3 flex items-center gap-1.5">
-              <col.icon className="w-4 h-4 text-brand-300" />
+              <col.icon className="w-4 h-4 text-accent-200" />
               {col.title}
             </p>
             <ul className="space-y-2">

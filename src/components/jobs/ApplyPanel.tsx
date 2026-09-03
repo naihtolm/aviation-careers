@@ -131,7 +131,7 @@ export function ApplyPanel({
               <button
                 onClick={handleConfirmRedirect}
                 disabled={isPending}
-                className="flex-1 bg-brand-600 text-white hover:bg-brand-700 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
+                className="flex-1 bg-accent-200 text-board hover:bg-accent-100 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
               >
                 {isPending ? "Opening…" : "Continue"}
               </button>
@@ -158,7 +158,7 @@ export function ApplyPanel({
               <button
                 onClick={handleConfirmApplied}
                 disabled={isPending}
-                className="flex-1 bg-brand-600 text-white hover:bg-brand-700 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
+                className="flex-1 bg-accent-200 text-board hover:bg-accent-100 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
               >
                 {isPending ? "Saving…" : "Yes, I applied"}
               </button>
@@ -182,7 +182,7 @@ export function ApplyPanel({
                 </p>
                 <Link
                   href="/dashboard/resume"
-                  className="block text-center mt-3 bg-brand-600 text-white hover:bg-brand-700 transition-colors py-2 rounded-md text-sm"
+                  className="block text-center mt-3 bg-accent-200 text-board hover:bg-accent-100 transition-colors py-2 rounded-md text-sm"
                 >
                   Upload resume
                 </Link>
@@ -249,7 +249,7 @@ export function ApplyPanel({
                   <button
                     onClick={handleNativeApplySubmit}
                     disabled={isPending}
-                    className="flex-1 bg-brand-600 text-white hover:bg-brand-700 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
+                    className="flex-1 bg-accent-200 text-board hover:bg-accent-100 transition-colors py-2 rounded-md text-sm disabled:opacity-50"
                   >
                     {isPending ? "Submitting…" : "Submit Application"}
                   </button>
@@ -269,7 +269,7 @@ export function ApplyPanel({
             </p>
             <button
               onClick={() => setModal("closed")}
-              className="w-full bg-brand-600 text-white hover:bg-brand-700 transition-colors py-2 rounded-md text-sm mt-4"
+              className="w-full bg-accent-200 text-board hover:bg-accent-100 transition-colors py-2 rounded-md text-sm mt-4"
             >
               Done
             </button>
@@ -285,7 +285,7 @@ export function ApplyPanel({
         <>
           <button
             onClick={() => setModal("confirming")}
-            className="w-full bg-brand-600 text-white py-2.5 rounded-md font-medium hover:bg-brand-700 transition-colors"
+            className="w-full bg-accent-200 text-board py-2.5 rounded-md font-medium hover:bg-accent-100 transition-colors"
           >
             Apply Now
           </button>
@@ -298,7 +298,7 @@ export function ApplyPanel({
       ) : (
         <button
           onClick={() => setModal("nativeApply")}
-          className="w-full bg-brand-600 text-white py-2.5 rounded-md font-medium hover:bg-brand-700 transition-colors"
+          className="w-full bg-accent-200 text-board py-2.5 rounded-md font-medium hover:bg-accent-100 transition-colors"
         >
           Apply Now
         </button>
@@ -308,7 +308,7 @@ export function ApplyPanel({
         onClick={handleSave}
         disabled={isPending}
         className={`w-full py-2.5 rounded-md font-medium disabled:opacity-50 ${
-          saved ? "bg-brand-600 text-white hover:bg-brand-700 transition-colors" : "border border-slate-300 hover:bg-slate-50"
+          saved ? "bg-accent-200 text-board hover:bg-accent-100 transition-colors" : "border border-slate-300 hover:bg-slate-50"
         }`}
       >
         {saved ? "Saved ✓" : "Save Job"}
