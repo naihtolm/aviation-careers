@@ -1,9 +1,7 @@
-import Link from "next/link";
-import { Clock, TrendingUp, Home, Briefcase } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
-import { JobCard } from "@/components/jobs/JobCard";
+import { JobsResults } from "@/components/jobs/JobsResults";
 import { PageHero } from "@/components/layout/PageHero";
-import { FlipCounter } from "@/components/ui/FlipCounter";
 import { searchJobs, getSavedJobIds } from "@/features/jobs/queries";
 import { getCurrentUser } from "@/features/profile/queries";
 
@@ -54,108 +52,27 @@ export default async function JobSearchPage({
     return `/jobs?${next.toString()}`;
   }
 
+  const toOptions = (values: string[], key: string, labelFor: (v: string) => string) =>
+    values.map((v) => ({ value: v, label: labelFor(v), href: filterHref(key, v), active: params[key as keyof typeof params] === v }));
+
   return (
     <div>
       <PageHero title="Browse Aviation Jobs" description={`${total} open role${total === 1 ? "" : "s"} across the industry right now`} icon={Briefcase}>
         <SearchBar dark defaultKeyword={params.keyword} defaultLocation={params.location} />
       </PageHero>
 
-      <div className="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-[220px_1fr] gap-8">
-        <aside className="space-y-6 md:sticky md:top-24 md:self-start">
-          <div>
-            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-brand-600" />
-              Employment type
-            </p>
-            <ul className="space-y-1">
-              {EMPLOYMENT_TYPES.map((v) => (
-                <li key={v}>
-                  <Link
-                    href={filterHref("employment_type", v)}
-                    className={`text-sm block ${params.employment_type === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
-                  >
-                    {label(v)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-brand-600" />
-              Experience level
-            </p>
-            <ul className="space-y-1">
-              {EXPERIENCE_LEVELS.map((v) => (
-                <li key={v}>
-                  <Link
-                    href={filterHref("experience_level", v)}
-                    className={`text-sm block ${params.experience_level === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
-                  >
-                    {EXPERIENCE_LABELS[v]}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
-              <Home className="w-4 h-4 text-brand-600" />
-              Work arrangement
-            </p>
-            <ul className="space-y-1">
-              {WORK_ARRANGEMENTS.map((v) => (
-                <li key={v}>
-                  <Link
-                    href={filterHref("work_arrangement", v)}
-                    className={`text-sm block ${params.work_arrangement === v ? "text-slate-900 font-medium" : "text-slate-500"}`}
-                  >
-                    {label(v)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
-
-        <div>
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <p className="text-sm text-slate-500">
-              <FlipCounter value={total} /> job{total === 1 ? "" : "s"} found
-            </p>
-            <div className="flex items-center gap-1 text-sm">
-              <span className="text-slate-400">Sort:</span>
-              <Link
-                href={filterHref("sort", "newest")}
-                className={`px-2 py-1 rounded-md ${!params.sort || params.sort === "newest" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
-              >
-                Newest
-              </Link>
-              <Link
-                href={filterHref("sort", "salary_desc")}
-                className={`px-2 py-1 rounded-md ${params.sort === "salary_desc" ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
-              >
-                Highest salary
-              </Link>
-            </div>
-          </div>
-
-          {jobs.length === 0 ? (
-            <div className="border rounded-lg p-8 text-center bg-white">
-              <p className="font-medium text-slate-900">We couldn't find any exact matches</p>
-              <p className="text-sm text-slate-500 mt-1">
-                Try broadening your filters or searching a wider location radius.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {jobs.map((job: any) => (
-                <JobCard key={job.id} job={job} initialSaved={savedJobIds.has(job.id)} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+      <JobsResults
+        employmentTypes={toOptions(EMPLOYMENT_TYPES, "employment_type", label)}
+        experienceLevels={toOptions(EXPERIENCE_LEVELS, "experience_level", (v) => EXPERIENCE_LABELS[v])}
+        workArrangements={toOptions(WORK_ARRANGEMENTS, "work_arrangement", label)}
+        sortOptions={[
+          { value: "newest", label: "Newest", href: filterHref("sort", "newest"), active: !params.sort || params.sort === "newest" },
+          { value: "salary_desc", label: "Highest salary", href: filterHref("sort", "salary_desc"), active: params.sort === "salary_desc" },
+        ]}
+        jobs={jobs}
+        total={total}
+        savedJobIds={[...savedJobIds]}
+      />
     </div>
   );
 }
