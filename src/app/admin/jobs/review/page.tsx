@@ -1,6 +1,7 @@
 // app/admin/jobs/review/page.tsx
 import { createServerActionClient } from "@/lib/supabase/server";
 import { getServiceClient } from "@/lib/supabase/service";
+import { normalizeRawData } from "@/lib/ingestion/normalizeRawData";
 import { RawJobReviewList } from "./RawJobReviewList";
 
 // "Auto-publish qualifying jobs now" (RawJobReviewList) invokes
@@ -58,11 +59,14 @@ export default async function JobReviewPage() {
   // Every ingestion source is one real employer's job board (see migration
   // 028) — resolving that link here means the reviewer never has to pick or
   // type the company by hand for an ingested job, only confirm it.
-  const { data: sources } = await db.from("job_ingestion_sources").select("id, company_id");
+  const { data: sources } = await db.from("job_ingestion_sources").select("id, company_id, source_type");
   // Plain object, not a Map -- this crosses the server/client boundary as a
   // prop to RawJobReviewList, and Maps aren't serializable there.
   const companyIdBySource: Record<string, string | null> = Object.fromEntries(
     (sources ?? []).map((s) => [s.id, s.company_id])
+  );
+  const sourceTypeBySource: Record<string, string> = Object.fromEntries(
+    (sources ?? []).map((s) => [s.id, s.source_type])
   );
 
   if (error) {
@@ -70,6 +74,15 @@ export default async function JobReviewPage() {
   }
 
   const pendingCount = count ?? rawRecords?.length ?? 0;
+
+  // Every source's raw payload gets reshaped into the one shape the review
+  // UI already knows how to render, right here, once -- see
+  // normalizeRawData.ts for why this lives here instead of in the
+  // component. The DB row itself (raw_job_records.raw_data) is untouched.
+  const normalizedRecords = (rawRecords ?? []).map((r) => ({
+    ...r,
+    raw_data: normalizeRawData(sourceTypeBySource[r.source_id] ?? "greenhouse", r.raw_data),
+  }));
 
   return (
     <div>
@@ -87,7 +100,7 @@ export default async function JobReviewPage() {
       </div>
 
       <RawJobReviewList
-        initialRecords={rawRecords ?? []}
+        initialRecords={normalizedRecords}
         careers={(careers ?? []).map((career: any) => ({
           id: career.id,
           name: career.name,

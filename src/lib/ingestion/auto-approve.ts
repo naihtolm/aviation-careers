@@ -39,6 +39,7 @@ import { suggestCareerMatch } from "@/lib/careerMatching";
 import { classifyCareerWithAI } from "./aiCareerClassifier";
 import { createCareer } from "./careerResolution";
 import { createJobFromRawRecord } from "./createJobFromRawRecord";
+import { normalizeRawData } from "./normalizeRawData";
 
 export interface AutoApproveResult {
   evaluated: number;
@@ -112,12 +113,21 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
     // queue could keep getting skipped by runs that happen to fetch a
     // different slice than the one shown on screen.
     db.from("raw_job_records").select("id, source_id, raw_data").eq("status", "received").order("received_at", { ascending: true }).limit(MAX_RECORDS_PER_RUN),
-    db.from("job_ingestion_sources").select("id, company_id"),
+    db.from("job_ingestion_sources").select("id, company_id, source_type"),
     db.from("careers").select("id, name, career_categories ( name )").eq("active", true),
     db.from("career_categories").select("id, name"),
   ]);
 
   const companyIdBySource = new Map((sources ?? []).map((s) => [s.id, s.company_id]));
+  const sourceTypeBySource = new Map((sources ?? []).map((s) => [s.id, s.source_type]));
+  // Same reshape the review page does (see normalizeRawData.ts) -- this
+  // function reads raw_data directly from the DB, a separate query from
+  // the review page's, so it needs its own normalization pass rather than
+  // inheriting the page's.
+  const normalizedRawRecords = ((rawRecords ?? []) as RawJobRecordRow[]).map((r) => ({
+    ...r,
+    raw_data: normalizeRawData(sourceTypeBySource.get(r.source_id) ?? "greenhouse", r.raw_data),
+  }));
   let careerOptions: CareerOption[] = (careersRaw ?? []).map((c: any) => ({
     id: c.id,
     name: c.name,
@@ -128,7 +138,7 @@ export async function autoApproveQualifyingRawJobs(): Promise<AutoApproveResult>
   const readyToCreate: PendingCreate[] = [];
   const needsAIClassification: { record: RawJobRecordRow; companyId: string; city: string; state: string; salary: { min: number; max: number; period: "hour" | "year" }; employmentType: string; workArrangement: string }[] = [];
 
-  for (const record of (rawRecords ?? []) as RawJobRecordRow[]) {
+  for (const record of normalizedRawRecords) {
     const title = record.raw_data.title?.trim() ?? "";
     const content = record.raw_data.content?.trim() ?? "";
     if (!title || !content) continue;

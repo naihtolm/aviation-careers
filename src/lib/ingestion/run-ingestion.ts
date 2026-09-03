@@ -7,6 +7,8 @@
 
 import { getServiceClient } from "@/lib/supabase/service";
 import { ingestGreenhouseBoard } from "./greenhouse-connector";
+import { ingestLeverBoard } from "./lever-connector";
+import { ingestUsaJobsSearch } from "./usajobs-connector";
 import type { IngestionResult, IngestionSourceConfig } from "./types";
 
 export async function runAllIngestion(): Promise<IngestionResult[]> {
@@ -42,8 +44,39 @@ export async function runAllIngestion(): Promise<IngestionResult[]> {
         break;
       }
 
-      // case "usajobs": ... add once the Greenhouse pattern is proven
-      // case "lever": ...
+      case "lever": {
+        // Reuses config.board_token for Lever's company slug -- both are
+        // just "the identifier in the API's URL path for this employer,"
+        // and giving them the same config field means one less thing to
+        // keep in sync between the two connectors' setup.
+        if (!config?.board_token) {
+          results.push({
+            sourceId: source.id,
+            fetched: 0,
+            inserted: 0,
+            skippedDuplicates: 0,
+            errors: [`Source ${source.id} is missing configuration.board_token`],
+          });
+          break;
+        }
+        results.push(await ingestLeverBoard(source.id, config.board_token));
+        break;
+      }
+
+      case "usajobs": {
+        if (!config?.keyword) {
+          results.push({
+            sourceId: source.id,
+            fetched: 0,
+            inserted: 0,
+            skippedDuplicates: 0,
+            errors: [`Source ${source.id} is missing configuration.keyword`],
+          });
+          break;
+        }
+        results.push(await ingestUsaJobsSearch(source.id, config.keyword));
+        break;
+      }
 
       default:
         results.push({
