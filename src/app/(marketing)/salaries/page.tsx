@@ -44,7 +44,7 @@ export default async function SalaryExplorerPage() {
                       <span className="text-xs text-slate-500">/yr median</span>
                     </p>
                   ) : (
-                    <p className="text-xs text-slate-500 mt-1">View national salary data →</p>
+                    <p className="text-xs text-slate-400 mt-1">Salary data coming soon</p>
                   )}
                 </Link>
               );
