@@ -28,10 +28,10 @@ export default async function JobApplicantsPage({ params }: { params: Promise<{ 
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <Link href="/employer/jobs" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
+      <Link href="/employer/jobs" className="text-sm text-slate-400 hover:underline hover:text-white transition-colors">
         ← Your Jobs
       </Link>
-      <h1 className="text-2xl font-semibold text-slate-900 mt-1 mb-6">Applicants — {job.title}</h1>
+      <h1 className="text-2xl font-semibold text-white mt-1 mb-6">Applicants — {job.title}</h1>
       <ApplicantList jobId={id} applicants={withResumeUrls} />
     </div>
   );

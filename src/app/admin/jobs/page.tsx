@@ -20,8 +20,8 @@ export default async function AdminJobsPage({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">All Jobs</h2>
-      <p className="text-sm text-slate-500 mb-4">
+      <h2 className="text-xl font-semibold text-white mb-2">All Jobs</h2>
+      <p className="text-sm text-slate-400 mb-4">
         {total} job{total === 1 ? "" : "s"} across every company.
       </p>
 
@@ -31,12 +31,12 @@ export default async function AdminJobsPage({
           name="q"
           defaultValue={params.q ?? ""}
           placeholder="Search by title"
-          className="border rounded-md px-3 py-1.5 text-sm"
+          className="bg-white/5 border border-white/15 rounded-md px-3 py-1.5 text-sm text-white placeholder:text-slate-500"
         />
-        <select name="status" defaultValue={params.status ?? ""} className="border rounded-md px-3 py-1.5 text-sm">
-          <option value="">Any status</option>
+        <select name="status" defaultValue={params.status ?? ""} className="bg-white/5 border border-white/15 rounded-md px-3 py-1.5 text-sm text-white">
+          <option value="" className="text-slate-900">Any status</option>
           {STATUSES.map((s) => (
-            <option key={s} value={s}>
+            <option key={s} value={s} className="text-slate-900">
               {titleCase(s)}
             </option>
           ))}
@@ -54,7 +54,7 @@ export default async function AdminJobsPage({
             <a
               key={p}
               href={`/admin/jobs?${new URLSearchParams({ ...params, page: String(p) } as any).toString()}`}
-              className={`px-2.5 py-1 rounded-md border ${p === page ? "bg-accent-200 text-board hover:bg-accent-100 transition-colors border-accent-200" : "text-slate-600"}`}
+              className={`px-2.5 py-1 rounded-md border ${p === page ? "bg-accent-200 text-board hover:bg-accent-100 transition-colors border-accent-200" : "text-slate-300 border-white/15 hover:bg-white/5"}`}
             >
               {p}
             </a>

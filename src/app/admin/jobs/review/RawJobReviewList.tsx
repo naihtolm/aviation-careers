@@ -104,7 +104,7 @@ export function RawJobReviewList({
         <Sparkles className="w-3.5 h-3.5" />
         {isPending ? "Checking the backlog…" : "Auto-publish qualifying jobs now"}
       </button>
-      {resultMessage && <p className="text-sm text-slate-500 mt-1.5">{resultMessage}</p>}
+      {resultMessage && <p className="text-sm text-slate-400 mt-1.5">{resultMessage}</p>}
     </div>
   );
 
@@ -112,8 +112,8 @@ export function RawJobReviewList({
     return (
       <div>
         {autoApproveButton}
-        <div className="flex flex-col items-center text-center gap-2 border border-dashed rounded-xl py-16 text-slate-500">
-          <Inbox className="w-8 h-8 text-slate-300" />
+        <div className="flex flex-col items-center text-center gap-2 border border-dashed border-white/15 rounded-xl py-16 text-slate-400">
+          <Inbox className="w-8 h-8 text-slate-500" />
           <p>Nothing waiting for review right now.</p>
         </div>
       </div>

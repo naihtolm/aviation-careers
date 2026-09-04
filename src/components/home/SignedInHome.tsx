@@ -77,7 +77,7 @@ export function SignedInHome({
       {categories.length > 0 && (
         <Reveal>
           <section className="max-w-6xl mx-auto px-4 py-14">
-            <h2 className="font-display text-xl font-semibold text-slate-900 mb-5">Browse by career category</h2>
+            <h2 className="font-display text-xl font-semibold text-white mb-5">Browse by career category</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {categories.map((cat) => {
                 const colors = categoryColorClasses(cat.name);
@@ -85,13 +85,13 @@ export function SignedInHome({
                   <Link
                     key={cat.id}
                     href={`/jobs?career_category=${cat.slug}`}
-                    className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                    className={`border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-xl p-5 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
                   >
                     <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                       <CategoryIcon name={cat.name} />
                     </div>
-                    <p className="font-medium text-slate-900 mt-3">{cat.name}</p>
-                    {cat.description && <p className="text-xs text-slate-500 mt-1">{cat.description}</p>}
+                    <p className="font-medium text-white mt-3">{cat.name}</p>
+                    {cat.description && <p className="text-xs text-slate-400 mt-1">{cat.description}</p>}
                   </Link>
                 );
               })}
@@ -103,8 +103,8 @@ export function SignedInHome({
       <Reveal>
         <section className="max-w-6xl mx-auto px-4 py-14">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-display text-xl font-semibold text-slate-900">Browse by sector</h2>
-            <Link href="/sectors" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
+            <h2 className="font-display text-xl font-semibold text-white">Browse by sector</h2>
+            <Link href="/sectors" className="text-sm font-medium text-brand-300 hover:text-brand-200 transition-colors">
               View all sectors →
             </Link>
           </div>
@@ -115,13 +115,13 @@ export function SignedInHome({
                 <Link
                   key={sector.slug}
                   href={`/sectors/${sector.slug}`}
-                  className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                  className={`border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-xl p-5 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
                 >
                   <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                     <sector.icon className="w-5 h-5" />
                   </div>
-                  <p className="font-medium text-slate-900 mt-3">{sector.name}</p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="font-medium text-white mt-3">{sector.name}</p>
+                  <p className="text-xs text-slate-400 mt-1">
                     {sector.companyCount} employer{sector.companyCount === 1 ? "" : "s"}
                   </p>
                 </Link>
@@ -135,20 +135,20 @@ export function SignedInHome({
         <section className="max-w-6xl mx-auto px-4 py-14">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-3">
-              <h2 className="font-display text-xl font-semibold text-slate-900">Featured jobs</h2>
+              <h2 className="font-display text-xl font-semibold text-white">Featured jobs</h2>
               {stats.newJobsThisWeek > 0 && (
-                <span className="inline-flex items-center gap-1 text-xs font-medium bg-orange-50 text-orange-600 px-2 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1 text-xs font-medium bg-orange-500/15 text-orange-300 px-2 py-1 rounded-full">
                   <Flame className="w-3.5 h-3.5" />
                   {stats.newJobsThisWeek} new this week
                 </span>
               )}
             </div>
-            <Link href="/jobs" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
+            <Link href="/jobs" className="text-sm font-medium text-brand-300 hover:text-brand-200 transition-colors">
               View all jobs →
             </Link>
           </div>
           {featuredJobs.length === 0 ? (
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-400 text-sm">
               No jobs posted yet — check back soon as new listings come in.
             </p>
           ) : (
@@ -166,8 +166,8 @@ export function SignedInHome({
           <section className="py-14">
             <div className="max-w-6xl mx-auto px-4">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display text-xl font-semibold text-slate-900">Explore by airport</h2>
-                <Link href="/airports" className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
+                <h2 className="font-display text-xl font-semibold text-white">Explore by airport</h2>
+                <Link href="/airports" className="text-sm font-medium text-brand-300 hover:text-brand-200 transition-colors">
                   View all airports →
                 </Link>
               </div>
@@ -197,18 +197,18 @@ export function SignedInHome({
       {companies.length > 0 && (
         <Reveal>
           <section className="max-w-6xl mx-auto px-4 py-14">
-            <h2 className="font-display text-xl font-semibold text-slate-900 mb-5">Featured employers</h2>
+            <h2 className="font-display text-xl font-semibold text-white mb-5">Featured employers</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {companies.map((c) => (
                 <Link
                   key={c.id}
                   href={`/companies/${c.slug}`}
-                  className="flex items-center gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  className="flex items-center gap-3 border border-white/10 rounded-xl p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all"
                 >
                   <CompanyLogo name={c.name} website={(c as any).website} size={36} />
                   <div className="min-w-0">
-                    <p className="font-medium text-slate-900 truncate">{c.name}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="font-medium text-white truncate">{c.name}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">
                       {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
                     </p>
                   </div>

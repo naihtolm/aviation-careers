@@ -30,40 +30,40 @@ export function CompanyProfileForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 border rounded-lg p-4 bg-white">
-      <label className="block text-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+      <label className="block text-sm text-slate-300">
         Website
         <input
           type="url"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white"
         />
       </label>
-      <label className="block text-sm">
+      <label className="block text-sm text-slate-300">
         Company size
-        <select value={sizeRange} onChange={(e) => setSizeRange(e.target.value)} className="w-full border rounded-md px-3 py-2 mt-1">
-          <option value="">Not specified</option>
+        <select value={sizeRange} onChange={(e) => setSizeRange(e.target.value)} className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white">
+          <option value="" className="text-slate-900">Not specified</option>
           {SIZE_RANGES.map((r) => (
-            <option key={r} value={r}>
+            <option key={r} value={r} className="text-slate-900">
               {r} employees
             </option>
           ))}
         </select>
       </label>
-      <label className="block text-sm">
+      <label className="block text-sm text-slate-300">
         About your company
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={5}
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white"
         />
       </label>
       <button type="submit" disabled={isPending} className="bg-accent-200 text-board hover:bg-accent-100 transition-colors px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50">
         {isPending ? "Saving…" : "Save"}
       </button>
-      {saved && <span className="text-sm text-emerald-600 ml-3">Saved</span>}
+      {saved && <span className="text-sm text-emerald-300 ml-3">Saved</span>}
     </form>
   );
 }

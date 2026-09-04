@@ -13,22 +13,22 @@ function IssueSection({
   renderItem: (item: any) => React.ReactNode;
 }) {
   return (
-    <section className="border rounded-lg bg-white p-4">
+    <section className="border border-white/10 rounded-lg bg-white/[0.04] p-4">
       <div className="flex items-baseline justify-between">
-        <h3 className="font-medium text-slate-900">{title}</h3>
-        <span className={`text-sm font-medium ${items.length > 0 ? "text-amber-700" : "text-emerald-700"}`}>
+        <h3 className="font-medium text-white">{title}</h3>
+        <span className={`text-sm font-medium ${items.length > 0 ? "text-amber-300" : "text-emerald-300"}`}>
           {items.length}
         </span>
       </div>
-      <p className="text-xs text-slate-500 mt-0.5 mb-3">{description}</p>
+      <p className="text-xs text-slate-400 mt-0.5 mb-3">{description}</p>
       {items.length === 0 ? (
-        <p className="text-sm text-slate-400">None — looks good.</p>
+        <p className="text-sm text-slate-500">None — looks good.</p>
       ) : (
         <ul className="space-y-1 text-sm">
           {items.slice(0, 10).map((item) => (
             <li key={item.id}>{renderItem(item)}</li>
           ))}
-          {items.length > 10 && <li className="text-slate-400">+ {items.length - 10} more</li>}
+          {items.length > 10 && <li className="text-slate-500">+ {items.length - 10} more</li>}
         </ul>
       )}
     </section>
@@ -40,8 +40,8 @@ export default async function AdminDataQualityPage() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-2">Data Quality</h2>
-      <p className="text-sm text-slate-500 mb-6">
+      <h2 className="text-xl font-semibold text-white mb-2">Data Quality</h2>
+      <p className="text-sm text-slate-400 mb-6">
         Concrete completeness gaps across active listings and companies — not a synthetic score.
       </p>
 
@@ -51,7 +51,7 @@ export default async function AdminDataQualityPage() {
           description="No job_locations row — will show as location not specified."
           items={issues.missingLocation}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
               {j.title}
             </Link>
           )}
@@ -61,7 +61,7 @@ export default async function AdminDataQualityPage() {
           description="No salary range on file at all."
           items={issues.missingCompensation}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
               {j.title}
             </Link>
           )}
@@ -71,7 +71,7 @@ export default async function AdminDataQualityPage() {
           description="Under 40 characters, or missing entirely."
           items={issues.missingDescription}
           renderItem={(j) => (
-            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+            <Link href={`/admin/jobs?q=${encodeURIComponent(j.title)}`} className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
               {j.title}
             </Link>
           )}
@@ -93,7 +93,7 @@ export default async function AdminDataQualityPage() {
           description="Raw job records received more than 3 days ago, still unreviewed."
           items={issues.stalePendingIngestion}
           renderItem={(r) => (
-            <Link href="/admin/jobs/review" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+            <Link href="/admin/jobs/review" className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
               Received {new Date(r.received_at).toLocaleDateString()}
             </Link>
           )}

@@ -119,20 +119,20 @@ export function JobPostForm({
       }}
       className="space-y-6"
     >
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Basics</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Basics</p>
         <label className="block text-sm">
           Job title
-          <input value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full border rounded-md px-3 py-2 mt-1" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white" />
         </label>
         <label className="block text-sm">
           Career role
-          <select value={careerId} onChange={(e) => setCareerId(e.target.value)} className="w-full border rounded-md px-3 py-2 mt-1">
-            <option value="">Not specified</option>
+          <select value={careerId} onChange={(e) => setCareerId(e.target.value)} className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white">
+            <option value="" className="text-slate-900">Not specified</option>
             {careerGroups.map((group) => (
-              <optgroup key={group.category} label={group.category}>
+              <optgroup key={group.category} label={group.category} className="text-slate-900">
                 {group.options.map((career) => (
-                  <option key={career.id} value={career.id}>{career.name}</option>
+                  <option key={career.id} value={career.id} className="text-slate-900">{career.name}</option>
                 ))}
               </optgroup>
             ))}
@@ -140,9 +140,9 @@ export function JobPostForm({
         </label>
         <label className="block text-sm">
           Employment type
-          <select value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="w-full border rounded-md px-3 py-2 mt-1">
+          <select value={employmentType} onChange={(e) => setEmploymentType(e.target.value)} className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white">
             {EMPLOYMENT_TYPES.map((t) => (
-              <option key={t} value={t}>
+              <option key={t} value={t} className="text-slate-900">
                 {titleCase(t)}
               </option>
             ))}
@@ -150,26 +150,26 @@ export function JobPostForm({
         </label>
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Location</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Location</p>
         <div className="grid grid-cols-2 gap-3">
-          <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} className="border rounded-md px-3 py-2" />
-          <input placeholder="State" value={state} onChange={(e) => setState(e.target.value)} className="border rounded-md px-3 py-2" />
+          <input placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white" />
+          <input placeholder="State" value={state} onChange={(e) => setState(e.target.value)} className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white" />
         </div>
-        <select value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value)} className="w-full border rounded-md px-3 py-2">
+        <select value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value)} className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white">
           {WORK_ARRANGEMENTS.map((w) => (
-            <option key={w} value={w}>
+            <option key={w} value={w} className="text-slate-900">
               {titleCase(w)}
             </option>
           ))}
         </select>
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Compensation (optional)</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Compensation (optional)</p>
         <div className="flex gap-4">
           {(["year", "hour"] as const).map((p) => (
-            <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-600">
+            <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-300">
               <input type="radio" name="salaryPeriod" checked={salaryPeriod === p} onChange={() => setSalaryPeriod(p)} />
               {p === "year" ? "Yearly salary" : "Hourly rate"}
             </label>
@@ -181,14 +181,14 @@ export function JobPostForm({
             placeholder={salaryPeriod === "hour" ? "Min ($/hr)" : "Min ($/yr)"}
             value={salaryMin}
             onChange={(e) => setSalaryMin(e.target.value)}
-            className="border rounded-md px-3 py-2"
+            className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
           />
           <input
             type="number"
             placeholder={salaryPeriod === "hour" ? "Max ($/hr)" : "Max ($/yr)"}
             value={salaryMax}
             onChange={(e) => setSalaryMax(e.target.value)}
-            className="border rounded-md px-3 py-2"
+            className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
           />
         </div>
         <label className="flex items-center gap-2 text-sm">
@@ -197,24 +197,24 @@ export function JobPostForm({
         </label>
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Requirements (optional)</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Requirements (optional)</p>
         <input
           placeholder="Required skills, comma separated"
           value={skillsInput}
           onChange={(e) => setSkillsInput(e.target.value)}
-          className="w-full border rounded-md px-3 py-2"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
         />
         <input
           placeholder="Required certifications, comma separated"
           value={certsInput}
           onChange={(e) => setCertsInput(e.target.value)}
-          className="w-full border rounded-md px-3 py-2"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
         />
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Application method</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Application method</p>
         <label className="flex items-center gap-2 text-sm">
           <input
             type="radio"
@@ -230,7 +230,7 @@ export function JobPostForm({
             placeholder="https://yourcompany.com/careers/job-id"
             value={applicationUrl}
             onChange={(e) => setApplicationUrl(e.target.value)}
-            className="w-full border rounded-md px-3 py-2"
+            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
           />
         )}
         <label className="flex items-center gap-2 text-sm">
@@ -245,28 +245,28 @@ export function JobPostForm({
 
         {applicationType === "platform_application" && (
           <div className="border-t pt-3 mt-3">
-            <p className="text-xs text-amber-800 bg-amber-50 rounded p-2 mb-3">
+            <p className="text-xs text-amber-300 bg-amber-500/15 rounded p-2 mb-3">
               Applications will appear in your Applicants tab — make sure someone on your team checks it regularly.
             </p>
             {questions.map((q) => (
-              <div key={q.id} className="border rounded-md p-3 mb-2 space-y-2">
+              <div key={q.id} className="border border-white/15 rounded-md p-3 mb-2 space-y-2">
                 <div className="flex gap-2">
                   <input
                     placeholder="Question"
                     value={q.label}
                     onChange={(e) => updateQuestion(q.id, { label: e.target.value })}
-                    className="flex-1 border rounded-md px-2 py-1.5 text-sm"
+                    className="flex-1 bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
                   />
                   <select
                     value={q.type}
                     onChange={(e) => updateQuestion(q.id, { type: e.target.value as ScreeningQuestion["type"] })}
-                    className="border rounded-md px-2 py-1.5 text-sm"
+                    className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
                   >
-                    <option value="yes_no">Yes/No</option>
-                    <option value="short_text">Short text</option>
-                    <option value="multiple_choice">Multiple choice</option>
+                    <option value="yes_no" className="text-slate-900">Yes/No</option>
+                    <option value="short_text" className="text-slate-900">Short text</option>
+                    <option value="multiple_choice" className="text-slate-900">Multiple choice</option>
                   </select>
-                  <button type="button" onClick={() => removeQuestion(q.id)} className="text-red-600 text-sm">
+                  <button type="button" onClick={() => removeQuestion(q.id)} className="text-red-400 hover:text-red-300 text-sm transition-colors">
                     Remove
                   </button>
                 </div>
@@ -275,7 +275,7 @@ export function JobPostForm({
                     placeholder="Options, comma separated"
                     value={q.options?.join(", ") ?? ""}
                     onChange={(e) => updateQuestion(q.id, { options: e.target.value.split(",").map((o) => o.trim()).filter(Boolean) })}
-                    className="w-full border rounded-md px-2 py-1.5 text-sm"
+                    className="w-full bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
                   />
                 )}
               </div>
@@ -289,31 +289,31 @@ export function JobPostForm({
         )}
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Listing expiration (optional)</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Listing expiration (optional)</p>
         <label className="block text-sm">
           Automatically unlist this job after
           <input
             type="date"
             value={expiresAt}
             onChange={(e) => setExpiresAt(e.target.value)}
-            className="w-full border rounded-md px-3 py-2 mt-1"
+            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white"
           />
         </label>
-        <p className="text-xs text-slate-500">Leave blank to keep the listing up until you pause or archive it yourself.</p>
+        <p className="text-xs text-slate-400">Leave blank to keep the listing up until you pause or archive it yourself.</p>
       </section>
 
-      <section className="border rounded-lg p-4 bg-white space-y-3">
-        <p className="font-medium text-slate-900">Description</p>
+      <section className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+        <p className="font-medium text-white">Description</p>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={6}
-          className="w-full border rounded-md px-3 py-2"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white"
         />
       </section>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
 
       <div className="flex gap-3">
         {alreadyLive ? (
@@ -330,7 +330,7 @@ export function JobPostForm({
               type="button"
               disabled={isPending}
               onClick={() => handleSubmit(false)}
-              className="border border-slate-300 px-6 py-2.5 rounded-md font-medium disabled:opacity-50 hover:bg-slate-50 transition-colors"
+              className="border border-white/15 text-white px-6 py-2.5 rounded-md font-medium disabled:opacity-50 hover:bg-white/5 transition-colors"
             >
               {isPending ? "Saving…" : "Save as Draft"}
             </button>

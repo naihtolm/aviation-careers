@@ -216,7 +216,7 @@ export function RawJobCard({
   }
 
   const fieldClass =
-    "w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-colors";
+    "w-full bg-white/5 border border-white/15 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-400/40 focus:border-brand-400 transition-colors";
 
   return (
     // The grid/overflow-hidden pair is what makes the collapse smooth without
@@ -228,16 +228,16 @@ export function RawJobCard({
       <div className="overflow-hidden">
         <div className="pb-3">
           <div
-            className={`border rounded-xl shadow-sm transition-all duration-200 ${
+            className={`border rounded-xl transition-all duration-200 ${
               collapsing
                 ? "opacity-0 scale-[0.97]"
                 : outcome === "approved"
-                  ? "bg-emerald-50 border-emerald-300"
+                  ? "bg-emerald-500/10 border-emerald-400/30"
                   : outcome === "rejected"
-                    ? "bg-slate-100 border-slate-300"
+                    ? "bg-white/[0.06] border-white/15"
                     : expanded
-                      ? "bg-white border-brand-200 shadow-md"
-                      : "bg-white border-slate-200"
+                      ? "bg-white/[0.05] border-brand-400/30"
+                      : "bg-white/[0.04] border-white/10"
             }`}
           >
       <button
@@ -245,49 +245,49 @@ export function RawJobCard({
         className="w-full flex items-start justify-between gap-4 p-4 text-left"
       >
         <div className="min-w-0">
-          <h3 className="font-medium text-slate-900 truncate">{title}</h3>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-sm text-slate-500">
+          <h3 className="font-medium text-white truncate">{title}</h3>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-sm text-slate-400">
             <span className="inline-flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
+              <MapPin className="w-3.5 h-3.5 text-slate-500" />
               {location || "No location provided"}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Building2 className="w-3.5 h-3.5 text-slate-400" />
+              <Building2 className="w-3.5 h-3.5 text-slate-500" />
               {matchedCompany?.name ?? record.raw_data.company_name ?? "Unknown company"}
             </span>
-            <span className="inline-flex items-center gap-1 text-slate-400">
+            <span className="inline-flex items-center gap-1 text-slate-500">
               <Clock className="w-3.5 h-3.5" />
               <TimeAgo iso={record.received_at} />
             </span>
           </div>
         </div>
         <ChevronDown
-          className={`w-5 h-5 text-slate-400 shrink-0 mt-0.5 transition-transform ${expanded ? "rotate-180" : ""}`}
+          className={`w-5 h-5 text-slate-500 shrink-0 mt-0.5 transition-transform ${expanded ? "rotate-180" : ""}`}
         />
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-4 border-t border-slate-100 pt-4">
+        <div className="px-4 pb-4 space-y-4 border-t border-white/10 pt-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Career role</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Career role</label>
             <select className={fieldClass} value={careerId} onChange={(e) => setCareerId(e.target.value)}>
-              <option value="">— Select career role —</option>
+              <option value="" className="text-slate-900">— Select career role —</option>
               {careerGroups.map((group) => (
-                <optgroup key={group.category} label={group.category}>
+                <optgroup key={group.category} label={group.category} className="text-slate-900">
                   {group.options.map((career) => (
-                    <option key={career.id} value={career.id}>{career.name}</option>
+                    <option key={career.id} value={career.id} className="text-slate-900">{career.name}</option>
                   ))}
                 </optgroup>
               ))}
             </select>
             {suggestedCareerId && careerId === suggestedCareerId && (
               suggestedCareer?.confidence === "high" ? (
-                <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+                <p className="text-xs text-emerald-300 mt-1.5 inline-flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
                   Suggested from the job title — please confirm before publishing.
                 </p>
               ) : (
-                <p className="text-xs text-amber-700 mt-1.5 inline-flex items-center gap-1">
+                <p className="text-xs text-amber-300 mt-1.5 inline-flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
                   Broad guess from the job title, not an exact match — please double-check this one. (Suggestions
                   this loose don't qualify for auto-publish.)
@@ -299,12 +299,12 @@ export function RawJobCard({
               <button
                 type="button"
                 onClick={() => setCreatingCareer(true)}
-                className="text-xs text-brand-600 underline underline-offset-2 mt-1.5"
+                className="text-xs text-brand-300 underline underline-offset-2 mt-1.5"
               >
                 Can't find the right fit? Create a new career role
               </button>
             ) : (
-              <div className="mt-2 space-y-2 border border-slate-200 rounded-lg p-3 bg-slate-50">
+              <div className="mt-2 space-y-2 border border-white/10 rounded-lg p-3 bg-white/[0.03]">
                 <input
                   type="text"
                   placeholder="New career role name"
@@ -317,9 +317,9 @@ export function RawJobCard({
                   value={newCareerCategoryId}
                   onChange={(e) => setNewCareerCategoryId(e.target.value)}
                 >
-                  <option value="">— Select a category —</option>
+                  <option value="" className="text-slate-900">— Select a category —</option>
                   {careerCategories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    <option key={cat.id} value={cat.id} className="text-slate-900">{cat.name}</option>
                   ))}
                 </select>
                 <p className="text-xs text-slate-400">
@@ -341,14 +341,14 @@ export function RawJobCard({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Employment type</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Employment type</label>
             <select className={fieldClass} value={employmentType} onChange={(e) => setEmploymentType(e.target.value as typeof employmentType)}>
               {EMPLOYMENT_TYPES.map((t) => (
-                <option key={t} value={t}>{titleCase(t)}</option>
+                <option key={t} value={t} className="text-slate-900">{titleCase(t)}</option>
               ))}
             </select>
             {detectedEmploymentType && employmentType === detectedEmploymentType && (
-              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+              <p className="text-xs text-emerald-300 mt-1.5 inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" />
                 Detected from the posting — please confirm before publishing.
               </p>
@@ -356,14 +356,14 @@ export function RawJobCard({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Work arrangement</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Work arrangement</label>
             <select className={fieldClass} value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value as typeof workArrangement)}>
               {WORK_ARRANGEMENTS.map((w) => (
-                <option key={w} value={w}>{titleCase(w)}</option>
+                <option key={w} value={w} className="text-slate-900">{titleCase(w)}</option>
               ))}
             </select>
             {detectedWorkArrangement && workArrangement === detectedWorkArrangement && (
-              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+              <p className="text-xs text-emerald-300 mt-1.5 inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" />
                 Detected from the posting — please confirm before publishing.
               </p>
@@ -372,13 +372,13 @@ export function RawJobCard({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
                 City {workArrangement === "remote" && <span className="font-normal text-slate-400">(optional — remote)</span>}
               </label>
               <input type="text" className={fieldClass} value={city} onChange={(e) => setCity(e.target.value)} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
                 State {workArrangement === "remote" && <span className="font-normal text-slate-400">(optional — remote)</span>}
               </label>
               <input type="text" className={fieldClass} value={state} onChange={(e) => setState(e.target.value)} />
@@ -386,13 +386,13 @@ export function RawJobCard({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Company</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">Company</label>
             {matchedCompany && !overrideCompany ? (
-              <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
-                <span className="inline-flex items-center gap-1.5 text-sm text-emerald-800">
+              <div className="flex items-center justify-between gap-3 bg-emerald-500/10 border border-emerald-400/30 rounded-lg px-3 py-2">
+                <span className="inline-flex items-center gap-1.5 text-sm text-emerald-200">
                   <Check className="w-4 h-4" />
                   {matchedCompany.name}
-                  <span className="text-emerald-600 font-normal">— matched from this job's source</span>
+                  <span className="text-emerald-400 font-normal">— matched from this job's source</span>
                 </span>
                 <button
                   type="button"
@@ -400,7 +400,7 @@ export function RawJobCard({
                     setOverrideCompany(true);
                     setCompanyId("");
                   }}
-                  className="text-xs text-emerald-700 underline underline-offset-2 shrink-0"
+                  className="text-xs text-emerald-300 underline underline-offset-2 shrink-0"
                 >
                   Change
                 </button>
@@ -412,9 +412,9 @@ export function RawJobCard({
                   value={companyId}
                   onChange={(e) => setCompanyId(e.target.value)}
                 >
-                  <option value="">— Create new company below —</option>
+                  <option value="" className="text-slate-900">— Create new company below —</option>
                   {companies.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.id} value={c.id} className="text-slate-900">
                       {c.name}
                     </option>
                   ))}
@@ -453,12 +453,12 @@ export function RawJobCard({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
+            <label className="block text-sm font-medium text-slate-300 mb-1">
               Salary <span className="font-normal text-slate-400">(optional)</span>
             </label>
             <div className="flex gap-3 mb-2">
               {(["year", "hour"] as const).map((p) => (
-                <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-600">
+                <label key={p} className="inline-flex items-center gap-1.5 text-sm text-slate-300">
                   <input type="radio" name={`salaryPeriod-${record.id}`} checked={salaryPeriod === p} onChange={() => setSalaryPeriod(p)} />
                   {p === "year" ? "Yearly salary" : "Hourly rate"}
                 </label>
@@ -481,7 +481,7 @@ export function RawJobCard({
               />
             </div>
             {parsedSalary ? (
-              <p className="text-xs text-emerald-700 mt-1.5 inline-flex items-center gap-1">
+              <p className="text-xs text-emerald-300 mt-1.5 inline-flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" />
                 Detected {parsedSalary.period === "hour" ? "an hourly rate" : "a salary range"} from the job description — please confirm before publishing.
               </p>
@@ -491,12 +491,12 @@ export function RawJobCard({
           </div>
 
           <details className="group">
-            <summary className="text-sm text-brand-600 cursor-pointer list-none inline-flex items-center gap-1">
+            <summary className="text-sm text-brand-300 cursor-pointer list-none inline-flex items-center gap-1">
               <ChevronDown className="w-3.5 h-3.5 transition-transform group-open:rotate-180" />
               View raw description
             </summary>
             <div
-              className="text-sm mt-2 prose max-w-none prose-sm bg-slate-50 rounded-lg p-3"
+              className="text-sm mt-2 prose prose-invert max-w-none prose-sm bg-white/[0.03] rounded-lg p-3"
               dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(record.raw_data.content ?? "") }}
             />
           </details>
@@ -518,7 +518,7 @@ export function RawJobCard({
             <button
               disabled={isPending || outcome !== null}
               onClick={handleReject}
-              className="inline-flex items-center gap-1.5 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-50 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 border border-red-400/30 text-red-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-500/10 disabled:opacity-50"
             >
               <X className="w-4 h-4" />
               {outcome === "rejected" ? "Rejected" : "Reject"}

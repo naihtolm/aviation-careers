@@ -18,10 +18,10 @@ export function MobileNav({ isSignedIn }: { isSignedIn: boolean }) {
   const { openGate } = useAuthGate();
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t flex">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-board/95 backdrop-blur-sm border-t border-white/10 flex">
       {ITEMS.map((item) => {
         const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-        const className = `flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs transition-colors ${active ? "text-accent-600 font-medium" : "text-slate-500"}`;
+        const className = `flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs transition-colors ${active ? "text-accent-200 font-medium" : "text-slate-400"}`;
 
         if (item.gated && !isSignedIn) {
           return (

@@ -70,7 +70,7 @@ export default async function JobReviewPage() {
   );
 
   if (error) {
-    return <p className="text-red-600">Failed to load raw job records: {error.message}</p>;
+    return <p className="text-red-400">Failed to load raw job records: {error.message}</p>;
   }
 
   const pendingCount = count ?? rawRecords?.length ?? 0;
@@ -88,14 +88,14 @@ export default async function JobReviewPage() {
     <div>
       <div className="flex items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="font-display text-2xl font-semibold text-slate-900">Job Ingestion Review</h2>
-          <p className="text-sm text-slate-500 mt-1">
+          <h2 className="font-display text-2xl font-semibold text-white">Job Ingestion Review</h2>
+          <p className="text-sm text-slate-400 mt-1">
             Confirm the details below and publish — career role and company are pre-filled where possible.
           </p>
         </div>
-        <div className="shrink-0 text-center bg-brand-50 border border-brand-100 rounded-xl px-5 py-2.5">
-          <p className="text-2xl font-display font-semibold text-brand-700 leading-none">{pendingCount}</p>
-          <p className="text-xs text-brand-600 mt-1">pending</p>
+        <div className="shrink-0 text-center bg-brand-400/10 border border-brand-400/20 rounded-xl px-5 py-2.5">
+          <p className="text-2xl font-display font-semibold text-brand-300 leading-none">{pendingCount}</p>
+          <p className="text-xs text-brand-300 mt-1">pending</p>
         </div>
       </div>
 

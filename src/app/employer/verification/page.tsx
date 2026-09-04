@@ -7,22 +7,22 @@ const STATUS_COPY: Record<string, { title: string; body: string; tone: string }>
   pending: {
     title: "Verification pending",
     body: "We're reviewing your company. This is usually quick — you'll be able to post jobs once approved.",
-    tone: "bg-amber-50 text-amber-800",
+    tone: "bg-amber-500/15 text-amber-200",
   },
   approved: {
     title: "You're verified!",
     body: "Your company is approved. You can post jobs now.",
-    tone: "bg-emerald-50 text-emerald-800",
+    tone: "bg-emerald-500/15 text-emerald-200",
   },
   rejected: {
     title: "Verification declined",
     body: "We weren't able to verify your company with the information provided. Contact support if you think this is a mistake.",
-    tone: "bg-red-50 text-red-800",
+    tone: "bg-red-500/15 text-red-200",
   },
   needs_information: {
     title: "More information needed",
     body: "We need a bit more to verify your company. Check your email, or contact support.",
-    tone: "bg-amber-50 text-amber-800",
+    tone: "bg-amber-500/15 text-amber-200",
   },
 };
 
@@ -39,7 +39,7 @@ export default async function EmployerVerificationPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <h1 className="text-2xl font-semibold text-slate-900">{context.company.name}</h1>
+      <h1 className="text-2xl font-semibold text-white">{context.company.name}</h1>
       <div className={`rounded-lg p-4 mt-4 ${copy.tone}`}>
         <p className="font-medium">{copy.title}</p>
         <p className="text-sm mt-1">{copy.body}</p>

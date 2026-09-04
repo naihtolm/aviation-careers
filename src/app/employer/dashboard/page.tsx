@@ -18,68 +18,68 @@ export default async function EmployerDashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-slate-900">{context.company.name}</h1>
-      <p className="text-sm text-slate-500 mt-1">Employer dashboard</p>
+      <h1 className="text-2xl font-semibold text-white">{context.company.name}</h1>
+      <p className="text-sm text-slate-400 mt-1">Employer dashboard</p>
 
       <div className="grid sm:grid-cols-3 gap-4 mt-6">
-        <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
+        <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
           <div className="flex items-center justify-between">
-            <p className="text-2xl font-semibold text-slate-900">{activeCount}</p>
-            <Briefcase className="w-4 h-4 text-brand-600" />
+            <p className="text-2xl font-semibold text-white">{activeCount}</p>
+            <Briefcase className="w-4 h-4 text-brand-300" />
           </div>
-          <p className="text-sm text-slate-500 mt-1">Active jobs</p>
+          <p className="text-sm text-slate-400 mt-1">Active jobs</p>
         </div>
-        <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
+        <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
           <div className="flex items-center justify-between">
-            <p className="text-2xl font-semibold text-slate-900">{totalApplicants}</p>
-            <Users className="w-4 h-4 text-brand-600" />
+            <p className="text-2xl font-semibold text-white">{totalApplicants}</p>
+            <Users className="w-4 h-4 text-brand-300" />
           </div>
-          <p className="text-sm text-slate-500 mt-1">Native applicants</p>
+          <p className="text-sm text-slate-400 mt-1">Native applicants</p>
         </div>
-        <div className="border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-all">
+        <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
           <div className="flex items-center justify-between">
-            <p className="text-2xl font-semibold text-slate-900">{jobs.length}</p>
-            <ListChecks className="w-4 h-4 text-brand-600" />
+            <p className="text-2xl font-semibold text-white">{jobs.length}</p>
+            <ListChecks className="w-4 h-4 text-brand-300" />
           </div>
-          <p className="text-sm text-slate-500 mt-1">Total jobs posted</p>
+          <p className="text-sm text-slate-400 mt-1">Total jobs posted</p>
         </div>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
         <Link href="/employer/jobs/new" className="flex items-center gap-3 border rounded-lg p-4 bg-accent-200 text-board hover:bg-accent-100 transition-colors">
-          <div className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-board/10 flex items-center justify-center shrink-0">
             <Plus className="w-5 h-5" />
           </div>
           <div>
             <p className="font-medium">Post a Job</p>
-            <p className="text-sm text-brand-100 mt-0.5">Create a new listing.</p>
+            <p className="text-sm text-board/70 mt-0.5">Create a new listing.</p>
           </div>
         </Link>
-        <Link href="/employer/jobs" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+        <Link href="/employer/jobs" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
             <Settings className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-slate-900">Manage Jobs</p>
-            <p className="text-sm text-slate-500 mt-0.5">{jobs.length} total</p>
+            <p className="font-medium text-white">Manage Jobs</p>
+            <p className="text-sm text-slate-400 mt-0.5">{jobs.length} total</p>
           </div>
         </Link>
-        <Link href="/employer/company" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+        <Link href="/employer/company" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
             <Building2 className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-slate-900">Company Profile</p>
-            <p className="text-sm text-slate-500 mt-0.5">Edit your company info.</p>
+            <p className="font-medium text-white">Company Profile</p>
+            <p className="text-sm text-slate-400 mt-0.5">Edit your company info.</p>
           </div>
         </Link>
-        <Link href="/employer/analytics" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+        <Link href="/employer/analytics" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
             <BarChart3 className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-slate-900">Analytics</p>
-            <p className="text-sm text-slate-500 mt-0.5">Views and applies over time.</p>
+            <p className="font-medium text-white">Analytics</p>
+            <p className="text-sm text-slate-400 mt-0.5">Views and applies over time.</p>
           </div>
         </Link>
       </div>
