@@ -5,6 +5,7 @@ import { getEmployerContext } from "@/features/employers/queries";
 import { getSavedJobIds } from "@/features/jobs/queries";
 import { signOut } from "@/features/auth/actions";
 import { HeaderNav } from "@/components/layout/HeaderNav";
+import { SignInGateButton } from "@/components/auth/SignInGateButton";
 
 export async function Header() {
   const user = await getCurrentUser();
@@ -17,7 +18,7 @@ export async function Header() {
         <Link href="/" className="font-display font-bold text-lg tracking-tight text-white uppercase">
           Aviation<span className="text-accent-200">.</span>Careers
         </Link>
-        <HeaderNav />
+        <HeaderNav isSignedIn={!!user} />
         <div className="flex items-center gap-3 text-sm">
           <Link href="/employers" className="hidden sm:block text-white/80 hover:text-white transition-colors">
             For Employers
@@ -43,12 +44,7 @@ export async function Header() {
               </form>
             </>
           ) : (
-            <Link
-              href="/sign-in"
-              className="bg-accent-200 text-board font-semibold px-4 py-2 rounded-md hover:bg-accent-100 transition-colors"
-            >
-              Sign In
-            </Link>
+            <SignInGateButton />
           )}
         </div>
       </div>

@@ -4,22 +4,33 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LocationAutocomplete } from "@/components/search/LocationAutocomplete";
 import { KeywordAutocomplete } from "@/components/search/KeywordAutocomplete";
+import { useAuthGate } from "@/components/auth/AuthGateContext";
 
 export function SearchBar({
   defaultKeyword = "",
   defaultLocation = "",
   dark = false,
+  gated = false,
 }: {
   defaultKeyword?: string;
   defaultLocation?: string;
   dark?: boolean;
+  // Signed-out homepage search: real inputs (still lets someone type what
+  // they're looking for -- that's part of the pitch), but submitting opens
+  // the sign-up gate instead of actually running the search.
+  gated?: boolean;
 }) {
   const router = useRouter();
+  const { openGate } = useAuthGate();
   const [keyword, setKeyword] = useState(defaultKeyword);
   const [location, setLocation] = useState(defaultLocation);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (gated) {
+      openGate("signup");
+      return;
+    }
     const params = new URLSearchParams();
     if (keyword) params.set("keyword", keyword);
     if (location) params.set("location", location);
