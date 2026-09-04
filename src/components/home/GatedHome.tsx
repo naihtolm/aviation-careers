@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { SearchBar } from "@/components/search/SearchBar";
 import { TeaserJobCard } from "@/components/jobs/TeaserJobCard";
 import { GateButtons } from "@/components/auth/GateButtons";
+import { AutoOpenGate } from "@/components/auth/AutoOpenGate";
 import { Reveal } from "@/components/ui/Reveal";
 
 // What a signed-out visitor sees: real hero, real stats, a handful of
@@ -17,6 +19,9 @@ export function GatedHome({
 }) {
   return (
     <div>
+      <Suspense fallback={null}>
+        <AutoOpenGate />
+      </Suspense>
       <section className="relative overflow-hidden -mt-16 bg-gradient-to-b from-board via-board-2 to-board-2">
         <div
           className="pointer-events-none absolute -top-24 -left-16 w-96 h-96 rounded-full bg-brand-400/25 blur-3xl animate-float-slow"
