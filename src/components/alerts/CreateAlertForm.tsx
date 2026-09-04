@@ -15,15 +15,15 @@ export function CreateAlertForm() {
   }
 
   return (
-    <form ref={formRef} action={handleSubmit} className="border rounded-lg p-4 bg-white space-y-3">
-      <p className="font-medium text-slate-900 text-sm">Create a new alert</p>
+    <form ref={formRef} action={handleSubmit} className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+      <p className="font-medium text-white text-sm">Create a new alert</p>
       <div className="grid sm:grid-cols-2 gap-2">
-        <input name="keyword" placeholder="Job title or keyword" className="border rounded-md px-2 py-1.5 text-sm" />
-        <input name="location" placeholder="City or state" className="border rounded-md px-2 py-1.5 text-sm" />
+        <input name="keyword" placeholder="Job title or keyword" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
+        <input name="location" placeholder="City or state" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
       </div>
-      <select name="frequency" defaultValue="daily" className="border rounded-md px-2 py-1.5 text-sm">
-        <option value="daily">Daily</option>
-        <option value="weekly">Weekly</option>
+      <select name="frequency" defaultValue="daily" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white">
+        <option value="daily" className="text-slate-900">Daily</option>
+        <option value="weekly" className="text-slate-900">Weekly</option>
       </select>
       <button
         type="submit"

@@ -14,20 +14,20 @@ export default function ResetPasswordRequestPage() {
 
   return (
     <div className="max-w-sm mx-auto px-4 py-16">
-      <h1 className="text-2xl font-semibold text-slate-900">Reset your password</h1>
-      <p className="text-sm text-slate-500 mt-1">We'll email you a link to set a new password.</p>
+      <h1 className="text-2xl font-semibold text-white">Reset your password</h1>
+      <p className="text-sm text-slate-400 mt-1">We'll email you a link to set a new password.</p>
 
       {state?.sent ? (
-        <p className="text-sm text-emerald-700 bg-emerald-50 rounded-md p-3 mt-6">
+        <p className="text-sm text-emerald-300 bg-emerald-500/15 rounded-md p-3 mt-6">
           Check your email for a reset link.
         </p>
       ) : (
         <form action={formAction} className="space-y-3 mt-6">
-          <label className="block text-sm">
+          <label className="block text-sm text-slate-300">
             Email
-            <input name="email" type="email" required className="w-full border rounded-md px-3 py-2 mt-1" />
+            <input name="email" type="email" required className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white" />
           </label>
-          {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+          {state?.error && <p className="text-sm text-red-400">{state.error}</p>}
           <button
             type="submit"
             disabled={isPending}

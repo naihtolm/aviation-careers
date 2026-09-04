@@ -66,8 +66,8 @@ export function ProfileDetailsForm({
   }
 
   return (
-    <form action={handleSubmit} className="border rounded-lg p-4 bg-white space-y-3">
-      <p className="font-medium text-slate-900">{profile?.email}</p>
+    <form action={handleSubmit} className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+      <p className="font-medium text-white">{profile?.email}</p>
 
       <label className="block text-sm">
         Headline
@@ -75,7 +75,7 @@ export function ProfileDetailsForm({
           name="headline"
           defaultValue={seekerProfile?.headline ?? ""}
           placeholder="e.g. A&P Mechanic with 5 years experience"
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
         />
       </label>
 
@@ -85,16 +85,16 @@ export function ProfileDetailsForm({
           name="professional_summary"
           defaultValue={seekerProfile?.professional_summary ?? ""}
           rows={3}
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
         />
       </label>
 
       {categories.length > 0 && (
         <div>
-          <p className="text-sm mb-1">Career interests</p>
+          <p className="text-sm mb-1 text-slate-300">Career interests</p>
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
-              <label key={cat.id} className="flex items-center gap-1.5 text-sm border rounded-full px-3 py-1 cursor-pointer">
+              <label key={cat.id} className="flex items-center gap-1.5 text-sm border border-white/15 text-slate-200 rounded-full px-3 py-1 cursor-pointer">
                 <input
                   type="checkbox"
                   name="career_category_ids"
@@ -113,11 +113,11 @@ export function ProfileDetailsForm({
         <select
           name="experience_level"
           defaultValue={seekerProfile?.experience_level ?? ""}
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
         >
-          <option value="">Not specified</option>
+          <option value="" className="text-slate-900">Not specified</option>
           {EXPERIENCE_LEVELS.map((level) => (
-            <option key={level.value} value={level.value}>
+            <option key={level.value} value={level.value} className="text-slate-900">
               {level.label}
             </option>
           ))}
@@ -137,21 +137,21 @@ export function ProfileDetailsForm({
               }}
               onFocus={() => setCityDropdownOpen(true)}
               autoComplete="off"
-              className="w-full border rounded-md px-3 py-2 mt-1"
+              className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
             />
           </label>
           {cityDropdownOpen && citySuggestions.length > 0 && (
-            <ul className="absolute left-0 right-0 top-full mt-1 bg-white border rounded-md shadow-lg z-20 max-h-56 overflow-auto text-sm">
+            <ul className="absolute left-0 right-0 top-full mt-1 bg-board-2 border border-white/15 rounded-md shadow-lg z-20 max-h-56 overflow-auto text-sm">
               {citySuggestions.map((s) => (
                 <li key={s.id}>
                   <button
                     type="button"
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => selectCity(s)}
-                    className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-slate-50 transition-colors"
+                    className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-white/5 transition-colors"
                   >
-                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-slate-900">{s.label}</span>
+                    <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
+                    <span className="text-white">{s.label}</span>
                   </button>
                 </li>
               ))}
@@ -164,17 +164,17 @@ export function ProfileDetailsForm({
             name="state"
             value={state}
             onChange={(e) => setState(e.target.value)}
-            className="w-full border rounded-md px-3 py-2 mt-1"
+            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
           />
         </label>
       </div>
 
       <div className="flex gap-4">
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-sm text-slate-300">
           <input type="checkbox" name="willing_to_relocate" defaultChecked={seekerProfile?.willing_to_relocate} />
           Willing to relocate
         </label>
-        <label className="flex items-center gap-2 text-sm">
+        <label className="flex items-center gap-2 text-sm text-slate-300">
           <input type="checkbox" name="open_to_remote" defaultChecked={seekerProfile?.open_to_remote} />
           Open to remote
         </label>
@@ -187,7 +187,7 @@ export function ProfileDetailsForm({
             type="number"
             name="desired_salary_min"
             defaultValue={seekerProfile?.desired_salary_min ?? ""}
-            className="w-full border rounded-md px-3 py-2 mt-1"
+            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
           />
         </label>
         <label className="block text-sm">
@@ -196,7 +196,7 @@ export function ProfileDetailsForm({
             type="number"
             name="desired_salary_max"
             defaultValue={seekerProfile?.desired_salary_max ?? ""}
-            className="w-full border rounded-md px-3 py-2 mt-1"
+            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
           />
         </label>
       </div>
@@ -206,11 +206,11 @@ export function ProfileDetailsForm({
         <select
           name="profile_visibility"
           defaultValue={seekerProfile?.profile_visibility ?? "private"}
-          className="w-full border rounded-md px-3 py-2 mt-1"
+          className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
         >
-          <option value="private">Only me</option>
-          <option value="employers">Employers I apply to</option>
-          <option value="public">Public</option>
+          <option value="private" className="text-slate-900">Only me</option>
+          <option value="employers" className="text-slate-900">Employers I apply to</option>
+          <option value="public" className="text-slate-900">Public</option>
         </select>
       </label>
 

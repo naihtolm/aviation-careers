@@ -23,18 +23,18 @@ export default async function ApplicationsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
+      <Link href="/dashboard" className="text-sm text-slate-400 hover:underline hover:text-white transition-colors">
         ← Dashboard
       </Link>
-      <h1 className="text-2xl font-semibold text-slate-900 mt-1">Applications</h1>
+      <h1 className="text-2xl font-semibold text-white mt-1">Applications</h1>
 
       {total === 0 ? (
-        <div className="border rounded-lg p-8 text-center bg-white mt-6">
-          <p className="text-slate-900 font-medium">No applications tracked yet</p>
-          <p className="text-sm text-slate-500 mt-1">
+        <div className="border border-white/10 rounded-lg p-8 text-center bg-white/[0.04] mt-6">
+          <p className="text-white font-medium">No applications tracked yet</p>
+          <p className="text-sm text-slate-400 mt-1">
             When you click Apply on a job, we'll track it here so you can follow up.
           </p>
-          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+          <Link href="/jobs" className="inline-block mt-3 text-sm text-brand-300 hover:underline hover:text-brand-200 transition-colors">
             Browse jobs →
           </Link>
         </div>
@@ -42,8 +42,8 @@ export default async function ApplicationsPage() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mt-6">
           {STATUSES.map((status) => (
             <div key={status}>
-              <p className="text-sm font-medium text-slate-900 mb-2">
-                {COLUMN_LABELS[status]} <span className="text-slate-400">({grouped[status].length})</span>
+              <p className="text-sm font-medium text-white mb-2">
+                {COLUMN_LABELS[status]} <span className="text-slate-500">({grouped[status].length})</span>
               </p>
               <div className="space-y-2">
                 {grouped[status].map((app: any) => (

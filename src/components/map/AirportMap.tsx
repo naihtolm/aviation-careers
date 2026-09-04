@@ -292,15 +292,15 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
   if (!token) {
     // Documented fallback: plain list instead of the map if no token.
     return (
-      <div className="border rounded-lg p-4 bg-slate-50">
-        <p className="text-sm text-slate-500 mb-3">Map unavailable — showing airports as a list.</p>
+      <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+        <p className="text-sm text-slate-400 mb-3">Map unavailable — showing airports as a list.</p>
         <ul className="space-y-1">
           {markers.map((m) => {
             const tier = tierFor(m.jobCount);
             return (
               <li key={m.id} className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: tier.color }} />
-                <a href={m.href} className="text-brand-600 hover:underline text-sm hover:text-brand-700 transition-colors">
+                <a href={m.href} className="text-brand-300 hover:underline text-sm hover:text-brand-200 transition-colors">
                   {m.name} ({m.code}) — {m.jobCount} job{m.jobCount === 1 ? "" : "s"}
                 </a>
               </li>
@@ -320,8 +320,8 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
             onClick={() => setSectorFilter(null)}
             className={`text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
               sectorFilter === null
-                ? "bg-slate-900 text-white border-slate-900"
-                : "text-slate-600 border-slate-300 hover:bg-slate-50"
+                ? "bg-accent-200 text-board border-accent-200"
+                : "text-slate-300 border-white/15 hover:bg-white/5"
             }`}
           >
             All sectors
@@ -335,7 +335,7 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
                 type="button"
                 onClick={() => setSectorFilter(active ? null : sector.slug)}
                 className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
-                  active ? `${colors.tagBg} ${colors.tagText} border-current` : "text-slate-600 border-slate-300 hover:bg-slate-50"
+                  active ? `${colors.tagBg} ${colors.tagText} border-current` : "text-slate-300 border-white/15 hover:bg-white/5"
                 }`}
               >
                 <sector.icon className="w-3 h-3" />
@@ -345,12 +345,12 @@ export function AirportMap({ markers, height = 360 }: { markers: MapMarker[]; he
           })}
         </div>
       )}
-      <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border" />
+      <div ref={containerRef} style={{ height }} className="rounded-lg overflow-hidden border border-white/10" />
       {/* Below the map rather than overlaid on it -- an absolutely
           positioned legend risks sitting right where a popup for a nearby
           marker opens, which reads as broken rather than informational. */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 px-1 text-[11px] text-slate-500">
-        <span className="font-medium text-slate-700">Hiring activity:</span>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 px-1 text-[11px] text-slate-400">
+        <span className="font-medium text-slate-300">Hiring activity:</span>
         {TIERS.map((tier) => (
           <span key={tier.label} className="inline-flex items-center gap-1">
             <span

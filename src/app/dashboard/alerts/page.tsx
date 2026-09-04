@@ -14,14 +14,14 @@ export default async function AlertsPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
+        <Link href="/dashboard" className="text-sm text-slate-400 hover:underline hover:text-white transition-colors">
           ← Dashboard
         </Link>
-        <h1 className="text-2xl font-semibold text-slate-900 mt-1">Job Alerts</h1>
+        <h1 className="text-2xl font-semibold text-white mt-1">Job Alerts</h1>
       </div>
 
       {alerts.length === 0 ? (
-        <p className="text-sm text-slate-500">No alerts yet — create one below to get emailed when matching jobs appear.</p>
+        <p className="text-sm text-slate-400">No alerts yet — create one below to get emailed when matching jobs appear.</p>
       ) : (
         <div className="space-y-2">
           {alerts.map((alert: any) => (

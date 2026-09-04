@@ -24,13 +24,13 @@ export default async function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <Link href="/dashboard" className="text-sm text-slate-500 hover:underline hover:text-slate-900 transition-colors">
+        <Link href="/dashboard" className="text-sm text-slate-400 hover:underline hover:text-white transition-colors">
           ← Dashboard
         </Link>
-        <h1 className="text-2xl font-semibold text-slate-900 mt-1">Your Profile</h1>
-        <p className="text-sm text-slate-500 mt-1">
+        <h1 className="text-2xl font-semibold text-white mt-1">Your Profile</h1>
+        <p className="text-sm text-slate-400 mt-1">
           Edit everything manually below, or{" "}
-          <Link href="/dashboard/resume" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+          <Link href="/dashboard/resume" className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
             upload a resume
           </Link>{" "}
           and we'll pull in your experience, education, skills, and certifications for you to review first.
@@ -60,11 +60,11 @@ export default async function ProfilePage() {
         onDelete={deleteExperience}
         formFields={
           <>
-            <input name="job_title" placeholder="Job title" required className="border rounded-md px-2 py-1.5 text-sm flex-1 min-w-[140px]" />
-            <input name="company_name" placeholder="Company" required className="border rounded-md px-2 py-1.5 text-sm flex-1 min-w-[140px]" />
-            <input name="start_date" type="date" className="border rounded-md px-2 py-1.5 text-sm" />
-            <input name="end_date" type="date" className="border rounded-md px-2 py-1.5 text-sm" />
-            <label className="flex items-center gap-1 text-xs text-slate-500">
+            <input name="job_title" placeholder="Job title" required className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500 flex-1 min-w-[140px]" />
+            <input name="company_name" placeholder="Company" required className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500 flex-1 min-w-[140px]" />
+            <input name="start_date" type="date" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
+            <input name="end_date" type="date" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
+            <label className="flex items-center gap-1 text-xs text-slate-400">
               <input type="checkbox" name="is_current" /> Current
             </label>
           </>
@@ -88,10 +88,10 @@ export default async function ProfilePage() {
         onDelete={deleteEducation}
         formFields={
           <>
-            <input name="school_name" placeholder="School" required className="border rounded-md px-2 py-1.5 text-sm flex-1 min-w-[140px]" />
-            <input name="degree" placeholder="Degree" className="border rounded-md px-2 py-1.5 text-sm" />
-            <input name="field_of_study" placeholder="Field of study" className="border rounded-md px-2 py-1.5 text-sm" />
-            <input name="graduation_date" type="date" className="border rounded-md px-2 py-1.5 text-sm" />
+            <input name="school_name" placeholder="School" required className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500 flex-1 min-w-[140px]" />
+            <input name="degree" placeholder="Degree" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
+            <input name="field_of_study" placeholder="Field of study" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
+            <input name="graduation_date" type="date" className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500" />
           </>
         }
       />
@@ -102,7 +102,7 @@ export default async function ProfilePage() {
         items={data.skills.map((s: any) => ({ id: s.skill_id, label: s.skills?.name }))}
         onAdd={addSkill}
         onDelete={deleteSkill}
-        formFields={<input name="name" placeholder="e.g. Sheet Metal Repair" required className="border rounded-md px-2 py-1.5 text-sm flex-1 min-w-[160px]" />}
+        formFields={<input name="name" placeholder="e.g. Sheet Metal Repair" required className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500 flex-1 min-w-[160px]" />}
       />
 
       <ListSection
@@ -119,7 +119,7 @@ export default async function ProfilePage() {
         }))}
         onAdd={addCertification}
         onDelete={deleteCertification}
-        formFields={<input name="name" placeholder="e.g. A&P Certificate" required className="border rounded-md px-2 py-1.5 text-sm flex-1 min-w-[160px]" />}
+        formFields={<input name="name" placeholder="e.g. A&P Certificate" required className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white placeholder:text-slate-500 flex-1 min-w-[160px]" />}
       />
     </div>
   );

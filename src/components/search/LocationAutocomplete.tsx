@@ -55,7 +55,7 @@ export function LocationAutocomplete({
         autoComplete="off"
       />
       {open && suggestions.length > 0 && (
-        <ul className="absolute left-0 right-0 top-full mt-1 bg-white border rounded-md shadow-lg z-20 max-h-64 overflow-auto text-sm">
+        <ul className="absolute left-0 right-0 top-full mt-1 bg-board-2 border border-white/15 rounded-md shadow-lg z-20 max-h-64 overflow-auto text-sm">
           {suggestions.map((s, i) => (
             <li key={s.key}>
               <button
@@ -63,17 +63,17 @@ export function LocationAutocomplete({
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => select(s)}
                 className={`w-full text-left px-3 py-2 flex items-center gap-2 transition-colors ${
-                  i === highlighted ? "bg-brand-50" : "hover:bg-slate-50"
+                  i === highlighted ? "bg-brand-400/15" : "hover:bg-white/5"
                 }`}
               >
                 {s.type === "airport" ? (
-                  <Plane className="w-4 h-4 text-brand-600 shrink-0" />
+                  <Plane className="w-4 h-4 text-brand-300 shrink-0" />
                 ) : (
-                  <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                  <MapPin className="w-4 h-4 text-slate-500 shrink-0" />
                 )}
                 <span className="min-w-0">
-                  <span className="block text-slate-900 truncate">{s.label}</span>
-                  {s.sublabel && <span className="block text-xs text-slate-400 truncate">{s.sublabel}</span>}
+                  <span className="block text-white truncate">{s.label}</span>
+                  {s.sublabel && <span className="block text-xs text-slate-500 truncate">{s.sublabel}</span>}
                 </span>
               </button>
             </li>

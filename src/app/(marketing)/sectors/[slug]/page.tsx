@@ -19,9 +19,9 @@ export default async function SectorDetailPage({ params }: { params: Promise<{ s
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         {companies.length === 0 ? (
-          <div className="border rounded-lg p-6 bg-white text-center">
-            <p className="text-slate-900 font-medium">No employers in this sector yet</p>
-            <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+          <div className="border border-white/10 rounded-lg p-6 bg-white/[0.04] text-center">
+            <p className="text-white font-medium">No employers in this sector yet</p>
+            <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
               We're actively growing coverage here. If you're hiring in {sector.name.toLowerCase()}, be one of the first
               employers listed.
             </p>
@@ -38,12 +38,12 @@ export default async function SectorDetailPage({ params }: { params: Promise<{ s
               <Link
                 key={c.id}
                 href={`/companies/${c.slug}`}
-                className={`flex items-center gap-3 border border-t-4 ${colors.border} rounded-xl p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                className={`flex items-center gap-3 border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-xl p-4 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
               >
                 <CompanyLogo name={c.name} website={c.website} size={36} />
                 <div className="min-w-0">
-                  <p className="font-medium text-slate-900 truncate">{c.name}</p>
-                  <p className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+                  <p className="font-medium text-white truncate">{c.name}</p>
+                  <p className="flex items-center gap-1 text-xs text-slate-400 mt-0.5">
                     <Briefcase className="w-3.5 h-3.5" />
                     {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
                   </p>

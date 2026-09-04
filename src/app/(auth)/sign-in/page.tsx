@@ -15,18 +15,18 @@ export default function SignInPage() {
 
   return (
     <div className="max-w-sm mx-auto px-4 py-16">
-      <h1 className="text-2xl font-semibold text-slate-900">Sign in</h1>
+      <h1 className="text-2xl font-semibold text-white">Sign in</h1>
 
       <form action={formAction} className="space-y-3 mt-6">
-        <label className="block text-sm">
+        <label className="block text-sm text-slate-300">
           Email
-          <input name="email" type="email" required className="w-full border rounded-md px-3 py-2 mt-1" />
+          <input name="email" type="email" required className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white" />
         </label>
-        <label className="block text-sm">
+        <label className="block text-sm text-slate-300">
           Password
-          <input name="password" type="password" required className="w-full border rounded-md px-3 py-2 mt-1" />
+          <input name="password" type="password" required className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white" />
         </label>
-        {state?.error && <p className="text-sm text-red-600">{state.error}</p>}
+        {state?.error && <p className="text-sm text-red-400">{state.error}</p>}
         <button
           type="submit"
           disabled={isPending}
@@ -36,11 +36,11 @@ export default function SignInPage() {
         </button>
       </form>
 
-      <div className="flex justify-between text-sm text-slate-500 mt-4">
-        <Link href="/sign-up" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+      <div className="flex justify-between text-sm text-slate-400 mt-4">
+        <Link href="/sign-up" className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
           Create an account
         </Link>
-        <Link href="/reset-password" className="hover:underline hover:text-slate-900 transition-colors">
+        <Link href="/reset-password" className="hover:underline hover:text-white transition-colors">
           Forgot password?
         </Link>
       </div>

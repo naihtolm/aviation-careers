@@ -34,15 +34,15 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
   return (
     <div className="space-y-6">
       {experience.length === 0 && education.length === 0 && skills.length === 0 && certifications.length === 0 && (
-        <p className="text-sm text-slate-500">We couldn't find much in this file — try adding your profile manually instead.</p>
+        <p className="text-sm text-slate-400">We couldn't find much in this file — try adding your profile manually instead.</p>
       )}
 
       {experience.length > 0 && (
         <section>
-          <h2 className="font-medium text-slate-900 mb-3">Experience</h2>
+          <h2 className="font-medium text-white mb-3">Experience</h2>
           <div className="space-y-3">
             {experience.map((item, i) => (
-              <div key={i} className={`border rounded-lg p-3 ${!item.approved ? "opacity-50" : ""}`}>
+              <div key={i} className={`border border-white/10 rounded-lg p-3 ${!item.approved ? "opacity-50" : ""}`}>
                 <div className="flex items-start gap-2">
                   <input
                     type="checkbox"
@@ -59,7 +59,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setExperience((prev) => prev.map((it, idx) => (idx === i ? { ...it, job_title: e.target.value } : it)))
                       }
                       placeholder="Job title"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       value={item.company_name}
@@ -67,7 +67,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setExperience((prev) => prev.map((it, idx) => (idx === i ? { ...it, company_name: e.target.value } : it)))
                       }
                       placeholder="Company"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <select
                       value={item.employment_type ?? ""}
@@ -80,11 +80,11 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                           )
                         )
                       }
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     >
-                      <option value="">Employment type</option>
+                      <option value="" className="text-slate-900">Employment type</option>
                       {EMPLOYMENT_TYPES.map((t) => (
-                        <option key={t} value={t}>
+                        <option key={t} value={t} className="text-slate-900">
                           {titleCase(t)}
                         </option>
                       ))}
@@ -95,7 +95,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setExperience((prev) => prev.map((it, idx) => (idx === i ? { ...it, location: e.target.value } : it)))
                       }
                       placeholder="Location"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       type="date"
@@ -103,7 +103,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                       onChange={(e) =>
                         setExperience((prev) => prev.map((it, idx) => (idx === i ? { ...it, start_date: e.target.value } : it)))
                       }
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       type="date"
@@ -112,9 +112,9 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                       onChange={(e) =>
                         setExperience((prev) => prev.map((it, idx) => (idx === i ? { ...it, end_date: e.target.value } : it)))
                       }
-                      className="border rounded px-2 py-1 text-sm disabled:bg-slate-50"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white disabled:bg-white/[0.02] disabled:text-slate-500"
                     />
-                    <label className="flex items-center gap-1.5 text-xs text-slate-500 sm:col-span-2">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-400 sm:col-span-2">
                       <input
                         type="checkbox"
                         checked={item.is_current}
@@ -127,7 +127,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                   </div>
                   <button
                     onClick={() => setExperience((prev) => prev.filter((_, idx) => idx !== i))}
-                    className="text-xs text-red-600"
+                    className="text-xs text-red-400 hover:text-red-300 transition-colors"
                   >
                     Delete
                   </button>
@@ -140,10 +140,10 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
 
       {education.length > 0 && (
         <section>
-          <h2 className="font-medium text-slate-900 mb-3">Education</h2>
+          <h2 className="font-medium text-white mb-3">Education</h2>
           <div className="space-y-3">
             {education.map((item, i) => (
-              <div key={i} className={`border rounded-lg p-3 ${!item.approved ? "opacity-50" : ""}`}>
+              <div key={i} className={`border border-white/10 rounded-lg p-3 ${!item.approved ? "opacity-50" : ""}`}>
                 <div className="flex items-start gap-2">
                   <input
                     type="checkbox"
@@ -160,7 +160,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setEducation((prev) => prev.map((it, idx) => (idx === i ? { ...it, school_name: e.target.value } : it)))
                       }
                       placeholder="School"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       value={item.degree ?? ""}
@@ -168,7 +168,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setEducation((prev) => prev.map((it, idx) => (idx === i ? { ...it, degree: e.target.value } : it)))
                       }
                       placeholder="Degree"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       value={item.field_of_study ?? ""}
@@ -176,7 +176,7 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                         setEducation((prev) => prev.map((it, idx) => (idx === i ? { ...it, field_of_study: e.target.value } : it)))
                       }
                       placeholder="Field of study"
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                     <input
                       type="date"
@@ -184,12 +184,12 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
                       onChange={(e) =>
                         setEducation((prev) => prev.map((it, idx) => (idx === i ? { ...it, graduation_date: e.target.value } : it)))
                       }
-                      className="border rounded px-2 py-1 text-sm"
+                      className="bg-white/5 border border-white/15 rounded px-2 py-1 text-sm text-white placeholder:text-slate-500"
                     />
                   </div>
                   <button
                     onClick={() => setEducation((prev) => prev.filter((_, idx) => idx !== i))}
-                    className="text-xs text-red-600"
+                    className="text-xs text-red-400 hover:text-red-300 transition-colors"
                   >
                     Delete
                   </button>
@@ -202,12 +202,12 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
 
       {skills.length > 0 && (
         <section>
-          <h2 className="font-medium text-slate-900 mb-3">Skills</h2>
+          <h2 className="font-medium text-white mb-3">Skills</h2>
           <div className="flex flex-wrap gap-2">
             {skills.map((skill, i) => (
               <label
                 key={i}
-                className={`flex items-center gap-1.5 text-sm border rounded-full px-3 py-1 ${!skill.approved ? "opacity-50" : ""}`}
+                className={`flex items-center gap-1.5 text-sm border border-white/15 text-slate-200 rounded-full px-3 py-1 ${!skill.approved ? "opacity-50" : ""}`}
               >
                 <input
                   type="checkbox"
@@ -223,12 +223,12 @@ export function ReviewForm({ data }: { data: ParsedResumeData }) {
 
       {certifications.length > 0 && (
         <section>
-          <h2 className="font-medium text-slate-900 mb-3">Certifications</h2>
+          <h2 className="font-medium text-white mb-3">Certifications</h2>
           <div className="flex flex-wrap gap-2">
             {certifications.map((cert, i) => (
               <label
                 key={i}
-                className={`flex items-center gap-1.5 text-sm border rounded-full px-3 py-1 ${!cert.approved ? "opacity-50" : ""}`}
+                className={`flex items-center gap-1.5 text-sm border border-white/15 text-slate-200 rounded-full px-3 py-1 ${!cert.approved ? "opacity-50" : ""}`}
               >
                 <input
                   type="checkbox"

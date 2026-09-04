@@ -18,7 +18,7 @@ export default async function AirportDirectoryPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-8">
       {airports.length === 0 ? (
-        <p className="text-slate-500 mt-8">No airports listed yet.</p>
+        <p className="text-slate-400 mt-8">No airports listed yet.</p>
       ) : (
         <>
           <div className="mt-6">
@@ -48,24 +48,24 @@ export default async function AirportDirectoryPage() {
                 <Link
                   key={a.id}
                   href={`/airports/${code}`}
-                  className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  className="border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all"
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg ${typeColors.badgeBg} ${typeColors.badgeText} flex items-center justify-center shrink-0`}>
                       <Plane className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                      <p className="font-medium text-slate-900 truncate">
-                        {a.name} <span className="text-slate-400 font-normal">({code})</span>
+                      <p className="font-medium text-white truncate">
+                        {a.name} <span className="text-slate-500 font-normal">({code})</span>
                       </p>
-                      <p className="text-sm text-slate-500 mt-1">{a.city}, {a.state}</p>
+                      <p className="text-sm text-slate-400 mt-1">{a.city}, {a.state}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         {airportTypeLabel(a.airport_type) && (
                           <span className={`text-[10px] font-semibold uppercase tracking-wide ${typeColors.badgeText} ${typeColors.badgeBg} rounded px-1.5 py-0.5`}>
                             {airportTypeLabel(a.airport_type)}
                           </span>
                         )}
-                        <p className="flex items-center gap-1 text-sm text-slate-500">
+                        <p className="flex items-center gap-1 text-sm text-slate-400">
                           <Briefcase className="w-3.5 h-3.5" />
                           {a.jobCount} open job{a.jobCount === 1 ? "" : "s"}
                         </p>

@@ -18,23 +18,23 @@ export function UploadForm() {
   }
 
   return (
-    <form action={handleSubmit} className="border rounded-lg p-6 bg-white">
-      <span className="text-sm font-medium text-slate-900">Upload your resume</span>
+    <form action={handleSubmit} className="border border-white/10 rounded-lg p-6 bg-white/[0.04]">
+      <span className="text-sm font-medium text-white">Upload your resume</span>
       {/* A bare <input type="file"> renders as a tiny native button with no
           visible boundary -- wrapping it in a dashed, clickable card makes
           the whole tap target obvious and gives clear before/after states. */}
       <label
         className={`mt-3 flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-lg px-6 py-8 text-center cursor-pointer transition-colors ${
-          fileName ? "border-brand-300 bg-brand-50/50" : "border-slate-300 hover:border-brand-400 hover:bg-brand-50/40"
+          fileName ? "border-brand-300 bg-brand-400/10" : "border-white/20 hover:border-brand-300 hover:bg-white/5"
         }`}
       >
         {fileName ? (
-          <FileCheck2 className="w-6 h-6 text-brand-600" />
+          <FileCheck2 className="w-6 h-6 text-brand-300" />
         ) : (
-          <UploadCloud className="w-6 h-6 text-slate-400" />
+          <UploadCloud className="w-6 h-6 text-slate-500" />
         )}
-        <span className="text-sm font-medium text-slate-700">{fileName ?? "Click to choose a file"}</span>
-        <span className="text-xs text-slate-400">PDF or DOCX, up to 10 MB</span>
+        <span className="text-sm font-medium text-slate-200">{fileName ?? "Click to choose a file"}</span>
+        <span className="text-xs text-slate-500">PDF or DOCX, up to 10 MB</span>
         <input
           type="file"
           name="file"
@@ -44,7 +44,7 @@ export function UploadForm() {
         />
       </label>
 
-      {error && <p className="text-sm text-red-600 mt-3">{error}</p>}
+      {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
 
       <button
         type="submit"

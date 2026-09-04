@@ -23,14 +23,14 @@ export default async function SectorsPage() {
               <Link
                 key={sector.slug}
                 href={`/sectors/${sector.slug}`}
-                className={`border border-t-4 ${colors.border} rounded-lg p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                className={`border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
               >
                 <div className={`w-9 h-9 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                   <sector.icon className="w-5 h-5" />
                 </div>
-                <p className="font-medium text-slate-900 mt-3">{sector.name}</p>
-                <p className="text-sm text-slate-500 mt-1">{sector.description}</p>
-                <div className="flex items-center gap-3 mt-3 text-xs text-slate-500">
+                <p className="font-medium text-white mt-3">{sector.name}</p>
+                <p className="text-sm text-slate-400 mt-1">{sector.description}</p>
+                <div className="flex items-center gap-3 mt-3 text-xs text-slate-400">
                   <span>{sector.companyCount} employer{sector.companyCount === 1 ? "" : "s"}</span>
                   <span className="flex items-center gap-1">
                     <Briefcase className="w-3.5 h-3.5" />
