@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, GraduationCap, DollarSign, Plane } from "lucide-react";
+import { Briefcase, GraduationCap, DollarSign, Plane, BookOpen } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/jobs", label: "Jobs", icon: Briefcase },
   { href: "/careers", label: "Careers", icon: GraduationCap },
   { href: "/salaries", label: "Salaries", icon: DollarSign },
   { href: "/airports", label: "Airports", icon: Plane },
+  { href: "/resources", label: "Resources", icon: BookOpen },
 ];
 
 export function HeaderNav() {

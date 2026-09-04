@@ -2,9 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { MapPin, Briefcase, ExternalLink } from "lucide-react";
 import { getCompanyBySlug } from "@/features/companies/queries";
+import { getCompanyReviews } from "@/features/companies/reviewQueries";
 import { Tabs } from "@/components/ui/Tabs";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { RelationshipBadge } from "@/components/ui/RelationshipBadge";
+import { CompanyReviewsTab } from "@/components/companies/CompanyReviewsTab";
 import { companyTypeLabel } from "@/lib/companyType";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -12,6 +14,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   const result = await getCompanyBySlug(slug);
   if (!result) notFound();
   const { company, jobs, airportLinks } = result;
+  const { reviews, ownReview, averageRating, count: reviewCount } = await getCompanyReviews(company.id);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -101,6 +104,19 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                     ))}
                   </ul>
                 ),
+            },
+            {
+              label: `Reviews${reviewCount > 0 ? ` (${reviewCount})` : ""}`,
+              content: (
+                <CompanyReviewsTab
+                  companyId={company.id}
+                  companySlug={company.slug}
+                  reviews={reviews as any}
+                  ownReview={ownReview as any}
+                  averageRating={averageRating}
+                  count={reviewCount}
+                />
+              ),
             },
           ]}
         />

@@ -7,6 +7,7 @@ const LINKS = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/jobs", label: "All Jobs" },
   { href: "/admin/jobs/review", label: "Ingestion Review" },
+  { href: "/admin/reviews", label: "Review Moderation" },
   { href: "/admin/employers", label: "Employer Verification" },
   { href: "/admin/data-quality", label: "Data Quality" },
 ];
