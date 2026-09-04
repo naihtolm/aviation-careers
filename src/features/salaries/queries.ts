@@ -12,6 +12,9 @@ export async function getCareersForSalaryPicker() {
 
   // National median (location_id + experience_level both null) for each
   // career, so the picker can show a real pay figure instead of a bare link.
+  // A career can now have one row per data_year (migration 033's trend
+  // history) -- order oldest-first so the Map (last write wins per key)
+  // settles on the newest year's median instead of an arbitrary one.
   const { data: aggregates } = await supabase
     .from("salary_aggregates")
     .select("career_id, salary_p50")
@@ -20,7 +23,8 @@ export async function getCareersForSalaryPicker() {
       careers.map((c) => c.id)
     )
     .is("location_id", null)
-    .is("experience_level", null);
+    .is("experience_level", null)
+    .order("data_year", { ascending: true });
 
   const medianByCareer = new Map((aggregates ?? []).map((a) => [a.career_id, a.salary_p50]));
 
@@ -53,9 +57,17 @@ export async function getSalaryDetail(careerSlug: string, locationSlug: string) 
     locationLabel = `${location.city}, ${location.state_code}`;
   }
 
+  // A career/location/experience combo can now carry one row per
+  // data_year (migration 033) -- fetch the whole run, newest-first, so
+  // `aggregate` (the current-snapshot display above the chart) is just
+  // the first row, and `history` (oldest-first, for the trend chart) is
+  // the same rows read the other way.
   let query = supabase.from("salary_aggregates").select("*").eq("career_id", career.id).is("experience_level", null);
   query = locationId ? query.eq("location_id", locationId) : query.is("location_id", null);
-  const { data: aggregate } = await query.maybeSingle();
+  const { data: rows } = await query.order("data_year", { ascending: false });
+
+  const aggregate = rows?.[0] ?? null;
+  const history = rows ? [...rows].reverse() : [];
 
   const { data: relatedJobs } = await supabase
     .from("jobs")
@@ -64,5 +76,5 @@ export async function getSalaryDetail(careerSlug: string, locationSlug: string) 
     .eq("status", "active")
     .limit(6);
 
-  return { career, locationLabel, aggregate, relatedJobs: relatedJobs ?? [] };
+  return { career, locationLabel, aggregate, history, relatedJobs: relatedJobs ?? [] };
 }

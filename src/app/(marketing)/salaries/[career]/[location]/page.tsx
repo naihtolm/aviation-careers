@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getSalaryDetail } from "@/features/salaries/queries";
 import { SalaryCalculator } from "@/components/salary/SalaryCalculator";
+import { SalaryTrendChart } from "@/components/salary/SalaryTrendChart";
 
 function fmt(n: number | null) {
   return n != null ? `$${Math.round(n).toLocaleString()}` : null;
@@ -22,7 +23,7 @@ export default async function SalaryDetailPage({
   const { career: careerSlug, location: locationSlug } = await params;
   const result = await getSalaryDetail(careerSlug, locationSlug);
   if (!result) notFound();
-  const { career, locationLabel, aggregate, relatedJobs } = result;
+  const { career, locationLabel, aggregate, history, relatedJobs } = result;
 
   const confidence = confidenceLabel(aggregate?.confidence_score ?? null, aggregate?.sample_size ?? null);
   const points = [
@@ -84,6 +85,17 @@ export default async function SalaryDetailPage({
             <p className="text-xs text-slate-400 mt-3">
               Sourced from the U.S. Bureau of Labor Statistics. Some percentiles aren't available for every career/location combination yet.
             </p>
+
+            {history.length >= 2 && (
+              <div className="border rounded-lg p-4 bg-white mt-4">
+                <p className="font-medium text-slate-900 text-sm mb-3">
+                  Median pay, {history[0].data_year}–{history[history.length - 1].data_year}
+                </p>
+                <SalaryTrendChart
+                  points={history.map((h: any) => ({ year: h.data_year, p25: h.salary_p25, p50: h.salary_p50, p75: h.salary_p75 }))}
+                />
+              </div>
+            )}
           </div>
 
           <div>
