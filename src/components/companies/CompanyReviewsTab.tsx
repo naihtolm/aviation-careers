@@ -67,18 +67,18 @@ export function CompanyReviewsTab({
           {count > 0 ? (
             <div className="flex items-center gap-2">
               <StarRating rating={averageRating ?? 0} size={18} />
-              <span className="text-sm font-medium text-slate-900">{averageRating!.toFixed(1)}</span>
-              <span className="text-sm text-slate-500">({count} review{count === 1 ? "" : "s"})</span>
+              <span className="text-sm font-medium text-white">{averageRating!.toFixed(1)}</span>
+              <span className="text-sm text-slate-400">({count} review{count === 1 ? "" : "s"})</span>
             </div>
           ) : (
-            <p className="text-sm text-slate-500">No reviews yet — be the first to share what it's like to work here.</p>
+            <p className="text-sm text-slate-400">No reviews yet — be the first to share what it's like to work here.</p>
           )}
         </div>
 
         {!ownReview && !showForm && !justSubmitted && (
           <button
             onClick={() => setShowForm(true)}
-            className="text-sm font-medium border rounded-md px-3 py-1.5 text-slate-700 hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            className="text-sm font-medium border border-white/15 rounded-md px-3 py-1.5 text-slate-200 hover:border-brand-300 hover:bg-white/5 hover:-translate-y-0.5 transition-all"
           >
             Write a review
           </button>
@@ -99,27 +99,27 @@ export function CompanyReviewsTab({
       )}
 
       {justSubmitted && (
-        <p className="text-sm bg-emerald-50 text-emerald-700 rounded-lg px-3 py-2 mb-5">
+        <p className="text-sm bg-emerald-500/15 text-emerald-300 rounded-lg px-3 py-2 mb-5">
           Thanks — your review is waiting on a quick check before it goes live.
         </p>
       )}
 
       {ownReview && !justSubmitted && (
-        <div className="border border-brand-200 bg-brand-50 rounded-lg p-4 mb-5">
+        <div className="border border-brand-400/30 bg-brand-400/10 rounded-lg p-4 mb-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-medium text-brand-700 uppercase tracking-wide mb-1">
+              <p className="text-xs font-medium text-brand-300 uppercase tracking-wide mb-1">
                 Your review — {ownReview.status === "pending" ? "awaiting review" : ownReview.status === "rejected" ? "not approved" : "live"}
               </p>
               <div className="flex items-center gap-2">
                 <StarRating rating={ownReview.rating} size={15} />
-                <span className="text-sm font-medium text-slate-900">{ownReview.title}</span>
+                <span className="text-sm font-medium text-white">{ownReview.title}</span>
               </div>
             </div>
             <button
               onClick={handleDelete}
               disabled={isPending}
-              className="text-xs text-slate-500 hover:text-red-600 transition-colors shrink-0"
+              className="text-xs text-slate-400 hover:text-red-400 transition-colors shrink-0"
             >
               Delete
             </button>
@@ -130,28 +130,28 @@ export function CompanyReviewsTab({
       {reviews.length === 0 ? null : (
         <div className="space-y-3">
           {reviews.map((r) => (
-            <div key={r.id} className="border rounded-lg p-4 bg-white">
+            <div key={r.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2">
                   <StarRating rating={r.rating} size={15} />
-                  <span className="font-medium text-slate-900 text-sm">{r.title}</span>
+                  <span className="font-medium text-white text-sm">{r.title}</span>
                 </div>
-                <span className="text-xs text-slate-400">{timeAgo(r.created_at)}</span>
+                <span className="text-xs text-slate-500">{timeAgo(r.created_at)}</span>
               </div>
-              <p className="text-xs text-slate-500 mt-1">{EMPLOYMENT_LABEL[r.employment_status] ?? r.employment_status}</p>
-              <p className="text-sm text-slate-700 mt-2 whitespace-pre-wrap">{r.body}</p>
+              <p className="text-xs text-slate-400 mt-1">{EMPLOYMENT_LABEL[r.employment_status] ?? r.employment_status}</p>
+              <p className="text-sm text-slate-300 mt-2 whitespace-pre-wrap">{r.body}</p>
               {(r.pros || r.cons) && (
                 <div className="grid sm:grid-cols-2 gap-3 mt-3">
                   {r.pros && (
                     <div className="text-xs">
-                      <p className="font-medium text-emerald-700">Pros</p>
-                      <p className="text-slate-600 mt-0.5 whitespace-pre-wrap">{r.pros}</p>
+                      <p className="font-medium text-emerald-300">Pros</p>
+                      <p className="text-slate-400 mt-0.5 whitespace-pre-wrap">{r.pros}</p>
                     </div>
                   )}
                   {r.cons && (
                     <div className="text-xs">
-                      <p className="font-medium text-red-700">Cons</p>
-                      <p className="text-slate-600 mt-0.5 whitespace-pre-wrap">{r.cons}</p>
+                      <p className="font-medium text-red-300">Cons</p>
+                      <p className="text-slate-400 mt-0.5 whitespace-pre-wrap">{r.cons}</p>
                     </div>
                   )}
                 </div>

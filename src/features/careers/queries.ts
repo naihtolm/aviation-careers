@@ -45,12 +45,18 @@ export async function getCareerBySlug(slug: string) {
 
   const [{ data: content }, { data: salary }, { data: certRequirements }, { data: jobs }] = await Promise.all([
     supabase.from("career_content").select("*").eq("career_id", career.id).not("published_at", "is", null).maybeSingle(),
+    // A career can carry one salary_aggregates row per data_year
+    // (migration 033's trend history) -- .maybeSingle() here would error
+    // on 2+ rows, so this takes the newest year instead, same fix
+    // already applied in features/salaries/queries.ts.
     supabase
       .from("salary_aggregates")
       .select("*")
       .eq("career_id", career.id)
       .is("location_id", null)
       .is("experience_level", null)
+      .order("data_year", { ascending: false })
+      .limit(1)
       .maybeSingle(),
     supabase
       .from("career_certification_requirements")

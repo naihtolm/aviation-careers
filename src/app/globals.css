@@ -48,28 +48,30 @@
   --font-mono-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* The site's one real look now, not a light default with dark sections
+   carved out (header/hero/footer used to be the only dark surfaces,
+   floating on an otherwise-white site). Everything from here down --
+   job-seeker-facing marketing pages' card surfaces, text tokens -- is
+   being converted page by page to sit correctly on this background
+   (bg-white -> bg-white/[0.04], text-slate-900 -> text-white, etc.);
+   admin and employer-dashboard pages are a separate, not-yet-converted
+   scope (internal tooling / a different audience, never part of the
+   job-seeker redesign this follows from). */
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc;
+  background-color: var(--color-board);
 }
 
-/* A continuous blue -> baby-blue -> blue wash across the *entire* white
-   content area, not just a glow near the top or bottom. Percentage-based
-   stops on a linear-gradient scale to whatever height <main> actually
-   renders at, so a three-card page and a long scrolling job list both get
-   the full blue-to-baby-blue-to-blue journey top to bottom, proportional
-   to their own length, rather than a fixed-pixel effect that only reaches
-   part of a long page or overwhelms a short one. The top stop mostly sits
-   *behind* the opaque hero on hero pages (harmless -- it's meant to keep
-   going where the top wash used to only reach non-hero pages like
-   sign-in), and the bottom stop is what actually solves the flat gap right
-   before the footer that prompted this in the first place. */
+/* A continuous brand-blue glow wash down the page, replacing the old
+   light-mode blue-to-baby-blue gradient (which assumed a white content
+   area) with something that reads as depth on a near-black one instead
+   of just a flat dark fill top to bottom. */
 main {
   background-image: linear-gradient(
     to bottom,
-    rgba(77, 127, 255, 0.16) 0%,
-    rgba(217, 230, 255, 0.55) 50%,
-    rgba(77, 127, 255, 0.16) 100%
+    rgba(77, 127, 255, 0.1) 0%,
+    rgba(77, 127, 255, 0.03) 50%,
+    rgba(77, 127, 255, 0.08) 100%
   );
 }
 

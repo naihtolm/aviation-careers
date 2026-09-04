@@ -18,9 +18,9 @@ export function MatchCard({ jobId }: { jobId: string }) {
 
   if (!state) {
     return (
-      <div className="border rounded-lg p-4 bg-slate-50">
-        <p className="font-medium text-slate-900 text-sm">Check My Match</p>
-        <p className="text-sm text-slate-500 mt-1">See how well your profile lines up with this job's requirements.</p>
+      <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+        <p className="font-medium text-white text-sm">Check My Match</p>
+        <p className="text-sm text-slate-400 mt-1">See how well your profile lines up with this job's requirements.</p>
         <button
           onClick={handleCheck}
           disabled={isPending}
@@ -34,10 +34,10 @@ export function MatchCard({ jobId }: { jobId: string }) {
 
   if (!state.signedIn) {
     return (
-      <div className="border rounded-lg p-4 bg-slate-50">
-        <p className="font-medium text-slate-900 text-sm">Check My Match</p>
-        <p className="text-sm text-slate-500 mt-1">
-          <Link href="/sign-in" className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
+      <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+        <p className="font-medium text-white text-sm">Check My Match</p>
+        <p className="text-sm text-slate-400 mt-1">
+          <Link href="/sign-in" className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
             Sign in
           </Link>{" "}
           and complete your profile to see how well you match this job's requirements.
@@ -59,14 +59,14 @@ export function MatchCard({ jobId }: { jobId: string }) {
   ].filter((c): c is { label: string; met: boolean; requirementType: "required" | "preferred" } => !!c);
 
   return (
-    <div className="border rounded-lg p-4 bg-slate-50">
+    <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
       <div className="flex items-center justify-between">
-        <p className="font-medium text-slate-900 text-sm">Your Match</p>
-        <span className="text-xl font-semibold text-slate-900">{result.score}%</span>
+        <p className="font-medium text-white text-sm">Your Match</p>
+        <span className="text-xl font-semibold text-white">{result.score}%</span>
       </div>
 
       {result.hasMissingRequiredCertification && (
-        <p className="text-xs text-amber-800 bg-amber-50 rounded px-2 py-1.5 mt-2">
+        <p className="text-xs text-amber-300 bg-amber-500/15 rounded px-2 py-1.5 mt-2">
           ⚠ This role requires a certification you don't have listed on your profile yet.
         </p>
       )}
@@ -75,17 +75,17 @@ export function MatchCard({ jobId }: { jobId: string }) {
         <ul className="mt-3 space-y-1">
           {allChecks.map((check, i) => (
             <li key={i} className="text-xs flex items-center gap-1.5">
-              <span className={check.met ? "text-emerald-600" : "text-amber-600"}>{check.met ? "✓" : "⚠"}</span>
-              <span className={check.met ? "text-slate-600" : "text-slate-500"}>{check.label}</span>
+              <span className={check.met ? "text-emerald-400" : "text-amber-400"}>{check.met ? "✓" : "⚠"}</span>
+              <span className={check.met ? "text-slate-300" : "text-slate-400"}>{check.label}</span>
               {check.requirementType === "required" && !check.met && (
-                <span className="text-slate-400">(required)</span>
+                <span className="text-slate-500">(required)</span>
               )}
             </li>
           ))}
         </ul>
       )}
 
-      <Link href="/dashboard/profile" className="text-xs text-brand-600 hover:underline mt-3 inline-block hover:text-brand-700 transition-colors">
+      <Link href="/dashboard/profile" className="text-xs text-brand-300 hover:underline mt-3 inline-block hover:text-brand-200 transition-colors">
         Update your profile →
       </Link>
     </div>

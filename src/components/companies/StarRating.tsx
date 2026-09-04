@@ -29,7 +29,7 @@ export function StarRating({
           <Star
             width={size}
             height={size}
-            className={n <= Math.round(rating) ? "fill-accent-600 text-accent-600" : "fill-slate-200 text-slate-200"}
+            className={n <= Math.round(rating) ? "fill-accent-200 text-accent-200" : "fill-white/10 text-white/15"}
           />
         </button>
       ))}

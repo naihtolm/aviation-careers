@@ -51,7 +51,7 @@ export default async function CompanyDirectoryPage({
 
       <div className="max-w-5xl mx-auto px-4 py-8">
         {companies.length === 0 ? (
-          <p className="text-slate-500 mt-8">
+          <p className="text-slate-400 mt-8">
             {activeSector ? `No employers in ${activeSector.name} yet.` : "No employers listed yet."}
           </p>
         ) : (
@@ -60,24 +60,24 @@ export default async function CompanyDirectoryPage({
               <Link
                 key={c.id}
                 href={`/companies/${c.slug}`}
-                className="flex items-start gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className="flex items-start gap-3 border border-white/10 rounded-xl p-4 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all"
               >
                 <CompanyLogo name={c.name} website={c.website} size={40} />
                 <div className="min-w-0">
-                  <p className="font-medium text-slate-900 truncate">
+                  <p className="font-medium text-white truncate">
                     {c.name}
                     {c.verification_status === "approved" && (
-                      <span className="ml-1.5 text-xs text-brand-600 align-middle" title="Verified employer">✓</span>
+                      <span className="ml-1.5 text-xs text-brand-300 align-middle" title="Verified employer">✓</span>
                     )}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{companyTypeLabel(c.company_type)}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{companyTypeLabel(c.company_type)}</p>
                   <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                    <p className="flex items-center gap-1 text-xs text-slate-500">
+                    <p className="flex items-center gap-1 text-xs text-slate-400">
                       <Briefcase className="w-3.5 h-3.5" />
                       {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
                     </p>
                     {c.veteran_friendly && (
-                      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-600 bg-slate-100 rounded px-1.5 py-0.5">
+                      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-300 bg-white/10 rounded px-1.5 py-0.5">
                         Veteran-friendly
                       </span>
                     )}

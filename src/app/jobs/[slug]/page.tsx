@@ -48,23 +48,23 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="grid md:grid-cols-[1fr_300px] gap-8">
         <div>
-          <div className="flex items-center gap-2 text-sm text-slate-500 mb-2">
+          <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
             {job.careers?.name && <span>{job.careers.name}</span>}
           </div>
           <div className="flex items-start gap-3">
             <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={48} className="mt-0.5" />
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="font-display text-2xl font-semibold text-slate-900">{job.title}</h1>
+                <h1 className="font-display text-2xl font-semibold text-white">{job.title}</h1>
                 {fresh && (
-                  <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded">
                     New
                   </span>
                 )}
               </div>
-              <p className="text-slate-600 mt-1">
+              <p className="text-slate-400 mt-1">
                 {job.companies?.slug ? (
-                  <Link href={`/companies/${job.companies.slug}`} className="hover:underline hover:text-slate-900 transition-colors">
+                  <Link href={`/companies/${job.companies.slug}`} className="hover:underline hover:text-white transition-colors">
                     {job.companies?.name}
                   </Link>
                 ) : (
@@ -74,7 +74,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-400">
             {location && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="w-3.5 h-3.5 shrink-0" />
@@ -94,7 +94,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               </span>
             )}
             {salary && (
-              <span className="inline-flex items-center gap-1 text-slate-900 font-medium">
+              <span className="inline-flex items-center gap-1 text-accent-200 font-medium font-mono-data">
                 <DollarSign className="w-3.5 h-3.5 shrink-0" />
                 {salary}
               </span>
@@ -119,18 +119,18 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             />
           </div>
 
-          <div className="border-t mt-6 pt-6 prose prose-sm max-w-none">
-            <h2 className="text-lg font-semibold text-slate-900 mb-2">Description</h2>
+          <div className="border-t border-white/10 mt-6 pt-6 prose prose-sm prose-invert max-w-none">
+            <h2 className="text-lg font-semibold text-white mb-2">Description</h2>
             <div dangerouslySetInnerHTML={{ __html: decodeHtmlEntities(job.description ?? "") }} />
           </div>
 
           {job.job_requirements?.length > 0 && (
-            <div className="border-t mt-6 pt-6">
-              <h2 className="text-lg font-semibold text-slate-900 mb-3">Requirements</h2>
+            <div className="border-t border-white/10 mt-6 pt-6">
+              <h2 className="text-lg font-semibold text-white mb-3">Requirements</h2>
               <ul className="space-y-1">
                 {job.job_requirements.map((r: any) => (
-                  <li key={r.id} className="text-sm text-slate-600">
-                    <span className={r.requirement_type === "required" ? "font-medium text-slate-900" : ""}>
+                  <li key={r.id} className="text-sm text-slate-400">
+                    <span className={r.requirement_type === "required" ? "font-medium text-white" : ""}>
                       {r.requirement_type === "required" ? "Required" : "Preferred"}:
                     </span>{" "}
                     {r.description ?? r.value}
@@ -140,7 +140,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             </div>
           )}
 
-          <div className="border-t mt-6 pt-6">
+          <div className="border-t border-white/10 mt-6 pt-6">
             <MatchCard jobId={job.id} />
           </div>
         </div>
@@ -161,8 +161,8 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
       </div>
 
       {similarJobs.length > 0 && (
-        <div className="border-t mt-10 pt-8">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Similar jobs</h2>
+        <div className="border-t border-white/10 mt-10 pt-8">
+          <h2 className="text-lg font-semibold text-white mb-4">Similar jobs</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {similarJobs.map((j: any) => (
               <JobCard key={j.id} job={j} initialSaved={savedJobIds.has(j.id)} />

@@ -50,8 +50,8 @@ export function SaveJobButton({ jobId, initialSaved = false }: { jobId: string; 
         aria-label={saved ? "Remove from saved jobs" : "Save job"}
         className={`w-8 h-8 flex items-center justify-center rounded-md border disabled:opacity-50 ${
           saved
-            ? "bg-accent-50 border-accent-200 text-accent-700"
-            : "border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600"
+            ? "bg-accent-200/15 border-accent-200/40 text-accent-200"
+            : "border-white/15 text-slate-400 hover:border-white/25 hover:text-slate-300"
         }`}
       >
         {saved ? (
