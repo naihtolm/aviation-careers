@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, Clock, Home, DollarSign } from "lucide-react";
 import { SaveJobButton } from "@/components/jobs/SaveJobButton";
+import { QuickApplyButton } from "@/components/jobs/QuickApplyButton";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { timeAgo, isRecent } from "@/lib/time";
 import { categoryColorClasses } from "@/lib/categoryColor";
@@ -24,11 +25,23 @@ function primaryLocation(jobLocations: any[] | undefined) {
   return "Location not specified";
 }
 
-export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?: boolean }) {
+export function JobCard({
+  job,
+  initialSaved = false,
+  initialApplied = false,
+}: {
+  job: any;
+  initialSaved?: boolean;
+  initialApplied?: boolean;
+}) {
   const salary = formatSalary(job.job_compensation);
   const posted = job.published_at ? timeAgo(job.published_at) : null;
   const fresh = isRecent(job.published_at);
   const colors = categoryColorClasses(job.careers?.name);
+  // Quick Apply only makes sense with nothing extra to ask first: a
+  // native application (not an external redirect to the employer's own
+  // site) with no screening questions of its own.
+  const canQuickApply = job.application_type !== "external_url" && !(job.screening_questions?.length > 0);
 
   return (
     <Link
@@ -86,7 +99,12 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
           </span>
         )}
       </div>
-      {posted && <p className="text-xs text-slate-400 mt-2">Posted {posted}</p>}
+      {(posted || canQuickApply) && (
+        <div className="flex items-center justify-between mt-3">
+          <p className="text-xs text-slate-400">{posted && `Posted ${posted}`}</p>
+          {canQuickApply && <QuickApplyButton jobId={job.id} initialApplied={initialApplied} />}
+        </div>
+      )}
     </Link>
   );
 }

@@ -10,20 +10,43 @@ export async function getCareerCategories() {
   return data ?? [];
 }
 
-export async function getCareers(categorySlug?: string) {
+export interface CareerFilters {
+  categorySlug?: string;
+  entryLevelOnly?: boolean;
+  regulatedOnly?: boolean;
+  // "entry_level" surfaces entry-level-friendly guides first (for someone
+  // just starting out) while still ordering alphabetically within each
+  // group; "name" is a plain A-Z browse.
+  sort?: "name" | "entry_level";
+}
+
+export async function getCareers(filters: CareerFilters = {}) {
   const supabase = await createServerActionClient();
   let query = supabase
     .from("careers")
     .select("id, name, slug, short_description, entry_level, regulated, career_categories ( name, slug )")
-    .eq("active", true)
-    .order("name");
+    .eq("active", true);
 
-  if (categorySlug) {
-    query = query.eq("career_categories.slug", categorySlug);
+  if (filters.categorySlug) {
+    query = query.eq("career_categories.slug", filters.categorySlug);
+  }
+  if (filters.entryLevelOnly) {
+    query = query.eq("entry_level", true);
+  }
+  if (filters.regulatedOnly) {
+    query = query.eq("regulated", true);
   }
 
+  query =
+    filters.sort === "entry_level"
+      ? query.order("entry_level", { ascending: false }).order("name")
+      : query.order("name");
+
   const { data } = await query;
-  return (data ?? []).filter((c: any) => !categorySlug || c.career_categories?.slug === categorySlug);
+  // Supabase's .eq() on an embedded relation doesn't reliably restrict
+  // rows for a left-joined select, so this re-filters client-side too --
+  // same belt-and-suspenders approach the original code used.
+  return (data ?? []).filter((c: any) => !filters.categorySlug || c.career_categories?.slug === filters.categorySlug);
 }
 
 export async function getCareerBySlug(slug: string) {

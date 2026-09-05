@@ -27,6 +27,7 @@ export function JobsResults({
   jobs,
   total,
   savedJobIds,
+  appliedJobIds,
 }: {
   employmentTypes: FilterOption[];
   experienceLevels: FilterOption[];
@@ -35,6 +36,7 @@ export function JobsResults({
   jobs: any[];
   total: number;
   savedJobIds: string[];
+  appliedJobIds: string[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -43,20 +45,47 @@ export function JobsResults({
     startTransition(() => router.push(href));
   }
 
-  function FilterGroup({ icon: Icon, title, options }: { icon: typeof Clock; title: string; options: FilterOption[] }) {
+  // `multi` swaps the plain text-toggle look for a checkbox row, since a
+  // filled/empty box reads as "pick any number of these" at a glance in a
+  // way a bolded label alone doesn't -- important now that employment type
+  // and work arrangement actually accept more than one selection.
+  function FilterGroup({
+    icon: Icon,
+    title,
+    options,
+    multi = false,
+  }: {
+    icon: typeof Clock;
+    title: string;
+    options: FilterOption[];
+    multi?: boolean;
+  }) {
     return (
       <div>
         <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
           <Icon className="w-4 h-4 text-brand-600" />
           {title}
         </p>
-        <ul className="space-y-1">
+        <ul className="space-y-1.5">
           {options.map((opt) => (
             <li key={opt.value}>
               <button
                 onClick={() => go(opt.href)}
-                className={`text-sm block text-left ${opt.active ? "text-slate-900 font-medium" : "text-slate-500"}`}
+                className={`text-sm flex items-center gap-2 text-left w-full ${opt.active ? "text-slate-900 font-medium" : "text-slate-500"}`}
               >
+                {multi && (
+                  <span
+                    className={`w-3.5 h-3.5 rounded-[4px] border shrink-0 flex items-center justify-center ${
+                      opt.active ? "bg-brand-600 border-brand-600" : "border-slate-300"
+                    }`}
+                  >
+                    {opt.active && (
+                      <svg viewBox="0 0 12 12" className="w-2.5 h-2.5" fill="none">
+                        <path d="M2.5 6.2 5 8.7l4.5-5" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </span>
+                )}
                 {opt.label}
               </button>
             </li>
@@ -69,9 +98,9 @@ export function JobsResults({
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 grid md:grid-cols-[220px_1fr] gap-8">
       <aside className="space-y-6 md:sticky md:top-24 md:self-start">
-        <FilterGroup icon={Clock} title="Employment type" options={employmentTypes} />
+        <FilterGroup icon={Clock} title="Employment type" options={employmentTypes} multi />
         <FilterGroup icon={TrendingUp} title="Experience level" options={experienceLevels} />
-        <FilterGroup icon={Home} title="Work arrangement" options={workArrangements} />
+        <FilterGroup icon={Home} title="Work arrangement" options={workArrangements} multi />
       </aside>
 
       <div>
@@ -104,7 +133,12 @@ export function JobsResults({
           ) : (
             <div className="space-y-3">
               {jobs.map((job: any) => (
-                <JobCard key={job.id} job={job} initialSaved={savedJobIds.includes(job.id)} />
+                <JobCard
+                  key={job.id}
+                  job={job}
+                  initialSaved={savedJobIds.includes(job.id)}
+                  initialApplied={appliedJobIds.includes(job.id)}
+                />
               ))}
             </div>
           )}

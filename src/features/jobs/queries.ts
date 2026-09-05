@@ -1,9 +1,14 @@
 // features/jobs/queries.ts
 import { createServerActionClient } from "@/lib/supabase/server";
 
+// screening_questions is included here (not just on the detail-page
+// select) so listing cards can tell, without a second query, whether a
+// job qualifies for one-click Quick Apply -- it only makes sense for a
+// native application with nothing extra to ask.
 const JOB_SELECT = `
   id, slug, title, description, employment_type, experience_level,
   work_arrangement, application_type, application_url, published_at,
+  screening_questions,
   companies ( id, name, slug, logo_path, website, verification_status ),
   careers ( id, name, slug ),
   job_locations ( id, is_primary, locations ( city, state_code, latitude, longitude ), airports ( iata_code, name, slug, city, state, latitude, longitude ) ),
@@ -15,9 +20,14 @@ export interface JobSearchParams {
   careerCategorySlug?: string;
   careerSlug?: string;
   airportCode?: string;
-  employmentType?: string;
+  // Employment type and work arrangement accept more than one selection
+  // (e.g. "show me Full Time OR Contract roles") -- experience level and
+  // career category stay single-select, matching how job seekers actually
+  // narrow a search: usually one specific level, but rarely just one
+  // acceptable schedule or work setting.
+  employmentType?: string[];
   experienceLevel?: string;
-  workArrangement?: string;
+  workArrangement?: string[];
   salaryMin?: number;
   location?: string;
   radiusMiles?: number;
@@ -89,14 +99,14 @@ export async function searchJobs(params: JobSearchParams) {
   if (params.careerSlug) {
     query = query.eq("careers.slug", params.careerSlug);
   }
-  if (params.employmentType) {
-    query = query.eq("employment_type", params.employmentType);
+  if (params.employmentType && params.employmentType.length > 0) {
+    query = query.in("employment_type", params.employmentType);
   }
   if (params.experienceLevel) {
     query = query.eq("experience_level", params.experienceLevel);
   }
-  if (params.workArrangement) {
-    query = query.eq("work_arrangement", params.workArrangement);
+  if (params.workArrangement && params.workArrangement.length > 0) {
+    query = query.in("work_arrangement", params.workArrangement);
   }
   if (params.airportCode) {
     query = query.eq("job_locations.airports.iata_code", params.airportCode);
@@ -194,6 +204,16 @@ export async function getSavedJobIds(userId: string | null): Promise<Set<string>
   if (!userId) return new Set();
   const supabase = await createServerActionClient();
   const { data } = await supabase.from("saved_jobs").select("job_id").eq("user_id", userId);
+  return new Set((data ?? []).map((r) => r.job_id));
+}
+
+// Bulk sibling of hasAppliedToJob, same shape as getSavedJobIds -- lets a
+// listing page (many jobs at once) show each Quick Apply button's correct
+// applied/not-applied state in one query instead of one per card.
+export async function getAppliedJobIds(userId: string | null): Promise<Set<string>> {
+  if (!userId) return new Set();
+  const supabase = await createServerActionClient();
+  const { data } = await supabase.from("job_applications").select("job_id").eq("user_id", userId).eq("status", "applied");
   return new Set((data ?? []).map((r) => r.job_id));
 }
 
