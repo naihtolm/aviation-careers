@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="text-white antialiased">
+      <body className="text-slate-900 antialiased">
         <AuthGateProvider stats={{ jobCount: stats.jobCount, companyCount: stats.companyCount }}>
           <Header />
           <main>{children}</main>

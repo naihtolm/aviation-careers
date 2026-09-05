@@ -14,7 +14,7 @@ export function GateButtons() {
       </button>
       <button
         onClick={() => openGate("signin")}
-        className="border border-white/30 text-white font-medium px-6 py-2.5 rounded-md hover:bg-white/10 transition-colors"
+        className="border border-slate-300 text-slate-700 font-medium px-6 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
       >
         Sign in
       </button>

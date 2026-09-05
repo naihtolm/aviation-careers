@@ -37,17 +37,17 @@ export default async function SalaryDetailPage({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <p className="text-sm text-slate-400">
-        <Link href="/salaries" className="hover:underline hover:text-white transition-colors">Salaries</Link> / {career.name}
+      <p className="text-sm text-slate-500">
+        <Link href="/salaries" className="hover:underline hover:text-slate-900 transition-colors">Salaries</Link> / {career.name}
       </p>
-      <h1 className="font-display text-2xl font-semibold text-white mt-1">
+      <h1 className="font-display text-2xl font-semibold text-slate-900 mt-1">
         {career.name} Salary — {locationLabel}
       </h1>
 
       {!aggregate ? (
-        <div className="border border-white/10 rounded-lg p-6 bg-white/[0.04] mt-6 text-center">
-          <p className="font-medium text-white">No salary data yet for this location</p>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-300 hover:underline mt-2 inline-block hover:text-brand-200 transition-colors">
+        <div className="border rounded-lg p-6 bg-slate-50 mt-6 text-center">
+          <p className="font-medium text-slate-900">No salary data yet for this location</p>
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline mt-2 inline-block hover:text-brand-700 transition-colors">
             View national data instead →
           </Link>
         </div>
@@ -56,39 +56,39 @@ export default async function SalaryDetailPage({
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span
-                className={`text-xs px-2 py-1 rounded ${confidence.color === "emerald" ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300"}`}
+                className={`text-xs px-2 py-1 rounded ${confidence.color === "emerald" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}
               >
                 {confidence.label}
               </span>
               {aggregate.sample_size && (
-                <span className="text-xs text-slate-500">Based on {aggregate.sample_size.toLocaleString()} data points</span>
+                <span className="text-xs text-slate-400">Based on {aggregate.sample_size.toLocaleString()} data points</span>
               )}
             </div>
 
-            <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+            <div className="border rounded-lg p-4 bg-white space-y-3">
               {points.map((p) =>
                 p.value == null ? null : (
                   <div key={p.key} className="flex items-center gap-3">
-                    <span className="text-xs text-slate-400 w-16">{p.label}</span>
-                    <div className="flex-1 bg-white/10 rounded-full h-2">
+                    <span className="text-xs text-slate-500 w-16">{p.label}</span>
+                    <div className="flex-1 bg-slate-100 rounded-full h-2">
                       <div
-                        className="bg-accent-200 h-2 rounded-full"
+                        className="bg-brand-600 h-2 rounded-full"
                         style={{ width: `${(p.value / maxValue) * 100}%` }}
                       />
                     </div>
-                    <span className="text-sm font-medium text-white w-24 text-right font-mono-data">{fmt(p.value)}</span>
+                    <span className="text-sm font-medium text-slate-900 w-24 text-right">{fmt(p.value)}</span>
                   </div>
                 )
               )}
             </div>
 
-            <p className="text-xs text-slate-500 mt-3">
+            <p className="text-xs text-slate-400 mt-3">
               Sourced from the U.S. Bureau of Labor Statistics. Some percentiles aren't available for every career/location combination yet.
             </p>
 
             {history.length >= 2 && (
-              <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] mt-4">
-                <p className="font-medium text-white text-sm mb-3">
+              <div className="border rounded-lg p-4 bg-white mt-4">
+                <p className="font-medium text-slate-900 text-sm mb-3">
                   Median pay, {history[0].data_year}–{history[history.length - 1].data_year}
                 </p>
                 <SalaryTrendChart
@@ -105,13 +105,13 @@ export default async function SalaryDetailPage({
       )}
 
       {relatedJobs.length > 0 && (
-        <div className="border-t border-white/10 mt-10 pt-8">
-          <h2 className="text-lg font-semibold text-white mb-4">Open {career.name} jobs</h2>
+        <div className="border-t mt-10 pt-8">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Open {career.name} jobs</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {relatedJobs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.slug}`} className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-                <p className="font-medium text-white text-sm">{j.title}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{j.companies?.name}</p>
+              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                <p className="font-medium text-slate-900 text-sm">{j.title}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{j.companies?.name}</p>
               </Link>
             ))}
           </div>

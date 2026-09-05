@@ -20,7 +20,7 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
   const [isPending, startTransition] = useTransition();
 
   if (applicants.length === 0) {
-    return <p className="text-sm text-slate-400">No applicants yet.</p>;
+    return <p className="text-sm text-slate-500">No applicants yet.</p>;
   }
 
   return (
@@ -28,12 +28,12 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
       {applicants.map((a) => {
         const name = a.profile?.display_name || [a.profile?.first_name, a.profile?.last_name].filter(Boolean).join(" ") || a.profile?.email || "Applicant";
         return (
-          <div key={a.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+          <div key={a.id} className="border rounded-lg p-4 bg-white">
             <div className="flex items-start justify-between">
               <div>
-                <p className="font-medium text-white">{name}</p>
-                {a.profile?.email && <p className="text-xs text-slate-400">{a.profile.email}</p>}
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="font-medium text-slate-900">{name}</p>
+                {a.profile?.email && <p className="text-xs text-slate-500">{a.profile.email}</p>}
+                <p className="text-xs text-slate-400 mt-0.5">
                   Applied {a.applied_at ? new Date(a.applied_at).toLocaleDateString() : "—"}
                 </p>
               </div>
@@ -46,10 +46,10 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
                     await updateApplicationStatus(a.id, jobId, status);
                   });
                 }}
-                className="bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white disabled:opacity-50"
+                className="border rounded-md px-2 py-1.5 text-sm disabled:opacity-50"
               >
                 {STATUSES.map((s) => (
-                  <option key={s} value={s} className="text-slate-900">
+                  <option key={s} value={s}>
                     {titleCase(s)}
                   </option>
                 ))}
@@ -57,16 +57,16 @@ export function ApplicantList({ jobId, applicants }: { jobId: string; applicants
             </div>
 
             {a.resumeUrl && (
-              <a href={a.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-300 hover:underline mt-2 inline-block hover:text-brand-200 transition-colors">
+              <a href={a.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline mt-2 inline-block hover:text-brand-700 transition-colors">
                 View resume{a.resumeFileName ? ` (${a.resumeFileName})` : ""}
               </a>
             )}
 
             {a.screening_answers && Object.keys(a.screening_answers).length > 0 && (
-              <div className="mt-3 border-t border-white/10 pt-3 space-y-1">
+              <div className="mt-3 border-t pt-3 space-y-1">
                 {Object.entries(a.screening_answers).map(([question, answer]) => (
                   <p key={question} className="text-sm">
-                    <span className="text-slate-400">{question}:</span> <span className="text-white">{String(answer)}</span>
+                    <span className="text-slate-500">{question}:</span> <span className="text-slate-900">{String(answer)}</span>
                   </p>
                 ))}
               </div>

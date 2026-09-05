@@ -49,67 +49,67 @@ export function ReviewForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+    <form onSubmit={handleSubmit} className="border rounded-lg p-4 bg-white space-y-3">
       <div>
-        <label className="text-xs text-slate-400 block mb-1">Your rating</label>
+        <label className="text-xs text-slate-500 block mb-1">Your rating</label>
         <StarRating rating={rating} size={22} interactive onChange={setRating} />
       </div>
 
-      <label className="text-xs text-slate-400 block">
+      <label className="text-xs text-slate-500 block">
         You are a
         <select
           value={employmentStatus}
           onChange={(e) => setEmploymentStatus(e.target.value as typeof employmentStatus)}
-          className="w-full bg-white/5 border border-white/15 rounded px-2 py-1.5 mt-1 text-sm text-white"
+          className="w-full border rounded px-2 py-1.5 mt-1 text-sm text-slate-900"
         >
           {EMPLOYMENT_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value} className="text-slate-900">{o.label}</option>
+            <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
       </label>
 
-      <label className="text-xs text-slate-400 block">
+      <label className="text-xs text-slate-500 block">
         Review title
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           maxLength={120}
-          className="w-full bg-white/5 border border-white/15 rounded px-2 py-1.5 mt-1 text-sm text-white placeholder:text-slate-500"
+          className="w-full border rounded px-2 py-1.5 mt-1 text-sm text-slate-900"
           placeholder="Sum up your experience"
         />
       </label>
 
-      <label className="text-xs text-slate-400 block">
+      <label className="text-xs text-slate-500 block">
         Review
         <textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={4}
           maxLength={4000}
-          className="w-full bg-white/5 border border-white/15 rounded px-2 py-1.5 mt-1 text-sm text-white placeholder:text-slate-500"
+          className="w-full border rounded px-2 py-1.5 mt-1 text-sm text-slate-900"
           placeholder="What was it like working here?"
         />
       </label>
 
       <div className="grid sm:grid-cols-2 gap-3">
-        <label className="text-xs text-slate-400 block">
+        <label className="text-xs text-slate-500 block">
           Pros (optional)
-          <textarea value={pros} onChange={(e) => setPros(e.target.value)} rows={2} maxLength={1000} className="w-full bg-white/5 border border-white/15 rounded px-2 py-1.5 mt-1 text-sm text-white" />
+          <textarea value={pros} onChange={(e) => setPros(e.target.value)} rows={2} maxLength={1000} className="w-full border rounded px-2 py-1.5 mt-1 text-sm text-slate-900" />
         </label>
-        <label className="text-xs text-slate-400 block">
+        <label className="text-xs text-slate-500 block">
           Cons (optional)
-          <textarea value={cons} onChange={(e) => setCons(e.target.value)} rows={2} maxLength={1000} className="w-full bg-white/5 border border-white/15 rounded px-2 py-1.5 mt-1 text-sm text-white" />
+          <textarea value={cons} onChange={(e) => setCons(e.target.value)} rows={2} maxLength={1000} className="w-full border rounded px-2 py-1.5 mt-1 text-sm text-slate-900" />
         </label>
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex items-center justify-between pt-1">
-        <p className="text-xs text-slate-500">Reviews are checked before they go live.</p>
+        <p className="text-xs text-slate-400">Reviews are checked before they go live.</p>
         <button
           type="submit"
           disabled={isPending}
-          className="text-sm font-medium bg-accent-200 text-board px-4 py-1.5 rounded-md hover:bg-accent-100 transition-colors disabled:opacity-50"
+          className="text-sm font-medium bg-brand-600 text-white px-4 py-1.5 rounded-md hover:bg-brand-700 transition-colors disabled:opacity-50"
         >
           {isPending ? "Submitting…" : "Submit review"}
         </button>

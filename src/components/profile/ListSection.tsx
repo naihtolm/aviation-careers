@@ -37,20 +37,20 @@ export function ListSection({
   }
 
   return (
-    <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
-      <p className="font-medium text-white mb-3">{title}</p>
+    <div className="border rounded-lg p-4 bg-white">
+      <p className="font-medium text-slate-900 mb-3">{title}</p>
 
       {items.length === 0 ? (
-        <p className="text-sm text-slate-400 mb-4">{emptyLabel}</p>
+        <p className="text-sm text-slate-500 mb-4">{emptyLabel}</p>
       ) : (
         <ul className="space-y-2 mb-4">
           {items.map((item) => (
-            <li key={item.id} className="flex items-center justify-between border border-white/10 rounded-md px-3 py-2 text-sm text-slate-200">
+            <li key={item.id} className="flex items-center justify-between border rounded-md px-3 py-2 text-sm">
               {renderItem ? renderItem(item) : item.label}
               <button
                 onClick={() => handleDelete(item.id)}
                 disabled={isPending}
-                className="text-xs text-red-400 hover:underline disabled:opacity-50 hover:text-red-300 transition-colors"
+                className="text-xs text-red-600 hover:underline disabled:opacity-50 hover:text-red-700 transition-colors"
               >
                 Remove
               </button>
@@ -59,12 +59,12 @@ export function ListSection({
         </ul>
       )}
 
-      <form ref={formRef} action={handleAdd} className="flex flex-wrap gap-2 border-t border-white/10 pt-3">
+      <form ref={formRef} action={handleAdd} className="flex flex-wrap gap-2 border-t pt-3">
         {formFields}
         <button
           type="submit"
           disabled={isPending}
-          className="text-sm border border-white/15 text-white rounded-md px-3 py-1.5 hover:bg-white/5 transition-colors disabled:opacity-50"
+          className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50 transition-colors disabled:opacity-50"
         >
           {isPending ? "Adding…" : "Add"}
         </button>

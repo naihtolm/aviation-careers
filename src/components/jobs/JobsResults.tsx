@@ -46,8 +46,8 @@ export function JobsResults({
   function FilterGroup({ icon: Icon, title, options }: { icon: typeof Clock; title: string; options: FilterOption[] }) {
     return (
       <div>
-        <p className="text-sm font-medium text-white mb-2 flex items-center gap-1.5">
-          <Icon className="w-4 h-4 text-brand-300" />
+        <p className="text-sm font-medium text-slate-900 mb-2 flex items-center gap-1.5">
+          <Icon className="w-4 h-4 text-brand-600" />
           {title}
         </p>
         <ul className="space-y-1">
@@ -55,7 +55,7 @@ export function JobsResults({
             <li key={opt.value}>
               <button
                 onClick={() => go(opt.href)}
-                className={`text-sm block text-left ${opt.active ? "text-accent-200 font-medium" : "text-slate-400 hover:text-slate-300"}`}
+                className={`text-sm block text-left ${opt.active ? "text-slate-900 font-medium" : "text-slate-500"}`}
               >
                 {opt.label}
               </button>
@@ -76,16 +76,16 @@ export function JobsResults({
 
       <div>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-500">
             <FlipCounter value={total} /> job{total === 1 ? "" : "s"} found
           </p>
           <div className="flex items-center gap-1 text-sm">
-            <span className="text-slate-500">Sort:</span>
+            <span className="text-slate-400">Sort:</span>
             {sortOptions.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => go(opt.href)}
-                className={`px-2 py-1 rounded-md ${opt.active ? "bg-brand-400/15 text-brand-300 font-medium" : "text-slate-400 hover:bg-white/5"}`}
+                className={`px-2 py-1 rounded-md ${opt.active ? "bg-brand-50 text-brand-700 font-medium" : "text-slate-500 hover:bg-slate-100"}`}
               >
                 {opt.label}
               </button>
@@ -95,9 +95,9 @@ export function JobsResults({
 
         <div className={`transition-opacity duration-200 ${isPending ? "opacity-40" : "opacity-100"}`}>
           {jobs.length === 0 ? (
-            <div className="border border-white/10 rounded-lg p-8 text-center bg-white/[0.04]">
-              <p className="font-medium text-white">We couldn't find any exact matches</p>
-              <p className="text-sm text-slate-400 mt-1">
+            <div className="border rounded-lg p-8 text-center bg-white">
+              <p className="font-medium text-slate-900">We couldn't find any exact matches</p>
+              <p className="text-sm text-slate-500 mt-1">
                 Try broadening your filters or searching a wider location radius.
               </p>
             </div>

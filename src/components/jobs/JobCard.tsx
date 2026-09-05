@@ -33,24 +33,24 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
   return (
     <Link
       href={`/jobs/${job.slug}`}
-      className={`block border-y border-r border-l-4 border-white/10 ${colors.border} bg-white/[0.04] rounded-lg p-4 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
+      className={`block border border-l-4 ${colors.border} ${colors.cardWash} rounded-lg p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
     >
       <div className="flex items-start gap-3">
         <CompanyLogo name={job.companies?.name ?? "?"} website={job.companies?.website} size={40} />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-medium text-white leading-snug min-w-0">{job.title}</h3>
+            <h3 className="font-medium text-slate-900 leading-snug min-w-0">{job.title}</h3>
             <SaveJobButton jobId={job.id} initialSaved={initialSaved} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-500">
               {job.companies?.name}
               {job.companies?.verification_status === "approved" && (
-                <span className="ml-1 text-brand-300" title="Verified employer">✓</span>
+                <span className="ml-1 text-brand-600" title="Verified employer">✓</span>
               )}
             </p>
             {fresh && (
-              <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-500/15 text-emerald-300 px-1.5 py-0.5 rounded shrink-0">
+              <span className="text-[10px] font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded shrink-0">
                 New
               </span>
             )}
@@ -62,7 +62,7 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
           )}
         </div>
       </div>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-400">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-slate-500">
         <span className="inline-flex items-center gap-1">
           <MapPin className="w-3.5 h-3.5 shrink-0" />
           {primaryLocation(job.job_locations)}
@@ -80,13 +80,13 @@ export function JobCard({ job, initialSaved = false }: { job: any; initialSaved?
           </span>
         )}
         {salary && (
-          <span className="inline-flex items-center gap-1 text-accent-200 font-medium font-mono-data">
+          <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
             <DollarSign className="w-3.5 h-3.5 shrink-0" />
             {salary}
           </span>
         )}
       </div>
-      {posted && <p className="text-xs text-slate-500 mt-2">Posted {posted}</p>}
+      {posted && <p className="text-xs text-slate-400 mt-2">Posted {posted}</p>}
     </Link>
   );
 }

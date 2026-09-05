@@ -62,21 +62,21 @@ export default async function VeteransPage() {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         <section>
-          <h2 className="text-lg font-semibold text-white mb-1">Translate your experience</h2>
-          <p className="text-sm text-slate-400 mb-5">
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">Translate your experience</h2>
+          <p className="text-sm text-slate-500 mb-5">
             Common military aviation roles and the civilian careers they lead into.
           </p>
           <div className="space-y-3">
             {TRANSLATIONS.map((row) => (
-              <div key={row.militaryRole} className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
-                <p className="font-medium text-white">{row.militaryRole}</p>
-                <p className="text-sm text-slate-400 mt-1">{row.blurb}</p>
+              <div key={row.militaryRole} className="border rounded-lg p-4 bg-white shadow-sm">
+                <p className="font-medium text-slate-900">{row.militaryRole}</p>
+                <p className="text-sm text-slate-500 mt-1">{row.blurb}</p>
                 <div className="flex flex-wrap items-center gap-2 mt-3">
                   {row.civilianCareers.map((c) => (
                     <Link
                       key={c.slug}
                       href={`/careers/${c.slug}`}
-                      className="inline-flex items-center gap-1 text-sm font-medium text-brand-300 bg-brand-400/15 px-3 py-1.5 rounded-full hover:bg-brand-400/25 transition-colors"
+                      className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 bg-brand-50 px-3 py-1.5 rounded-full hover:bg-brand-100 transition-colors"
                     >
                       {c.name}
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -88,46 +88,46 @@ export default async function VeteransPage() {
           </div>
         </section>
 
-        <section className="mt-10 pt-8 border-t border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-1">Explore veteran-relevant sectors</h2>
-          <p className="text-sm text-slate-400 mb-5">
+        <section className="mt-10 pt-8 border-t">
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">Explore veteran-relevant sectors</h2>
+          <p className="text-sm text-slate-500 mb-5">
             These sectors are where military aviation experience is most directly valued.
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/sectors/military-defense"
-              className="text-sm font-medium text-slate-300 border border-white/15 rounded-full px-4 py-2 hover:border-brand-300 hover:bg-white/5 transition-colors"
+              className="text-sm font-medium text-slate-700 border rounded-full px-4 py-2 hover:border-brand-300 hover:bg-slate-50 transition-colors"
             >
               Military & Defense →
             </Link>
             <Link
               href="/sectors/law-enforcement"
-              className="text-sm font-medium text-slate-300 border border-white/15 rounded-full px-4 py-2 hover:border-brand-300 hover:bg-white/5 transition-colors"
+              className="text-sm font-medium text-slate-700 border rounded-full px-4 py-2 hover:border-brand-300 hover:bg-slate-50 transition-colors"
             >
               Law Enforcement →
             </Link>
             <Link
               href="/sectors/ems-air-ambulance"
-              className="text-sm font-medium text-slate-300 border border-white/15 rounded-full px-4 py-2 hover:border-brand-300 hover:bg-white/5 transition-colors"
+              className="text-sm font-medium text-slate-700 border rounded-full px-4 py-2 hover:border-brand-300 hover:bg-slate-50 transition-colors"
             >
               EMS / Air Ambulance →
             </Link>
             <Link
               href="/sectors/cargo-logistics"
-              className="text-sm font-medium text-slate-300 border border-white/15 rounded-full px-4 py-2 hover:border-brand-300 hover:bg-white/5 transition-colors"
+              className="text-sm font-medium text-slate-700 border rounded-full px-4 py-2 hover:border-brand-300 hover:bg-slate-50 transition-colors"
             >
               Cargo & Logistics →
             </Link>
           </div>
         </section>
 
-        <section className="mt-10 pt-8 border-t border-white/10">
-          <h2 className="text-lg font-semibold text-white mb-1">Veteran-friendly employers</h2>
-          <p className="text-sm text-slate-400 mb-5">Companies that have told us they actively welcome veteran applicants.</p>
+        <section className="mt-10 pt-8 border-t">
+          <h2 className="text-lg font-semibold text-slate-900 mb-1">Veteran-friendly employers</h2>
+          <p className="text-sm text-slate-500 mb-5">Companies that have told us they actively welcome veteran applicants.</p>
           {companies.length === 0 ? (
-            <div className="border border-white/10 rounded-lg p-6 bg-white/[0.04] text-center">
-              <p className="text-white font-medium">No employers listed yet</p>
-              <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
+            <div className="border rounded-lg p-6 bg-white text-center">
+              <p className="text-slate-900 font-medium">No employers listed yet</p>
+              <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
                 We're actively growing this list. If your company welcomes veteran applicants, say so when you register
                 and you'll show up here.
               </p>
@@ -144,12 +144,12 @@ export default async function VeteransPage() {
                 <Link
                   key={c.id}
                   href={`/companies/${c.slug}`}
-                  className="flex items-center gap-3 border border-white/10 rounded-xl p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all"
+                  className="flex items-center gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
                   <CompanyLogo name={c.name} website={c.website} size={36} />
                   <div className="min-w-0">
-                    <p className="font-medium text-white truncate">{c.name}</p>
-                    <p className="flex items-center gap-1 text-xs text-slate-400 mt-0.5">
+                    <p className="font-medium text-slate-900 truncate">{c.name}</p>
+                    <p className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
                       <Briefcase className="w-3.5 h-3.5" />
                       {c.jobCount} open job{c.jobCount === 1 ? "" : "s"}
                     </p>

@@ -41,7 +41,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
 
   return (
     <div>
-      <div className="flex gap-1 border-b border-white/10 mb-4">
+      <div className="flex gap-1 border-b mb-4">
         {TABS.map((t) => {
           const count = withStatus.filter((j) => j.derived === t).length;
           return (
@@ -49,7 +49,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
               key={t}
               onClick={() => setTab(t)}
               className={`px-3 py-2 text-sm capitalize border-b-2 -mb-px transition-colors ${
-                tab === t ? "border-accent-200 text-white font-medium" : "border-transparent text-slate-400 hover:text-slate-200"
+                tab === t ? "border-accent-600 text-slate-900 font-medium" : "border-transparent text-slate-500"
               }`}
             >
               {t} ({count})
@@ -58,20 +58,20 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
         })}
       </div>
 
-      {filtered.length === 0 && <p className="text-sm text-slate-400">No {tab} jobs.</p>}
+      {filtered.length === 0 && <p className="text-sm text-slate-500">No {tab} jobs.</p>}
 
       <div className="space-y-3">
         {filtered.map((job) => (
-          <div key={job.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.04] flex items-center justify-between">
+          <div key={job.id} className="border rounded-lg p-4 bg-white flex items-center justify-between">
             <div>
               {job.derived === "draft" ? (
-                <span className="font-medium text-white">{job.title || "Untitled draft"}</span>
+                <span className="font-medium text-slate-900">{job.title || "Untitled draft"}</span>
               ) : (
-                <Link href={`/jobs/${job.slug}`} className="font-medium text-white hover:underline hover:text-brand-300 transition-colors">
+                <Link href={`/jobs/${job.slug}`} className="font-medium text-slate-900 hover:underline hover:text-brand-600 transition-colors">
                   {job.title}
                 </Link>
               )}
-              <p className="text-xs text-slate-400 mt-0.5 capitalize">
+              <p className="text-xs text-slate-500 mt-0.5 capitalize">
                 {job.derived === "draft" ? (
                   "Not published yet"
                 ) : (
@@ -80,7 +80,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                     {job.application_type === "platform_application" && (
                       <>
                         {" · "}
-                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-brand-300 hover:underline hover:text-brand-200 transition-colors">
+                        <Link href={`/employer/jobs/${job.id}/applicants`} className="text-brand-600 hover:underline hover:text-brand-700 transition-colors">
                           {job.applicantCount} applicant{job.applicantCount === 1 ? "" : "s"}
                         </Link>
                       </>
@@ -88,13 +88,13 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                   </>
                 )}
                 {job.derived === "expired" && job.expires_at && (
-                  <span className="text-amber-300"> · expired {new Date(job.expires_at).toLocaleDateString()}</span>
+                  <span className="text-amber-700"> · expired {new Date(job.expires_at).toLocaleDateString()}</span>
                 )}
               </p>
             </div>
             <div className="flex gap-2">
               {(job.derived === "draft" || job.derived === "active" || job.derived === "paused" || job.derived === "expired") && (
-                <Link href={`/employer/jobs/${job.id}/edit`} className="text-sm border border-white/15 text-slate-200 rounded-md px-3 py-1.5 hover:bg-white/5 transition-colors">
+                <Link href={`/employer/jobs/${job.id}/edit`} className="text-sm border rounded-md px-3 py-1.5 hover:bg-slate-50 transition-colors">
                   Edit
                 </Link>
               )}
@@ -111,7 +111,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                 <button
                   disabled={isPending}
                   onClick={() => handleStatusChange(job.id, "paused")}
-                  className="text-sm border border-white/15 text-slate-200 rounded-md px-3 py-1.5 disabled:opacity-50 hover:bg-white/5 transition-colors"
+                  className="text-sm border rounded-md px-3 py-1.5 disabled:opacity-50"
                 >
                   Pause
                 </button>
@@ -120,7 +120,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                 <button
                   disabled={isPending}
                   onClick={() => handleStatusChange(job.id, "active")}
-                  className="text-sm border border-white/15 text-slate-200 rounded-md px-3 py-1.5 disabled:opacity-50 hover:bg-white/5 transition-colors"
+                  className="text-sm border rounded-md px-3 py-1.5 disabled:opacity-50"
                 >
                   Resume
                 </button>
@@ -129,7 +129,7 @@ export function ManageJobsList({ jobs }: { jobs: Job[] }) {
                 <button
                   disabled={isPending}
                   onClick={() => handleStatusChange(job.id, "archived")}
-                  className="text-sm border border-red-400/30 text-red-300 rounded-md px-3 py-1.5 disabled:opacity-50 hover:bg-red-500/10 transition-colors"
+                  className="text-sm border border-red-300 text-red-600 rounded-md px-3 py-1.5 disabled:opacity-50"
                 >
                   Archive
                 </button>

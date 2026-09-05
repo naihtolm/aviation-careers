@@ -31,20 +31,20 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-semibold text-white">
+      <h1 className="text-2xl font-semibold text-slate-900">
         Welcome{data.profile?.first_name ? `, ${data.profile.first_name}` : ""}
       </h1>
 
-      <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] mt-6">
+      <div className="border rounded-lg p-4 bg-white mt-6">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-white">Profile completion</p>
-          <p className="text-sm text-slate-400">{completion}%</p>
+          <p className="text-sm font-medium text-slate-900">Profile completion</p>
+          <p className="text-sm text-slate-500">{completion}%</p>
         </div>
-        <div className="bg-white/10 rounded-full h-2">
-          <div className="bg-accent-200 h-2 rounded-full" style={{ width: `${completion}%` }} />
+        <div className="bg-slate-100 rounded-full h-2">
+          <div className="bg-brand-600 h-2 rounded-full" style={{ width: `${completion}%` }} />
         </div>
-        <p className="text-sm text-slate-400 mt-3">{nextStepSuggestion(data)}</p>
-        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-brand-300 hover:underline hover:text-brand-200 transition-colors">
+        <p className="text-sm text-slate-500 mt-3">{nextStepSuggestion(data)}</p>
+        <Link href="/dashboard/profile" className="inline-block mt-3 text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
           Edit profile →
         </Link>
       </div>
@@ -65,51 +65,51 @@ export default async function DashboardPage() {
       </Link>
 
       <div className="grid sm:grid-cols-2 gap-4 mt-4">
-        <Link href="/jobs" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
+        <Link href="/jobs" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <Search className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-white">Browse jobs</p>
-            <p className="text-sm text-slate-400 mt-0.5">Search real aviation openings.</p>
+            <p className="font-medium text-slate-900">Browse jobs</p>
+            <p className="text-sm text-slate-500 mt-0.5">Search real aviation openings.</p>
           </div>
         </Link>
-        <Link href="/dashboard/profile" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
+        <Link href="/dashboard/profile" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <UserRound className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-white">Your profile</p>
-            <p className="text-sm text-slate-400 mt-0.5">
+            <p className="font-medium text-slate-900">Your profile</p>
+            <p className="text-sm text-slate-500 mt-0.5">
               {data.experience.length} experience · {data.education.length} education · {data.skills.length} skills
             </p>
           </div>
         </Link>
-        <Link href="/dashboard/saved" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
+        <Link href="/dashboard/saved" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <Bookmark className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-white">Saved jobs</p>
-            <p className="text-sm text-slate-400 mt-0.5">{savedJobs.length} saved</p>
+            <p className="font-medium text-slate-900">Saved jobs</p>
+            <p className="text-sm text-slate-500 mt-0.5">{savedJobs.length} saved</p>
           </div>
         </Link>
-        <Link href="/dashboard/applications" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
+        <Link href="/dashboard/applications" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-white">Applications</p>
-            <p className="text-sm text-slate-400 mt-0.5">{applicationCount} tracked</p>
+            <p className="font-medium text-slate-900">Applications</p>
+            <p className="text-sm text-slate-500 mt-0.5">{applicationCount} tracked</p>
           </div>
         </Link>
-        <Link href="/dashboard/alerts" className="flex items-center gap-3 border border-white/10 rounded-lg p-4 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all sm:col-span-2">
-          <div className="w-9 h-9 rounded-lg bg-brand-400/15 text-brand-300 flex items-center justify-center shrink-0">
+        <Link href="/dashboard/alerts" className="flex items-center gap-3 border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all sm:col-span-2">
+          <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <Bell className="w-5 h-5" />
           </div>
           <div>
-            <p className="font-medium text-white">Job alerts</p>
-            <p className="text-sm text-slate-400 mt-0.5">
+            <p className="font-medium text-slate-900">Job alerts</p>
+            <p className="text-sm text-slate-500 mt-0.5">
               {alerts.filter((a: any) => a.is_active).length} active alert{alerts.filter((a: any) => a.is_active).length === 1 ? "" : "s"}
             </p>
           </div>

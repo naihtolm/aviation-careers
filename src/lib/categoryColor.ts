@@ -5,87 +5,87 @@ export interface CategoryColorClasses {
   tagBg: string;
   tagText: string;
   text: string;
+  cardWash: string;
 }
 
-// Dark-surface identities: a saturated 400/500-weight border (600-weight
-// reads muddy against a near-black card, so this bumps a step brighter
-// than the old light-theme values), an icon badge as a translucent tint
-// of the same hue rather than a flat light-50 fill, and text lightened
-// to a 300-weight so it stays readable on dark without glowing. One
-// shared dark card surface now carries every category (see JobCard.tsx)
-// -- the old per-category cardWash gradient (light-50 -> white) doesn't
-// have a dark equivalent worth maintaining separately; the colored
-// border + icon + tag already carry the identity.
 const ENGINEERING: CategoryColorClasses = {
-  iconBg: "bg-indigo-500/15",
-  iconText: "text-indigo-300",
-  border: "border-indigo-400",
-  tagBg: "bg-indigo-500/15",
-  tagText: "text-indigo-300",
-  text: "text-indigo-300",
+  iconBg: "bg-indigo-50",
+  iconText: "text-indigo-600",
+  border: "border-indigo-600",
+  tagBg: "bg-indigo-50",
+  tagText: "text-indigo-700",
+  text: "text-indigo-600",
+  cardWash: "bg-gradient-to-br from-indigo-50/60 to-white",
 };
 
 const MAINTENANCE: CategoryColorClasses = {
-  iconBg: "bg-amber-500/15",
-  iconText: "text-amber-300",
-  border: "border-amber-400",
-  tagBg: "bg-amber-500/15",
-  tagText: "text-amber-300",
-  text: "text-amber-300",
+  iconBg: "bg-amber-50",
+  iconText: "text-amber-700",
+  border: "border-amber-700",
+  tagBg: "bg-amber-50",
+  tagText: "text-amber-800",
+  text: "text-amber-700",
+  cardWash: "bg-gradient-to-br from-amber-50/60 to-white",
 };
 
 const FLIGHT: CategoryColorClasses = {
-  iconBg: "bg-sky-500/15",
-  iconText: "text-sky-300",
-  border: "border-sky-400",
-  tagBg: "bg-sky-500/15",
-  tagText: "text-sky-300",
-  text: "text-sky-300",
+  iconBg: "bg-sky-50",
+  iconText: "text-sky-700",
+  border: "border-sky-700",
+  tagBg: "bg-sky-50",
+  tagText: "text-sky-800",
+  text: "text-sky-700",
+  cardWash: "bg-gradient-to-br from-sky-50/60 to-white",
 };
 
 const DEFAULT: CategoryColorClasses = {
-  iconBg: "bg-brand-400/15",
-  iconText: "text-brand-300",
-  border: "border-brand-400",
-  tagBg: "bg-brand-400/15",
-  tagText: "text-brand-300",
-  text: "text-brand-300",
+  iconBg: "bg-brand-50",
+  iconText: "text-brand-600",
+  border: "border-brand-600",
+  tagBg: "bg-brand-50",
+  tagText: "text-brand-700",
+  text: "text-brand-600",
+  cardWash: "bg-gradient-to-br from-brand-50/60 to-white",
 };
 
 const EMERGENCY: CategoryColorClasses = {
-  iconBg: "bg-rose-500/15",
-  iconText: "text-rose-300",
-  border: "border-rose-400",
-  tagBg: "bg-rose-500/15",
-  tagText: "text-rose-300",
-  text: "text-rose-300",
+  iconBg: "bg-rose-50",
+  iconText: "text-rose-600",
+  border: "border-rose-600",
+  tagBg: "bg-rose-50",
+  tagText: "text-rose-700",
+  text: "text-rose-600",
+  cardWash: "bg-gradient-to-br from-rose-50/60 to-white",
 };
 
 const MILITARY: CategoryColorClasses = {
-  iconBg: "bg-stone-400/15",
-  iconText: "text-stone-300",
-  border: "border-stone-400",
-  tagBg: "bg-stone-400/15",
-  tagText: "text-stone-300",
-  text: "text-stone-300",
+  iconBg: "bg-stone-200",
+  iconText: "text-stone-700",
+  border: "border-stone-600",
+  tagBg: "bg-stone-100",
+  tagText: "text-stone-700",
+  text: "text-stone-600",
+  cardWash: "bg-gradient-to-br from-stone-100/60 to-white",
 };
 
 const CARGO: CategoryColorClasses = {
-  iconBg: "bg-teal-500/15",
-  iconText: "text-teal-300",
-  border: "border-teal-400",
-  tagBg: "bg-teal-500/15",
-  tagText: "text-teal-300",
-  text: "text-teal-300",
+  iconBg: "bg-teal-50",
+  iconText: "text-teal-700",
+  border: "border-teal-600",
+  tagBg: "bg-teal-50",
+  tagText: "text-teal-800",
+  text: "text-teal-700",
+  cardWash: "bg-gradient-to-br from-teal-50/60 to-white",
 };
 
 const GENERAL_AVIATION: CategoryColorClasses = {
-  iconBg: "bg-violet-500/15",
-  iconText: "text-violet-300",
-  border: "border-violet-400",
-  tagBg: "bg-violet-500/15",
-  tagText: "text-violet-300",
-  text: "text-violet-300",
+  iconBg: "bg-violet-50",
+  iconText: "text-violet-600",
+  border: "border-violet-600",
+  tagBg: "bg-violet-50",
+  tagText: "text-violet-700",
+  text: "text-violet-600",
+  cardWash: "bg-gradient-to-br from-violet-50/60 to-white",
 };
 
 // Same substring matching as CategoryIcon so a career/category always gets

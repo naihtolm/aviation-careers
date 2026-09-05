@@ -59,28 +59,28 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto" role="img" aria-label="Median salary by year">
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--color-accent-200)" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="var(--color-accent-200)" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="var(--color-brand-200)" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="var(--color-brand-200)" stopOpacity="0.15" />
           </linearGradient>
         </defs>
 
         {/* Recessive gridlines + axis labels */}
         {yTicks.map((v, i) => (
           <g key={i}>
-            <line x1={padding.left} x2={width - padding.right} y1={y(v)} y2={y(v)} stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
-            <text x={padding.left - 8} y={y(v)} textAnchor="end" dominantBaseline="middle" className="fill-slate-500" fontSize={10}>
+            <line x1={padding.left} x2={width - padding.right} y1={y(v)} y2={y(v)} stroke="#e2e8f0" strokeWidth={1} />
+            <text x={padding.left - 8} y={y(v)} textAnchor="end" dominantBaseline="middle" className="fill-slate-400" fontSize={10}>
               {fmt(v)}
             </text>
           </g>
         ))}
         {points.map((p, i) => (
-          <text key={p.year} x={x(i)} y={height - 8} textAnchor="middle" className="fill-slate-400" fontSize={11}>
+          <text key={p.year} x={x(i)} y={height - 8} textAnchor="middle" className="fill-slate-500" fontSize={11}>
             {p.year}
           </text>
         ))}
 
         {bandPath && <path d={bandPath} fill={`url(#${gradientId})`} />}
-        <path d={medianPath} fill="none" stroke="var(--color-accent-200)" strokeWidth={2} strokeLinejoin="round" />
+        <path d={medianPath} fill="none" stroke="var(--color-brand-600)" strokeWidth={2} strokeLinejoin="round" />
 
         {points.map((p, i) => (
           <g key={p.year}>
@@ -94,7 +94,7 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
               onMouseLeave={() => setHoverIndex((cur) => (cur === i ? null : cur))}
               style={{ cursor: "pointer" }}
             />
-            <circle cx={x(i)} cy={y(p.p50)} r={4} fill="var(--color-accent-200)" stroke="var(--color-board-2)" strokeWidth={1.5} />
+            <circle cx={x(i)} cy={y(p.p50)} r={4} fill="var(--color-brand-600)" stroke="white" strokeWidth={1.5} />
           </g>
         ))}
 
@@ -104,7 +104,7 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
             x2={x(hoverIndex)}
             y1={padding.top}
             y2={padding.top + plotH}
-            stroke="rgba(255,255,255,0.25)"
+            stroke="var(--color-brand-400)"
             strokeWidth={1}
             strokeDasharray="3 3"
           />
@@ -112,9 +112,9 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
       </svg>
 
       {hoverIndex != null && (
-        <div className="text-xs bg-board text-white rounded px-2.5 py-1.5 inline-block -mt-2 shadow-lg border border-white/10">
+        <div className="text-xs bg-slate-900 text-white rounded px-2.5 py-1.5 inline-block -mt-2 shadow-lg">
           <span className="font-medium">{points[hoverIndex].year}</span>
-          <span className="mx-1.5 text-slate-500">·</span>
+          <span className="mx-1.5 text-slate-400">·</span>
           Median {fmt(points[hoverIndex].p50)}
           {points[hoverIndex].p25 != null && points[hoverIndex].p75 != null && (
             <span className="text-slate-400"> ({fmt(points[hoverIndex].p25!)}–{fmt(points[hoverIndex].p75!)})</span>
@@ -123,17 +123,17 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
       )}
 
       {hasBand && (
-        <p className="text-xs text-slate-500 mt-2 flex items-center gap-1.5">
-          <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "var(--color-accent-200)", opacity: 0.35 }} />
+        <p className="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+          <span className="inline-block w-3 h-2 rounded-sm" style={{ background: "var(--color-brand-200)", opacity: 0.5 }} />
           Shaded band = 25th–75th percentile range
         </p>
       )}
 
       <details className="mt-3">
-        <summary className="text-xs text-slate-400 cursor-pointer hover:text-slate-300 select-none">View as table</summary>
+        <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-700 select-none">View as table</summary>
         <table className="w-full text-xs mt-2 border-collapse">
           <thead>
-            <tr className="text-left text-slate-500 border-b border-white/10">
+            <tr className="text-left text-slate-400 border-b">
               <th className="py-1.5 font-medium">Year</th>
               <th className="py-1.5 font-medium">25th pct</th>
               <th className="py-1.5 font-medium">Median</th>
@@ -142,11 +142,11 @@ export function SalaryTrendChart({ points }: { points: SalaryTrendPoint[] }) {
           </thead>
           <tbody>
             {points.map((p) => (
-              <tr key={p.year} className="border-b border-white/5">
-                <td className="py-1.5 text-slate-300">{p.year}</td>
-                <td className="py-1.5 text-slate-300">{p.p25 != null ? fmt(p.p25) : "—"}</td>
-                <td className="py-1.5 text-white font-medium">{fmt(p.p50)}</td>
-                <td className="py-1.5 text-slate-300">{p.p75 != null ? fmt(p.p75) : "—"}</td>
+              <tr key={p.year} className="border-b border-slate-100">
+                <td className="py-1.5 text-slate-700">{p.year}</td>
+                <td className="py-1.5 text-slate-700">{p.p25 != null ? fmt(p.p25) : "—"}</td>
+                <td className="py-1.5 text-slate-900 font-medium">{fmt(p.p50)}</td>
+                <td className="py-1.5 text-slate-700">{p.p75 != null ? fmt(p.p75) : "—"}</td>
               </tr>
             ))}
           </tbody>

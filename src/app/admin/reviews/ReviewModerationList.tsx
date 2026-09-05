@@ -65,14 +65,14 @@ function ReviewCard({ review, onSettled }: { review: PendingReview; onSettled: (
     <div
       className={`border rounded-lg p-4 mb-3 transition-all duration-300 ${
         collapsing ? "opacity-0 -translate-x-2 max-h-0 !p-0 !mb-0 overflow-hidden border-none" : "max-h-[600px]"
-      } ${outcome === "approved" ? "bg-emerald-500/10 border-emerald-400/30" : outcome === "rejected" ? "bg-red-500/10 border-red-400/30" : "bg-white/[0.04] border-white/10"}`}
+      } ${outcome === "approved" ? "bg-emerald-50 border-emerald-200" : outcome === "rejected" ? "bg-red-50 border-red-200" : "bg-white"}`}
     >
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <p className="text-xs text-slate-400">{review.companyName} · {review.reviewerName} · {EMPLOYMENT_LABEL[review.employment_status] ?? review.employment_status}</p>
+          <p className="text-xs text-slate-500">{review.companyName} · {review.reviewerName} · {EMPLOYMENT_LABEL[review.employment_status] ?? review.employment_status}</p>
           <div className="flex items-center gap-2 mt-1">
             <StarRating rating={review.rating} size={15} />
-            <span className="font-medium text-white text-sm">{review.title}</span>
+            <span className="font-medium text-slate-900 text-sm">{review.title}</span>
           </div>
         </div>
         {!outcome && (
@@ -87,7 +87,7 @@ function ReviewCard({ review, onSettled }: { review: PendingReview; onSettled: (
             <button
               onClick={handleReject}
               disabled={isPending}
-              className="inline-flex items-center gap-1 text-xs font-medium border border-red-400/30 text-red-300 px-2.5 py-1.5 rounded-md hover:bg-red-500/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1 text-xs font-medium border border-red-200 text-red-700 px-2.5 py-1.5 rounded-md hover:bg-red-50 disabled:opacity-50"
             >
               <X className="w-3.5 h-3.5" /> Reject
             </button>
@@ -95,25 +95,25 @@ function ReviewCard({ review, onSettled }: { review: PendingReview; onSettled: (
         )}
       </div>
 
-      <p className="text-sm text-slate-300 mt-2 whitespace-pre-wrap">{review.body}</p>
+      <p className="text-sm text-slate-700 mt-2 whitespace-pre-wrap">{review.body}</p>
       {(review.pros || review.cons) && (
         <div className="grid sm:grid-cols-2 gap-3 mt-3">
           {review.pros && (
-            <div className="text-xs"><p className="font-medium text-emerald-300">Pros</p><p className="text-slate-400 mt-0.5 whitespace-pre-wrap">{review.pros}</p></div>
+            <div className="text-xs"><p className="font-medium text-emerald-700">Pros</p><p className="text-slate-600 mt-0.5 whitespace-pre-wrap">{review.pros}</p></div>
           )}
           {review.cons && (
-            <div className="text-xs"><p className="font-medium text-red-300">Cons</p><p className="text-slate-400 mt-0.5 whitespace-pre-wrap">{review.cons}</p></div>
+            <div className="text-xs"><p className="font-medium text-red-700">Cons</p><p className="text-slate-600 mt-0.5 whitespace-pre-wrap">{review.cons}</p></div>
           )}
         </div>
       )}
 
       {showRejectReason && !outcome && (
-        <div className="flex items-center gap-2 mt-3 border-t border-white/10 pt-3">
+        <div className="flex items-center gap-2 mt-3 border-t pt-3">
           <input
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Reason (shown in the audit log, not to the reviewer)"
-            className="flex-1 bg-white/5 border border-white/15 rounded px-2 py-1.5 text-sm text-white placeholder:text-slate-500"
+            className="flex-1 border rounded px-2 py-1.5 text-sm text-slate-900"
           />
           <button onClick={handleReject} disabled={isPending} className="text-xs font-medium bg-red-600 text-white px-3 py-1.5 rounded-md hover:bg-red-700 disabled:opacity-50">
             Confirm reject
@@ -133,8 +133,8 @@ export function ReviewModerationList({ initialReviews }: { initialReviews: Pendi
 
   if (reviews.length === 0) {
     return (
-      <div className="flex flex-col items-center text-center gap-2 border border-dashed border-white/15 rounded-xl py-16 text-slate-400">
-        <Inbox className="w-8 h-8 text-slate-500" />
+      <div className="flex flex-col items-center text-center gap-2 border border-dashed rounded-xl py-16 text-slate-500">
+        <Inbox className="w-8 h-8 text-slate-300" />
         <p>No reviews waiting for moderation.</p>
       </div>
     );

@@ -18,18 +18,18 @@ export default async function AdminEmployersPage() {
     .limit(50);
 
   if (error) {
-    return <p className="text-red-400">Failed to load verifications: {error.message}</p>;
+    return <p className="text-red-600">Failed to load verifications: {error.message}</p>;
   }
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-white mb-2">Employer Verification</h2>
-      <p className="text-sm text-slate-400 mb-6">
+      <h2 className="text-xl font-semibold mb-2">Employer Verification</h2>
+      <p className="text-sm text-gray-500 mb-6">
         {verifications?.length ?? 0} pending employer{(verifications?.length ?? 0) === 1 ? "" : "s"} awaiting review.
       </p>
 
       {(!verifications || verifications.length === 0) && (
-        <p className="text-slate-400">Nothing waiting for review right now.</p>
+        <p className="text-gray-500">Nothing waiting for review right now.</p>
       )}
 
       <div className="space-y-4">

@@ -66,18 +66,18 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
     <div className="max-w-md mx-auto px-4 py-16">
       <div className="flex gap-1 mb-8">
         {STEPS.map((_, i) => (
-          <div key={i} className={`flex-1 h-1 rounded-full ${i <= step ? "bg-accent-200" : "bg-white/10"}`} />
+          <div key={i} className={`flex-1 h-1 rounded-full ${i <= step ? "bg-brand-600" : "bg-slate-200"}`} />
         ))}
       </div>
 
       {step === 0 && (
         <div>
-          <h1 className="text-xl font-semibold text-white">What are you interested in?</h1>
-          <p className="text-sm text-slate-400 mt-1">Pick as many as apply — you can change this later.</p>
+          <h1 className="text-xl font-semibold text-slate-900">What are you interested in?</h1>
+          <p className="text-sm text-slate-500 mt-1">Pick as many as apply — you can change this later.</p>
           <div className="space-y-2 mt-6">
-            {categories.length === 0 && <p className="text-sm text-slate-400">No career categories available yet.</p>}
+            {categories.length === 0 && <p className="text-sm text-slate-500">No career categories available yet.</p>}
             {categories.map((cat) => (
-              <label key={cat.id} className="flex items-start gap-2 border border-white/15 rounded-md px-3 py-2 text-sm text-slate-200 cursor-pointer hover:bg-white/5 transition-colors">
+              <label key={cat.id} className="flex items-start gap-2 border rounded-md px-3 py-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
                   checked={careerCategoryIds.includes(cat.id)}
@@ -85,8 +85,8 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
                   className="mt-0.5"
                 />
                 <span>
-                  <span className="font-medium text-white">{cat.name}</span>
-                  {cat.description && <span className="block text-xs text-slate-400">{cat.description}</span>}
+                  <span className="font-medium">{cat.name}</span>
+                  {cat.description && <span className="block text-xs text-slate-500">{cat.description}</span>}
                 </span>
               </label>
             ))}
@@ -96,10 +96,10 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
 
       {step === 1 && (
         <div>
-          <h1 className="text-xl font-semibold text-white">How much experience do you have?</h1>
+          <h1 className="text-xl font-semibold text-slate-900">How much experience do you have?</h1>
           <div className="space-y-2 mt-6">
             {EXPERIENCE_LEVELS.map((level) => (
-              <label key={level.value} className="flex items-center gap-2 border border-white/15 rounded-md px-3 py-2 text-sm text-slate-200 cursor-pointer hover:bg-white/5 transition-colors">
+              <label key={level.value} className="flex items-center gap-2 border rounded-md px-3 py-2 text-sm cursor-pointer">
                 <input
                   type="radio"
                   name="experience_level"
@@ -115,25 +115,25 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
 
       {step === 2 && (
         <div>
-          <h1 className="text-xl font-semibold text-white">Where are you located?</h1>
+          <h1 className="text-xl font-semibold text-slate-900">Where are you located?</h1>
           <div className="space-y-3 mt-6">
             <input
               placeholder="City"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white placeholder:text-slate-500"
+              className="w-full border rounded-md px-3 py-2"
             />
             <input
               placeholder="State (e.g. CA)"
               value={state}
               onChange={(e) => setState(e.target.value)}
-              className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white placeholder:text-slate-500"
+              className="w-full border rounded-md px-3 py-2"
             />
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={willingToRelocate} onChange={(e) => setWillingToRelocate(e.target.checked)} />
               Willing to relocate
             </label>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={openToRemote} onChange={(e) => setOpenToRemote(e.target.checked)} />
               Open to remote work
             </label>
@@ -143,24 +143,24 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
 
       {step === 3 && (
         <div>
-          <h1 className="text-xl font-semibold text-white">Any certifications? (optional)</h1>
-          <p className="text-sm text-slate-400 mt-1">A&P, ATP, IA, etc. — you can always add more later.</p>
+          <h1 className="text-xl font-semibold text-slate-900">Any certifications? (optional)</h1>
+          <p className="text-sm text-slate-500 mt-1">A&P, ATP, IA, etc. — you can always add more later.</p>
           <div className="flex gap-2 mt-6">
             <input
               placeholder="e.g. A&P Certificate"
               value={certInput}
               onChange={(e) => setCertInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addCert())}
-              className="flex-1 bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white placeholder:text-slate-500"
+              className="flex-1 border rounded-md px-3 py-2"
             />
-            <button type="button" onClick={addCert} className="border border-white/15 text-white rounded-md px-3 py-2 text-sm hover:bg-white/5 transition-colors">
+            <button type="button" onClick={addCert} className="border rounded-md px-3 py-2 text-sm">
               Add
             </button>
           </div>
           {certifications.length > 0 && (
             <ul className="mt-3 space-y-1">
               {certifications.map((c, i) => (
-                <li key={i} className="text-sm text-slate-200 bg-white/10 rounded px-2 py-1 inline-block mr-2">
+                <li key={i} className="text-sm bg-slate-100 rounded px-2 py-1 inline-block mr-2">
                   {c}
                 </li>
               ))}
@@ -171,21 +171,21 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
 
       {step === 4 && (
         <div>
-          <h1 className="text-xl font-semibold text-white">What's your salary goal?</h1>
+          <h1 className="text-xl font-semibold text-slate-900">What's your salary goal?</h1>
           <div className="grid grid-cols-2 gap-3 mt-6">
             <input
               type="number"
               placeholder="Min ($/yr)"
               value={salaryMin}
               onChange={(e) => setSalaryMin(e.target.value)}
-              className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white placeholder:text-slate-500"
+              className="border rounded-md px-3 py-2"
             />
             <input
               type="number"
               placeholder="Max ($/yr)"
               value={salaryMax}
               onChange={(e) => setSalaryMax(e.target.value)}
-              className="bg-white/5 border border-white/15 rounded-md px-3 py-2 text-white placeholder:text-slate-500"
+              className="border rounded-md px-3 py-2"
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ export function OnboardingWizard({ categories }: { categories: CareerCategory[] 
 
       <div className="flex justify-between mt-8">
         {step > 0 ? (
-          <button onClick={() => setStep((s) => s - 1)} className="text-sm text-slate-400 hover:text-white transition-colors">
+          <button onClick={() => setStep((s) => s - 1)} className="text-sm text-slate-500">
             Back
           </button>
         ) : (

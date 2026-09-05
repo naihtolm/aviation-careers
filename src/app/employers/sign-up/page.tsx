@@ -34,45 +34,45 @@ export default function EmployerSignUpPage() {
 
   return (
     <div className="max-w-md mx-auto px-4 py-12">
-      <h1 className="text-2xl font-semibold text-white">Register your company</h1>
-      <p className="text-sm text-slate-400 mt-1">
+      <h1 className="text-2xl font-semibold text-slate-900">Register your company</h1>
+      <p className="text-sm text-slate-500 mt-1">
         You'll need to sign in first — this creates your employer account under your existing profile.
       </p>
 
       <form action={formAction} className="space-y-3 mt-6">
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm">
           Company name
-          <input name="companyName" required className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white" />
+          <input name="companyName" required className="w-full border rounded-md px-3 py-2 mt-1" />
         </label>
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm">
           Company type
-          <select name="companyType" defaultValue="other" className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white">
+          <select name="companyType" defaultValue="other" className="w-full border rounded-md px-3 py-2 mt-1">
             {COMPANY_TYPES.map((t) => (
-              <option key={t} value={t} className="text-slate-900">
+              <option key={t} value={t}>
                 {companyTypeLabel(t)}
               </option>
             ))}
           </select>
         </label>
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm">
           Website
-          <input name="website" type="url" placeholder="https://" className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500" />
+          <input name="website" type="url" placeholder="https://" className="w-full border rounded-md px-3 py-2 mt-1" />
         </label>
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm">
           How can we verify your company? (optional)
           <input
             name="verificationMethod"
             placeholder="e.g. work email domain, LinkedIn company page"
-            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white placeholder:text-slate-500"
+            className="w-full border rounded-md px-3 py-2 mt-1"
           />
         </label>
-        <label className="flex items-center gap-2 text-sm text-slate-300">
-          <input name="veteranFriendly" type="checkbox" />
+        <label className="flex items-center gap-2 text-sm">
+          <input name="veteranFriendly" type="checkbox" className="rounded border-slate-300" />
           We actively welcome veteran applicants
         </label>
 
         {state?.error && (
-          <p className="text-sm text-red-400">
+          <p className="text-sm text-red-600">
             {state.error === "sign_in_required" ? (
               <>
                 Please <a href="/sign-in" className="underline">sign in</a> first, then come back to this page.

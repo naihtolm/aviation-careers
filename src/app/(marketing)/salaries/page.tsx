@@ -22,7 +22,7 @@ export default async function SalaryExplorerPage() {
 
       <div className="max-w-3xl mx-auto px-4 py-8">
         {careers.length === 0 ? (
-          <p className="text-slate-400 mt-8">No salary data published yet.</p>
+          <p className="text-slate-500 mt-8">No salary data published yet.</p>
         ) : (
           <div className="grid sm:grid-cols-2 gap-3 mt-6">
             {careers.map((career: any) => {
@@ -32,19 +32,19 @@ export default async function SalaryExplorerPage() {
                 <Link
                   key={career.id}
                   href={`/salaries/${career.slug}/national`}
-                  className={`border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
+                  className={`border border-t-4 ${colors.border} rounded-lg p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
                 >
                   <div className={`w-9 h-9 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                     <CategoryIcon name={career.career_categories?.name ?? career.name} className="w-5 h-5" />
                   </div>
-                  <p className="font-medium text-white mt-3">{career.name}</p>
+                  <p className="font-medium text-slate-900 mt-3">{career.name}</p>
                   {median ? (
                     <p className="mt-1">
-                      <span className="text-lg font-semibold text-accent-200 font-mono-data">{median}</span>
-                      <span className="text-xs text-slate-400">/yr median</span>
+                      <span className="text-lg font-semibold text-slate-900">{median}</span>
+                      <span className="text-xs text-slate-500">/yr median</span>
                     </p>
                   ) : (
-                    <p className="text-xs text-slate-500 mt-1">Salary data coming soon</p>
+                    <p className="text-xs text-slate-400 mt-1">Salary data coming soon</p>
                   )}
                 </Link>
               );

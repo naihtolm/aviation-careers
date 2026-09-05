@@ -21,13 +21,13 @@ function companyName(companies: Job["companies"]) {
 }
 
 const STATUS_STYLES: Record<string, string> = {
-  active: "bg-emerald-500/15 text-emerald-300",
-  draft: "bg-white/10 text-slate-300",
-  paused: "bg-amber-500/15 text-amber-300",
-  expired: "bg-orange-500/15 text-orange-300",
-  archived: "bg-white/10 text-slate-400",
-  rejected: "bg-red-500/15 text-red-300",
-  pending_review: "bg-sky-500/15 text-sky-300",
+  active: "bg-emerald-50 text-emerald-700",
+  draft: "bg-slate-100 text-slate-600",
+  paused: "bg-amber-50 text-amber-700",
+  expired: "bg-orange-50 text-orange-700",
+  archived: "bg-slate-100 text-slate-500",
+  rejected: "bg-red-50 text-red-700",
+  pending_review: "bg-blue-50 text-blue-700",
 };
 
 export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
@@ -37,12 +37,12 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
     startTransition(() => adminUpdateJobStatus(jobId, status));
   }
 
-  if (jobs.length === 0) return <p className="text-sm text-slate-400">No jobs match this filter.</p>;
+  if (jobs.length === 0) return <p className="text-sm text-slate-500">No jobs match this filter.</p>;
 
   return (
-    <div className="overflow-x-auto border border-white/10 rounded-lg bg-white/[0.04]">
+    <div className="overflow-x-auto border rounded-lg bg-white">
       <table className="w-full text-sm">
-        <thead className="bg-white/[0.03] text-left text-slate-400">
+        <thead className="bg-slate-50 text-left text-slate-500">
           <tr>
             <th className="px-3 py-2 font-medium">Title</th>
             <th className="px-3 py-2 font-medium">Company</th>
@@ -54,24 +54,24 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
         </thead>
         <tbody>
           {jobs.map((job) => (
-            <tr key={job.id} className="border-t border-white/10">
+            <tr key={job.id} className="border-t">
               <td className="px-3 py-2">
                 {job.status === "active" ? (
-                  <Link href={`/jobs/${job.slug}`} className="text-white hover:underline hover:text-brand-300 transition-colors">
+                  <Link href={`/jobs/${job.slug}`} className="text-slate-900 hover:underline hover:text-brand-600 transition-colors">
                     {job.title}
                   </Link>
                 ) : (
-                  <span className="text-white">{job.title}</span>
+                  <span className="text-slate-900">{job.title}</span>
                 )}
               </td>
-              <td className="px-3 py-2 text-slate-300">{companyName(job.companies)}</td>
+              <td className="px-3 py-2 text-slate-600">{companyName(job.companies)}</td>
               <td className="px-3 py-2">
-                <span className={`px-2 py-0.5 rounded text-xs capitalize ${STATUS_STYLES[job.status] ?? "bg-white/10 text-slate-300"}`}>
+                <span className={`px-2 py-0.5 rounded text-xs capitalize ${STATUS_STYLES[job.status] ?? "bg-slate-100"}`}>
                   {job.status.replace("_", " ")}
                 </span>
               </td>
-              <td className="px-3 py-2 text-slate-400 capitalize">{job.application_type.replace("_", " ")}</td>
-              <td className="px-3 py-2 text-slate-400">
+              <td className="px-3 py-2 text-slate-500 capitalize">{job.application_type.replace("_", " ")}</td>
+              <td className="px-3 py-2 text-slate-500">
                 {job.published_at ? new Date(job.published_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-3 py-2 text-right whitespace-nowrap">
@@ -79,7 +79,7 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
                   <button
                     disabled={isPending}
                     onClick={() => setStatus(job.id, "paused")}
-                    className="text-xs border border-white/15 text-slate-200 rounded px-2 py-1 mr-1 disabled:opacity-50 hover:bg-white/5 transition-colors"
+                    className="text-xs border rounded px-2 py-1 mr-1 disabled:opacity-50"
                   >
                     Pause
                   </button>
@@ -88,7 +88,7 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
                   <button
                     disabled={isPending}
                     onClick={() => setStatus(job.id, "active")}
-                    className="text-xs border border-white/15 text-slate-200 rounded px-2 py-1 mr-1 disabled:opacity-50 hover:bg-white/5 transition-colors"
+                    className="text-xs border rounded px-2 py-1 mr-1 disabled:opacity-50"
                   >
                     Resume
                   </button>
@@ -97,7 +97,7 @@ export function AdminJobsTable({ jobs }: { jobs: Job[] }) {
                   <button
                     disabled={isPending}
                     onClick={() => setStatus(job.id, "archived")}
-                    className="text-xs border border-red-400/30 text-red-300 rounded px-2 py-1 disabled:opacity-50 hover:bg-red-500/10 transition-colors"
+                    className="text-xs border border-red-300 text-red-600 rounded px-2 py-1 disabled:opacity-50"
                   >
                     Archive
                   </button>

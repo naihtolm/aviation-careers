@@ -25,14 +25,14 @@ export function ApplicationCard({ application }: { application: any }) {
   }
 
   return (
-    <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
+    <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
       <div className="flex items-start gap-2">
         <CompanyLogo name={application.jobs?.companies?.name ?? "?"} website={application.jobs?.companies?.website} size={28} />
         <div className="min-w-0">
-          <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-white hover:underline hover:text-brand-300 transition-colors">
+          <Link href={`/jobs/${application.jobs?.slug}`} className="font-medium text-sm text-slate-900 hover:underline hover:text-brand-600 transition-colors">
             {application.jobs?.title}
           </Link>
-          <p className="text-xs text-slate-400">{application.jobs?.companies?.name}</p>
+          <p className="text-xs text-slate-500">{application.jobs?.companies?.name}</p>
         </div>
       </div>
 
@@ -40,10 +40,10 @@ export function ApplicationCard({ application }: { application: any }) {
         value={application.status}
         onChange={handleStatusChange}
         disabled={isPending}
-        className="w-full bg-white/5 border border-white/15 rounded px-2 py-1 text-xs mt-2 text-white"
+        className="w-full border rounded px-2 py-1 text-xs mt-2"
       >
         {STATUSES.map((s) => (
-          <option key={s} value={s} className="text-slate-900">
+          <option key={s} value={s}>
             {titleCase(s)}
           </option>
         ))}
@@ -55,7 +55,7 @@ export function ApplicationCard({ application }: { application: any }) {
         onBlur={handleNotesBlur}
         placeholder="Notes…"
         rows={2}
-        className="w-full bg-white/5 border border-white/15 rounded px-2 py-1 text-xs mt-2 text-white placeholder:text-slate-500"
+        className="w-full border rounded px-2 py-1 text-xs mt-2"
       />
     </div>
   );

@@ -19,8 +19,8 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <p className="text-sm text-slate-400">
-        <Link href="/careers" className="hover:underline hover:text-white transition-colors">Careers</Link>
+      <p className="text-sm text-slate-500">
+        <Link href="/careers" className="hover:underline hover:text-slate-900 transition-colors">Careers</Link>
         {career.career_categories?.name && <> / {career.career_categories.name}</>}
       </p>
       <div className="flex items-center gap-3 mt-3">
@@ -28,89 +28,89 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
           <CategoryIcon name={career.career_categories?.name ?? career.name} />
         </div>
         <div>
-          <h1 className="font-display text-2xl font-semibold text-white">{career.name}</h1>
-          <p className="text-slate-400 mt-0.5">{career.short_description}</p>
+          <h1 className="font-display text-2xl font-semibold text-slate-900">{career.name}</h1>
+          <p className="text-slate-500 mt-0.5">{career.short_description}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mt-6">
-        <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
-          <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <DollarSign className="w-3.5 h-3.5" />
             <p className="text-xs">Median salary</p>
           </div>
-          <p className="font-semibold text-accent-200 mt-1 font-mono-data">{fmt(salary?.salary_p50) ?? "—"}</p>
+          <p className="font-semibold text-slate-900 mt-1">{fmt(salary?.salary_p50) ?? "—"}</p>
         </div>
-        <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
-          <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <TrendingUp className="w-3.5 h-3.5" />
             <p className="text-xs">Salary range</p>
           </div>
-          <p className="font-semibold text-white mt-1 font-mono-data">
+          <p className="font-semibold text-slate-900 mt-1">
             {salary ? `${fmt(salary.salary_p10)}–${fmt(salary.salary_p90)}` : "—"}
           </p>
         </div>
-        <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
-          <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <LineChart className="w-3.5 h-3.5" />
             <p className="text-xs">Job outlook</p>
           </div>
-          <p className="font-semibold text-white mt-1">
+          <p className="font-semibold text-slate-900 mt-1">
             {content?.outlook_growth_pct != null ? `+${content.outlook_growth_pct}%` : "—"}
           </p>
         </div>
-        <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
-          <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <GraduationCap className="w-3.5 h-3.5" />
             <p className="text-xs">Entry-level friendly</p>
           </div>
-          <p className="font-semibold text-white mt-1">{career.entry_level ? "Yes" : "No"}</p>
+          <p className="font-semibold text-slate-900 mt-1">{career.entry_level ? "Yes" : "No"}</p>
         </div>
-        <div className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:bg-white/[0.07] transition-all">
-          <div className="flex items-center gap-1.5 text-slate-400">
+        <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-all">
+          <div className="flex items-center gap-1.5 text-slate-500">
             <ShieldCheck className="w-3.5 h-3.5" />
             <p className="text-xs">FAA regulated</p>
           </div>
-          <p className="font-semibold text-white mt-1">{career.regulated ? "Yes" : "No"}</p>
+          <p className="font-semibold text-slate-900 mt-1">{career.regulated ? "Yes" : "No"}</p>
         </div>
       </div>
       {content?.outlook_narrative && (
-        <p className="text-xs text-slate-400 mt-2">
+        <p className="text-xs text-slate-500 mt-2">
           {content.outlook_label} ({content.outlook_period}). {content.outlook_narrative}
         </p>
       )}
 
       {!content ? (
-        <div className="border border-white/10 rounded-lg p-6 bg-white/[0.04] mt-8 text-center">
-          <p className="text-white font-medium">Detailed guide coming soon</p>
-          <p className="text-sm text-slate-400 mt-1">
+        <div className="border rounded-lg p-6 bg-slate-50 mt-8 text-center">
+          <p className="text-slate-900 font-medium">Detailed guide coming soon</p>
+          <p className="text-sm text-slate-500 mt-1">
             We're still building out the full career guide for {career.name}. Here's what we know so far.
           </p>
-          {career.full_description && <p className="text-sm text-slate-300 mt-4 text-left">{career.full_description}</p>}
+          {career.full_description && <p className="text-sm text-slate-600 mt-4 text-left">{career.full_description}</p>}
         </div>
       ) : (
         <div className="mt-8 space-y-8">
           <section>
-            <h2 className="text-lg font-semibold text-white mb-2">Overview</h2>
-            <p className="text-sm text-slate-300">{content.overview}</p>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">Overview</h2>
+            <p className="text-sm text-slate-600">{content.overview}</p>
           </section>
 
           {content.responsibilities?.length > 0 && (
             <section>
-              <h2 className="text-lg font-semibold text-white mb-2">What they do</h2>
-              <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">What they do</h2>
+              <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
                 {content.responsibilities.map((r: string, i: number) => <li key={i}>{r}</li>)}
               </ul>
             </section>
           )}
 
           <section>
-            <h2 className="text-lg font-semibold text-white mb-2">How to become one</h2>
-            <p className="text-sm text-slate-300">{content.training_path}</p>
+            <h2 className="text-lg font-semibold text-slate-900 mb-2">How to become one</h2>
+            <p className="text-sm text-slate-600">{content.training_path}</p>
             {certRequirements.length > 0 && (
               <ul className="mt-2 space-y-1">
                 {certRequirements.map((c: any, i: number) => (
-                  <li key={i} className="text-sm text-slate-300">
+                  <li key={i} className="text-sm text-slate-600">
                     {c.requirement_type === "required" ? "Required" : "Preferred"}: {c.certifications?.name}
                   </li>
                 ))}
@@ -120,8 +120,8 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
 
           {content.career_path && (
             <section>
-              <h2 className="text-lg font-semibold text-white mb-2">Career path</h2>
-              <p className="text-sm text-slate-300">{content.career_path}</p>
+              <h2 className="text-lg font-semibold text-slate-900 mb-2">Career path</h2>
+              <p className="text-sm text-slate-600">{content.career_path}</p>
             </section>
           )}
 
@@ -129,16 +129,16 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
             <section className="grid sm:grid-cols-2 gap-6">
               {content.pros?.length > 0 && (
                 <div>
-                  <h3 className="font-medium text-white mb-2">Pros</h3>
-                  <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
+                  <h3 className="font-medium text-slate-900 mb-2">Pros</h3>
+                  <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
                     {content.pros.map((p: string, i: number) => <li key={i}>{p}</li>)}
                   </ul>
                 </div>
               )}
               {content.considerations?.length > 0 && (
                 <div>
-                  <h3 className="font-medium text-white mb-2">Considerations</h3>
-                  <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
+                  <h3 className="font-medium text-slate-900 mb-2">Considerations</h3>
+                  <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
                     {content.considerations.map((p: string, i: number) => <li key={i}>{p}</li>)}
                   </ul>
                 </div>
@@ -148,27 +148,27 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         </div>
       )}
 
-      <section className="border-t border-white/10 mt-10 pt-8">
+      <section className="border-t mt-10 pt-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Briefcase className="w-5 h-5 text-brand-300" />
+          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Briefcase className="w-5 h-5 text-brand-600" />
             Open jobs
             {jobs.length > 0 && (
-              <span className="text-xs font-medium bg-brand-400/15 text-brand-300 px-2 py-0.5 rounded-full">{jobs.length}</span>
+              <span className="text-xs font-medium bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full">{jobs.length}</span>
             )}
           </h2>
-          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-300 hover:underline hover:text-brand-200 transition-colors">
+          <Link href={`/salaries/${career.slug}/national`} className="text-sm text-brand-600 hover:underline hover:text-brand-700 transition-colors">
             View salary details →
           </Link>
         </div>
         {jobs.length === 0 ? (
-          <p className="text-sm text-slate-400">No open jobs in this career right now.</p>
+          <p className="text-sm text-slate-500">No open jobs in this career right now.</p>
         ) : (
           <div className="grid sm:grid-cols-2 gap-3">
             {jobs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.slug}`} className="border border-white/10 rounded-lg p-3 bg-white/[0.04] hover:border-brand-300 hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all">
-                <p className="font-medium text-white text-sm">{j.title}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{j.companies?.name}</p>
+              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                <p className="font-medium text-slate-900 text-sm">{j.title}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{j.companies?.name}</p>
               </Link>
             ))}
           </div>
@@ -176,7 +176,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
       </section>
 
       {salary && (
-        <p className="text-xs text-slate-500 mt-8 border-t border-white/10 pt-4">
+        <p className="text-xs text-slate-400 mt-8 border-t pt-4">
           Salary data sourced from the U.S. Bureau of Labor Statistics.
         </p>
       )}

@@ -24,9 +24,9 @@ export default function ResetPasswordConfirmPage() {
 
   return (
     <div className="max-w-sm mx-auto px-4 py-16">
-      <h1 className="text-2xl font-semibold text-white">Set a new password</h1>
+      <h1 className="text-2xl font-semibold text-slate-900">Set a new password</h1>
       <form onSubmit={handleSubmit} className="space-y-3 mt-6">
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm">
           New password
           <input
             type="password"
@@ -34,10 +34,10 @@ export default function ResetPasswordConfirmPage() {
             minLength={8}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/15 rounded-md px-3 py-2 mt-1 text-white"
+            className="w-full border rounded-md px-3 py-2 mt-1"
           />
         </label>
-        {error && <p className="text-sm text-red-400">{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={isPending}

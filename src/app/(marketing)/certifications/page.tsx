@@ -34,35 +34,35 @@ export default async function CertificationsPage() {
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {certifications.length === 0 ? (
-          <p className="text-slate-400 mt-8">No certifications published yet.</p>
+          <p className="text-slate-500 mt-8">No certifications published yet.</p>
         ) : (
           <div className="space-y-10">
             {Array.from(byCategory.entries()).map(([category, certs]) => {
               const Icon = CATEGORY_ICONS[category] ?? Award;
               return (
                 <section key={category}>
-                  <h2 className="flex items-center gap-2 text-lg font-semibold text-white mb-4">
-                    <Icon className="w-5 h-5 text-brand-300" />
+                  <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900 mb-4">
+                    <Icon className="w-5 h-5 text-brand-600" />
                     {category}
                   </h2>
                   <div className="space-y-3">
                     {certs.map((cert) => (
-                      <div key={cert.id} className="border border-white/10 rounded-lg p-4 bg-white/[0.04]">
+                      <div key={cert.id} className="border rounded-lg p-4 bg-white shadow-sm">
                         <div className="flex items-start justify-between gap-3 flex-wrap">
-                          <p className="font-medium text-white">{cert.name}</p>
+                          <p className="font-medium text-slate-900">{cert.name}</p>
                           {cert.issuing_authority && (
-                            <span className="text-xs text-slate-400 shrink-0">{cert.issuing_authority}</span>
+                            <span className="text-xs text-slate-500 shrink-0">{cert.issuing_authority}</span>
                           )}
                         </div>
-                        <p className="text-sm text-slate-300 mt-1.5">{cert.description}</p>
+                        <p className="text-sm text-slate-600 mt-1.5">{cert.description}</p>
                         {cert.careers.length > 0 && (
                           <div className="flex flex-wrap items-center gap-2 mt-3">
-                            <span className="text-xs text-slate-400">Required for:</span>
+                            <span className="text-xs text-slate-500">Required for:</span>
                             {cert.careers.map((c) => (
                               <Link
                                 key={c.slug}
                                 href={`/careers/${c.slug}`}
-                                className="text-xs font-medium text-brand-300 bg-brand-400/15 px-2 py-0.5 rounded-full hover:bg-brand-400/25 transition-colors"
+                                className="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full hover:bg-brand-100 transition-colors"
                               >
                                 {c.name}
                                 {c.requirementType === "preferred" ? " (preferred)" : ""}

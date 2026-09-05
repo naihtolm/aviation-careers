@@ -47,7 +47,7 @@ export default async function CareerDirectoryPage({
 
       <div className="max-w-5xl mx-auto px-4 py-8">
       {careers.length === 0 ? (
-        <p className="text-slate-400 mt-8">No career guides published yet for this category.</p>
+        <p className="text-slate-500 mt-8">No career guides published yet for this category.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
           {careers.map((career: any) => {
@@ -56,22 +56,22 @@ export default async function CareerDirectoryPage({
               <Link
                 key={career.id}
                 href={`/careers/${career.slug}`}
-                className={`border border-t-4 ${colors.border} border-x border-b border-white/10 rounded-lg p-4 bg-white/[0.04] hover:bg-white/[0.07] hover:-translate-y-0.5 transition-all`}
+                className={`border border-t-4 ${colors.border} rounded-lg p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
               >
                 <div className={`w-9 h-9 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                   <CategoryIcon name={career.career_categories?.name ?? career.name} className="w-5 h-5" />
                 </div>
-                <p className="font-medium text-white mt-3">{career.name}</p>
-                <p className="text-sm text-slate-400 mt-1">{career.short_description}</p>
+                <p className="font-medium text-slate-900 mt-3">{career.name}</p>
+                <p className="text-sm text-slate-500 mt-1">{career.short_description}</p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {career.entry_level && (
-                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-500/15 text-emerald-300 px-2 py-0.5 rounded">
+                    <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded">
                       <GraduationCap className="w-3.5 h-3.5" />
                       Entry-level friendly
                     </span>
                   )}
                   {career.regulated && (
-                    <span className="inline-flex items-center gap-1 text-xs bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded">
+                    <span className="inline-flex items-center gap-1 text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       FAA regulated
                     </span>

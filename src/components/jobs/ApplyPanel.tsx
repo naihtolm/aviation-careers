@@ -113,15 +113,15 @@ export function ApplyPanel({
       case "confirming":
         return (
           <>
-            <h3 className="font-medium text-white">You'll be redirected to {companyName}'s site</h3>
-            <p className="text-sm text-slate-400 mt-2">
+            <h3 className="font-medium text-slate-900">You'll be redirected to {companyName}'s site</h3>
+            <p className="text-sm text-slate-500 mt-2">
               We'll track that you clicked apply, but you'll submit your application directly through{" "}
               {companyName}. Sign in first and we can pre-fill your resume and contact info to save you time.
             </p>
             <div className="flex gap-2 mt-4">
               <button
                 onClick={() => setModal("closed")}
-                className="flex-1 border border-white/15 text-white py-2 rounded-md text-sm hover:bg-white/5 transition-colors"
+                className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
               >
                 Cancel
               </button>
@@ -139,15 +139,15 @@ export function ApplyPanel({
       case "didYouApply":
         return (
           <>
-            <h3 className="font-medium text-white">Did you apply to this job?</h3>
-            <p className="text-sm text-slate-400 mt-2">
+            <h3 className="font-medium text-slate-900">Did you apply to this job?</h3>
+            <p className="text-sm text-slate-500 mt-2">
               We opened {companyName}'s application page in a new tab. Let us know if you finished applying so we
               can track it for you.
             </p>
             <div className="flex gap-2 mt-4">
               <button
                 onClick={() => setModal("closed")}
-                className="flex-1 border border-white/15 text-white py-2 rounded-md text-sm hover:bg-white/5 transition-colors"
+                className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
               >
                 Not yet
               </button>
@@ -165,14 +165,14 @@ export function ApplyPanel({
       case "nativeApply":
         return (
           <>
-            <h3 className="font-medium text-white">Apply to {companyName}</h3>
-            <p className="text-sm text-slate-400 mt-2">
+            <h3 className="font-medium text-slate-900">Apply to {companyName}</h3>
+            <p className="text-sm text-slate-500 mt-2">
               Your saved resume and profile will be sent with this application.
             </p>
 
             {nativeApplyError === "resume_required" ? (
               <div className="mt-4">
-                <p className="text-sm text-amber-300 bg-amber-500/15 rounded-md p-3">
+                <p className="text-sm text-amber-700 bg-amber-50 rounded-md p-3">
                   You need a resume on file before applying. Upload one, then come back.
                 </p>
                 <Link
@@ -183,7 +183,7 @@ export function ApplyPanel({
                 </Link>
                 <button
                   onClick={() => setModal("closed")}
-                  className="w-full border border-white/15 text-white py-2 rounded-md text-sm mt-2 hover:bg-white/5 transition-colors"
+                  className="w-full border border-slate-300 py-2 rounded-md text-sm mt-2"
                 >
                   Cancel
                 </button>
@@ -194,26 +194,26 @@ export function ApplyPanel({
                   <div className="mt-4 space-y-3">
                     {screeningQuestions.map((q) => (
                       <div key={q.id}>
-                        <label className="block text-sm text-slate-300 mb-1">{q.label}</label>
+                        <label className="block text-sm text-slate-700 mb-1">{q.label}</label>
                         {q.type === "yes_no" ? (
                           <select
                             value={answers[q.label] ?? ""}
                             onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
-                            className="w-full bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
                           >
-                            <option value="" className="text-slate-900">Select…</option>
-                            <option value="Yes" className="text-slate-900">Yes</option>
-                            <option value="No" className="text-slate-900">No</option>
+                            <option value="">Select…</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                           </select>
                         ) : q.type === "multiple_choice" ? (
                           <select
                             value={answers[q.label] ?? ""}
                             onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
-                            className="w-full bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
                           >
-                            <option value="" className="text-slate-900">Select…</option>
+                            <option value="">Select…</option>
                             {(q.options ?? []).map((opt) => (
-                              <option key={opt} value={opt} className="text-slate-900">
+                              <option key={opt} value={opt}>
                                 {opt}
                               </option>
                             ))}
@@ -222,7 +222,7 @@ export function ApplyPanel({
                           <input
                             value={answers[q.label] ?? ""}
                             onChange={(e) => setAnswers((prev) => ({ ...prev, [q.label]: e.target.value }))}
-                            className="w-full bg-white/5 border border-white/15 rounded-md px-2 py-1.5 text-sm text-white"
+                            className="w-full border rounded-md px-2 py-1.5 text-sm"
                           />
                         )}
                       </div>
@@ -231,13 +231,13 @@ export function ApplyPanel({
                 )}
 
                 {nativeApplyError && nativeApplyError !== "resume_required" && (
-                  <p className="text-sm text-red-400 mt-3">{nativeApplyError}</p>
+                  <p className="text-sm text-red-600 mt-3">{nativeApplyError}</p>
                 )}
 
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={() => setModal("closed")}
-                    className="flex-1 border border-white/15 text-white py-2 rounded-md text-sm hover:bg-white/5 transition-colors"
+                    className="flex-1 border border-slate-300 py-2 rounded-md text-sm"
                   >
                     Cancel
                   </button>
@@ -257,8 +257,8 @@ export function ApplyPanel({
       case "appliedConfirmation":
         return (
           <div className="text-center">
-            <h3 className="font-medium text-white">Application submitted</h3>
-            <p className="text-sm text-slate-400 mt-2">
+            <h3 className="font-medium text-slate-900">Application submitted</h3>
+            <p className="text-sm text-slate-500 mt-2">
               {companyName} will review your application. You can track its status from your dashboard.
             </p>
             <button
@@ -292,8 +292,8 @@ export function ApplyPanel({
   // which is what makes this read as one continuous flow instead of four
   // popups closing and reopening.
   const modalContent = (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 animate-modal-backdrop">
-      <div className="bg-board-2 border border-white/10 rounded-lg p-6 max-w-sm w-full max-h-[85vh] overflow-y-auto animate-modal-box">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50 animate-modal-backdrop">
+      <div className="bg-white rounded-lg p-6 max-w-sm w-full max-h-[85vh] overflow-y-auto animate-modal-box">
         <div key={modal} className="animate-modal-content">
           {renderStepContent()}
         </div>
@@ -302,7 +302,7 @@ export function ApplyPanel({
   );
 
   return (
-    <div className="border border-white/10 rounded-lg p-4 bg-white/[0.04] space-y-3">
+    <div className="border rounded-lg p-4 bg-white space-y-3">
       {applicationType === "external_url" ? (
         <>
           <button
@@ -311,10 +311,10 @@ export function ApplyPanel({
           >
             Apply Now
           </button>
-          <p className="text-xs text-slate-500 text-center">You'll be redirected to {companyName}'s site.</p>
+          <p className="text-xs text-slate-400 text-center">You'll be redirected to {companyName}'s site.</p>
         </>
       ) : applied ? (
-        <div className="text-sm text-emerald-300 bg-emerald-500/15 rounded-md text-center py-2.5 font-medium">
+        <div className="text-sm text-emerald-700 bg-emerald-50 rounded-md text-center py-2.5 font-medium">
           Applied ✓
         </div>
       ) : (
@@ -330,12 +330,12 @@ export function ApplyPanel({
         onClick={handleSave}
         disabled={isPending}
         className={`w-full py-2.5 rounded-md font-medium disabled:opacity-50 ${
-          saved ? "bg-accent-200 text-board hover:bg-accent-100 transition-colors" : "border border-white/15 text-white hover:bg-white/5 transition-colors"
+          saved ? "bg-accent-200 text-board hover:bg-accent-100 transition-colors" : "border border-slate-300 hover:bg-slate-50"
         }`}
       >
         {saved ? "Saved ✓" : "Save Job"}
       </button>
-      {saveMessage && <p className="text-xs text-center text-slate-400">{saveMessage}</p>}
+      {saveMessage && <p className="text-xs text-center text-slate-500">{saveMessage}</p>}
 
       {modal !== "closed" && typeof document !== "undefined" && createPortal(modalContent, document.body)}
     </div>

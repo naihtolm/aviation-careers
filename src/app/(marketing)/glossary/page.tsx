@@ -44,9 +44,9 @@ export default function GlossaryPage() {
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div className="space-y-4">
           {TERMS.map((t) => (
-            <div key={t.term} className="border-b border-white/10 pb-4">
-              <p className="font-medium text-white">{t.term}</p>
-              <p className="text-sm text-slate-300 mt-1">{t.definition}</p>
+            <div key={t.term} className="border-b pb-4">
+              <p className="font-medium text-slate-900">{t.term}</p>
+              <p className="text-sm text-slate-600 mt-1">{t.definition}</p>
             </div>
           ))}
         </div>

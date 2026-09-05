@@ -28,12 +28,12 @@ export default async function ReviewModerationPage() {
     <div>
       <div className="flex items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="font-display text-2xl font-semibold text-white">Employer Review Moderation</h2>
-          <p className="text-sm text-slate-400 mt-1">Check each review before it goes live on the employer's page.</p>
+          <h2 className="font-display text-2xl font-semibold text-slate-900">Employer Review Moderation</h2>
+          <p className="text-sm text-slate-500 mt-1">Check each review before it goes live on the employer's page.</p>
         </div>
-        <div className="shrink-0 text-center bg-brand-400/10 border border-brand-400/20 rounded-xl px-5 py-2.5">
-          <p className="text-2xl font-display font-semibold text-brand-300 leading-none">{pendingCount}</p>
-          <p className="text-xs text-brand-300 mt-1">pending</p>
+        <div className="shrink-0 text-center bg-brand-50 border border-brand-100 rounded-xl px-5 py-2.5">
+          <p className="text-2xl font-display font-semibold text-brand-700 leading-none">{pendingCount}</p>
+          <p className="text-xs text-brand-600 mt-1">pending</p>
         </div>
       </div>
 
