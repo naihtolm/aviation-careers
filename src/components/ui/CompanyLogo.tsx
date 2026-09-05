@@ -10,19 +10,21 @@
 // will ever render. Designed and treated as that, not left as an
 // afterthought sized for the rare case.
 
+// Muted, desaturated tones instead of bright SaaS-rainbow colors -- these
+// read as one considered, cohesive family (closer to the brand/accent
+// palette's own depth) rather than each avatar competing for attention
+// against its neighbors and the navy card it now sits on.
 const PALETTE = [
-  "#4d7fff", // brand blue
-  "#0ea5e9", // sky
-  "#8b5cf6", // violet
-  "#f43f5e", // rose
-  "#f59e0b", // amber
-  "#10b981", // emerald
-  "#14b8a6", // teal
-  "#ec4899", // pink
-  "#6366f1", // indigo
-  "#f97316", // orange
-  "#84cc16", // lime
-  "#06b6d4", // cyan
+  "#3d5a80", // slate blue
+  "#5c6f8a", // steel blue-gray
+  "#8a6a3a", // muted amber-brown
+  "#4a6b5c", // deep sage
+  "#6b4a5c", // dusty plum
+  "#3a6b6b", // deep teal
+  "#5c4a6b", // dusty indigo
+  "#7a4a3a", // burnt sienna
+  "#4a5c3a", // deep olive
+  "#6b5a3a", // warm bronze
 ];
 
 function colorForName(name: string): string {

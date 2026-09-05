@@ -18,7 +18,7 @@ export function GatedHome({
   stats: { jobCount: number; companyCount: number; airportCount: number };
 }) {
   return (
-    <div>
+    <div className="bg-board">
       <Suspense fallback={null}>
         <AutoOpenGate />
       </Suspense>
@@ -68,14 +68,14 @@ export function GatedHome({
 
       <Reveal>
         <section className="max-w-6xl mx-auto px-4 py-14">
-          <p className="font-mono-data text-xs uppercase tracking-wide text-accent-700">🔥 Hot right now</p>
-          <h2 className="font-display text-2xl font-semibold text-slate-900 mt-1">Open roles</h2>
-          <p className="text-slate-500 text-sm mt-1.5 max-w-xl">
+          <p className="font-mono-data text-xs uppercase tracking-wide text-accent-200">🔥 Hot right now</p>
+          <h2 className="font-display text-2xl font-semibold text-white mt-1">Open roles</h2>
+          <p className="text-slate-400 text-sm mt-1.5 max-w-xl">
             A preview of what's open. Create a free account to see all {stats.jobCount}+ roles, filter by location and pay, and apply.
           </p>
 
           {featuredJobs.length === 0 ? (
-            <p className="text-slate-500 text-sm mt-8">No jobs posted yet — check back soon.</p>
+            <p className="text-slate-400 text-sm mt-8">No jobs posted yet — check back soon.</p>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
               {featuredJobs.map((job: any, i: number) => (
@@ -84,11 +84,11 @@ export function GatedHome({
             </div>
           )}
 
-          <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-8 mt-8 text-center">
-            <h3 className="font-display text-lg font-semibold text-slate-900">
+          <div className="bg-white/5 border border-white/10 shadow-sm rounded-2xl p-8 mt-8 text-center">
+            <h3 className="font-display text-lg font-semibold text-white">
               {Math.max(stats.jobCount - featuredJobs.length, 0)} more roles are waiting
             </h3>
-            <p className="text-slate-500 text-sm mt-2 max-w-md mx-auto">
+            <p className="text-slate-400 text-sm mt-2 max-w-md mx-auto">
               Create a free account to unlock full search, salary filters, and one-click apply.
             </p>
             <div className="mt-6">
