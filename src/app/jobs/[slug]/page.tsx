@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Clock, Home, DollarSign, CalendarDays } from "lucide-react";
+import { MapPin, Clock, Home, CalendarDays } from "lucide-react";
 import { getJobBySlug, getSimilarJobs, getSavedJobIds, hasAppliedToJob } from "@/features/jobs/queries";
 import { getCurrentUser } from "@/features/profile/queries";
 import { ApplyPanel } from "@/components/jobs/ApplyPanel";
@@ -94,8 +94,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
               </span>
             )}
             {salary && (
-              <span className="inline-flex items-center gap-1 text-slate-900 font-medium">
-                <DollarSign className="w-3.5 h-3.5 shrink-0" />
+              <span className="inline-flex items-center gap-1 text-accent-700 font-medium">
                 {salary}
               </span>
             )}

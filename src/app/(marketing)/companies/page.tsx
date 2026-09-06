@@ -4,7 +4,14 @@ import { getAllCompanies } from "@/features/companies/queries";
 import { PageHero } from "@/components/layout/PageHero";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
 import { companyTypeLabel } from "@/lib/companyType";
-import { SECTORS, getSectorBySlug } from "@/lib/sectors";
+import { SECTORS, getSectorBySlug, sectorColorClasses } from "@/lib/sectors";
+
+const DEFAULT_COMPANY_COLORS = { border: "border-brand-600", cardWash: "bg-gradient-to-br from-brand-50/60 to-white" };
+
+function companyCardColors(companyType: string | null | undefined) {
+  const sector = SECTORS.find((s) => s.companyTypes.includes(companyType ?? ""));
+  return sector ? sectorColorClasses(sector.colorKey) : DEFAULT_COMPANY_COLORS;
+}
 
 export default async function CompanyDirectoryPage({
   searchParams,
@@ -56,11 +63,13 @@ export default async function CompanyDirectoryPage({
           </p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {companies.map((c) => (
+            {companies.map((c) => {
+              const colors = companyCardColors(c.company_type);
+              return (
               <Link
                 key={c.id}
                 href={`/companies/${c.slug}`}
-                className="flex items-start gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className={`flex items-start gap-3 border border-t-4 ${colors.border} ${colors.cardWash} rounded-xl p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
               >
                 <CompanyLogo name={c.name} website={c.website} size={40} />
                 <div className="min-w-0">
@@ -84,7 +93,8 @@ export default async function CompanyDirectoryPage({
                   </div>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

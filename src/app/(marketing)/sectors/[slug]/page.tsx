@@ -38,7 +38,7 @@ export default async function SectorDetailPage({ params }: { params: Promise<{ s
               <Link
                 key={c.id}
                 href={`/companies/${c.slug}`}
-                className={`flex items-center gap-3 border border-t-4 ${colors.border} rounded-xl p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                className={`flex items-center gap-3 border border-t-4 ${colors.border} ${colors.cardWash} rounded-xl p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
               >
                 <CompanyLogo name={c.name} website={c.website} size={36} />
                 <div className="min-w-0">

@@ -85,7 +85,7 @@ export function SignedInHome({
                   <Link
                     key={cat.id}
                     href={`/jobs?career_category=${cat.slug}`}
-                    className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                    className={`border border-t-4 ${colors.border} ${colors.cardWash} rounded-xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
                   >
                     <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                       <CategoryIcon name={cat.name} />
@@ -115,7 +115,7 @@ export function SignedInHome({
                 <Link
                   key={sector.slug}
                   href={`/sectors/${sector.slug}`}
-                  className={`border border-t-4 ${colors.border} rounded-xl p-5 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                  className={`border border-t-4 ${colors.border} ${colors.cardWash} rounded-xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
                 >
                   <div className={`w-11 h-11 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                     <sector.icon className="w-5 h-5" />
@@ -203,7 +203,7 @@ export function SignedInHome({
                 <Link
                   key={c.id}
                   href={`/companies/${c.slug}`}
-                  className="flex items-center gap-3 border rounded-xl p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  className="flex items-center gap-3 border border-t-4 border-brand-600 bg-gradient-to-br from-brand-50/60 to-white rounded-xl p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
                 >
                   <CompanyLogo name={c.name} website={(c as any).website} size={36} />
                   <div className="min-w-0">

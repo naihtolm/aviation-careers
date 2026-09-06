@@ -166,7 +166,7 @@ export default async function CareerDetailPage({ params }: { params: Promise<{ s
         ) : (
           <div className="grid sm:grid-cols-2 gap-3">
             {jobs.map((j: any) => (
-              <Link key={j.id} href={`/jobs/${j.slug}`} className="border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <Link key={j.id} href={`/jobs/${j.slug}`} className={`border border-t-4 ${colors.border} ${colors.cardWash} rounded-lg p-3 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}>
                 <p className="font-medium text-slate-900 text-sm">{j.title}</p>
                 <p className="text-xs text-slate-500 mt-0.5">{j.companies?.name}</p>
               </Link>

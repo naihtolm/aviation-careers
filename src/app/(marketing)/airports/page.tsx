@@ -48,7 +48,7 @@ export default async function AirportDirectoryPage() {
                 <Link
                   key={a.id}
                   href={`/airports/${code}`}
-                  className="border rounded-lg p-4 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                  className={`border border-t-4 ${typeColors.border} ${typeColors.cardWash} rounded-lg p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg ${typeColors.badgeBg} ${typeColors.badgeText} flex items-center justify-center shrink-0`}>

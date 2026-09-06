@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MapPin, Clock, Home, DollarSign } from "lucide-react";
+import { MapPin, Clock, Home } from "lucide-react";
 import { SaveJobButton } from "@/components/jobs/SaveJobButton";
 import { QuickApplyButton } from "@/components/jobs/QuickApplyButton";
 import { CompanyLogo } from "@/components/ui/CompanyLogo";
@@ -92,12 +92,7 @@ export function JobCard({
             {job.work_arrangement.replace("_", " ")}
           </span>
         )}
-        {salary && (
-          <span className="inline-flex items-center gap-1 text-slate-700 font-medium">
-            <DollarSign className="w-3.5 h-3.5 shrink-0" />
-            {salary}
-          </span>
-        )}
+        {salary && <span className="text-slate-700 font-medium">{salary}</span>}
       </div>
       {(posted || canQuickApply) && (
         <div className="flex items-center justify-between mt-3">

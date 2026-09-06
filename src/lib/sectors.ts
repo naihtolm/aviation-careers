@@ -103,18 +103,19 @@ export interface SectorColorClasses {
   border: string;
   tagBg: string;
   tagText: string;
+  cardWash: string;
 }
 
 const SECTOR_COLOR_CLASSES: Record<SectorDef["colorKey"], SectorColorClasses> = {
-  sky: { iconBg: "bg-sky-50", iconText: "text-sky-700", border: "border-sky-600", tagBg: "bg-sky-50", tagText: "text-sky-800" },
-  teal: { iconBg: "bg-teal-50", iconText: "text-teal-700", border: "border-teal-600", tagBg: "bg-teal-50", tagText: "text-teal-800" },
-  violet: { iconBg: "bg-violet-50", iconText: "text-violet-600", border: "border-violet-600", tagBg: "bg-violet-50", tagText: "text-violet-700" },
-  amber: { iconBg: "bg-amber-50", iconText: "text-amber-700", border: "border-amber-700", tagBg: "bg-amber-50", tagText: "text-amber-800" },
-  indigo: { iconBg: "bg-indigo-50", iconText: "text-indigo-600", border: "border-indigo-600", tagBg: "bg-indigo-50", tagText: "text-indigo-700" },
-  slate: { iconBg: "bg-slate-200", iconText: "text-slate-700", border: "border-slate-500", tagBg: "bg-slate-100", tagText: "text-slate-700" },
-  rose: { iconBg: "bg-rose-50", iconText: "text-rose-600", border: "border-rose-600", tagBg: "bg-rose-50", tagText: "text-rose-700" },
-  orange: { iconBg: "bg-orange-50", iconText: "text-orange-700", border: "border-orange-600", tagBg: "bg-orange-50", tagText: "text-orange-800" },
-  stone: { iconBg: "bg-stone-200", iconText: "text-stone-700", border: "border-stone-600", tagBg: "bg-stone-100", tagText: "text-stone-700" },
+  sky: { iconBg: "bg-sky-50", iconText: "text-sky-700", border: "border-sky-600", tagBg: "bg-sky-50", tagText: "text-sky-800", cardWash: "bg-gradient-to-br from-sky-50/60 to-white" },
+  teal: { iconBg: "bg-teal-50", iconText: "text-teal-700", border: "border-teal-600", tagBg: "bg-teal-50", tagText: "text-teal-800", cardWash: "bg-gradient-to-br from-teal-50/60 to-white" },
+  violet: { iconBg: "bg-violet-50", iconText: "text-violet-600", border: "border-violet-600", tagBg: "bg-violet-50", tagText: "text-violet-700", cardWash: "bg-gradient-to-br from-violet-50/60 to-white" },
+  amber: { iconBg: "bg-amber-50", iconText: "text-amber-700", border: "border-amber-700", tagBg: "bg-amber-50", tagText: "text-amber-800", cardWash: "bg-gradient-to-br from-amber-50/60 to-white" },
+  indigo: { iconBg: "bg-indigo-50", iconText: "text-indigo-600", border: "border-indigo-600", tagBg: "bg-indigo-50", tagText: "text-indigo-700", cardWash: "bg-gradient-to-br from-indigo-50/60 to-white" },
+  slate: { iconBg: "bg-slate-200", iconText: "text-slate-700", border: "border-slate-500", tagBg: "bg-slate-100", tagText: "text-slate-700", cardWash: "bg-gradient-to-br from-slate-100/60 to-white" },
+  rose: { iconBg: "bg-rose-50", iconText: "text-rose-600", border: "border-rose-600", tagBg: "bg-rose-50", tagText: "text-rose-700", cardWash: "bg-gradient-to-br from-rose-50/60 to-white" },
+  orange: { iconBg: "bg-orange-50", iconText: "text-orange-700", border: "border-orange-600", tagBg: "bg-orange-50", tagText: "text-orange-800", cardWash: "bg-gradient-to-br from-orange-50/60 to-white" },
+  stone: { iconBg: "bg-stone-200", iconText: "text-stone-700", border: "border-stone-600", tagBg: "bg-stone-100", tagText: "text-stone-700", cardWash: "bg-gradient-to-br from-stone-100/60 to-white" },
 };
 
 export function sectorColorClasses(colorKey: SectorDef["colorKey"]): SectorColorClasses {

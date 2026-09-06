@@ -32,7 +32,7 @@ export default async function SalaryExplorerPage() {
                 <Link
                   key={career.id}
                   href={`/salaries/${career.slug}/national`}
-                  className={`border border-t-4 ${colors.border} rounded-lg p-4 bg-white shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
+                  className={`border border-t-4 ${colors.border} ${colors.cardWash} rounded-lg p-4 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all`}
                 >
                   <div className={`w-9 h-9 rounded-lg ${colors.iconBg} ${colors.iconText} flex items-center justify-center`}>
                     <CategoryIcon name={career.career_categories?.name ?? career.name} className="w-5 h-5" />

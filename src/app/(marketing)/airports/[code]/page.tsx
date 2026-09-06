@@ -73,7 +73,7 @@ export default async function AirportDetailPage({ params }: { params: Promise<{ 
                       <Link
                         key={i}
                         href={`/companies/${c.companies?.slug}`}
-                        className="flex items-center gap-3 border rounded-lg p-3 bg-white shadow-sm hover:border-brand-300 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                        className="flex items-center gap-3 border border-t-4 border-brand-600 bg-gradient-to-br from-brand-50/60 to-white rounded-lg p-3 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
                       >
                         <CompanyLogo name={c.companies?.name ?? "?"} website={c.companies?.website} size={32} />
                         <div className="min-w-0">
